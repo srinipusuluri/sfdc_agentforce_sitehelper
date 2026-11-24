@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 400" width="1000" height="400" role="img" aria-label="Decision guide. If someone asks in their own words and needs an answer or action, use Agentforce. If a team should be told when something happens and nobody asks, use Slackforce. If you are building, changing, testing or documenting the project, use Claudeforce.">
+<rect width="1000" height="400" fill="#f6f8f8"/>
+<defs><marker id="d1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#17232a"/></marker></defs>
+<g font-family="IBM Plex Sans, system-ui, sans-serif" font-size="13" fill="#17232a" stroke="#17232a">
+<text x="10" y="24" stroke="none" font-size="15" font-weight="600">What are you trying to do?</text>
+
+<rect x="10" y="44" width="440" height="78" rx="8" fill="#ffffff"/>
+<text x="26" y="73" stroke="none">Someone asks, in their own words,</text><text x="26" y="93" stroke="none">and needs an answer or an action</text>
+<line x1="450" y1="83" x2="518" y2="83" stroke-width="1.5" marker-end="url(#d1)"/>
+<rect x="520" y="44" width="170" height="78" rx="8" fill="#dff1ef" stroke="#0b7a75" stroke-width="2"/>
+<text x="605" y="76" text-anchor="middle" stroke="none" font-weight="600" font-size="16" fill="#0b7a75">Agentforce</text><text x="605" y="98" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">a conversation</text>
+<text x="710" y="73" stroke="none" font-size="12" fill="#58696f">A visitor asks about products</text><text x="710" y="93" stroke="none" font-size="12" fill="#58696f">Staff ask for High priority cases</text>
+
+<rect x="10" y="142" width="440" height="78" rx="8" fill="#ffffff"/>
+<text x="26" y="171" stroke="none">A team should be told when something</text><text x="26" y="191" stroke="none">happens, and nobody has to ask</text>
+<line x1="450" y1="181" x2="518" y2="181" stroke-width="1.5" marker-end="url(#d1)"/>
+<rect x="520" y="142" width="170" height="78" rx="8" fill="#fbeedb" stroke="#b45309" stroke-width="2"/>
+<text x="605" y="174" text-anchor="middle" stroke="none" font-weight="600" font-size="16" fill="#b45309">Slackforce</text><text x="605" y="196" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">a notification</text>
+<text x="710" y="171" stroke="none" font-size="12" fill="#58696f">A new High priority Case arrives</text><text x="710" y="191" stroke="none" font-size="12" fill="#58696f">A summary every morning at 8:00</text>
+
+<rect x="10" y="240" width="440" height="78" rx="8" fill="#ffffff"/>
+<text x="26" y="269" stroke="none">You are building, changing, testing</text><text x="26" y="289" stroke="none">or documenting this project</text>
+<line x1="450" y1="279" x2="518" y2="279" stroke-width="1.5" marker-end="url(#d1)"/>
+<rect x="520" y="240" width="170" height="78" rx="8" fill="#e3eaf5" stroke="#3b5b8c" stroke-width="2"/>
+<text x="605" y="272" text-anchor="middle" stroke="none" font-weight="600" font-size="16" fill="#3b5b8c">Claudeforce</text><text x="605" y="294" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">build-time help</text>
+<text x="710" y="269" stroke="none" font-size="12" fill="#58696f">Add an action and run its tests</text><text x="710" y="289" stroke="none" font-size="12" fill="#58696f">Write the docs, push to GitHub</text>
+
+<rect x="10" y="338" width="980" height="52" rx="8" fill="#ffffff" stroke-dasharray="5 3"/>
+<text x="26" y="360" stroke="none" font-weight="600">Rule of thumb</text>
+<text x="140" y="360" stroke="none">a person asks → Agentforce · an event happens → Slackforce · a developer works → Claudeforce</text>
+<text x="26" y="379" stroke="none" font-size="12" fill="#58696f">Needs often combine: an escalated chat leads to a Case, the Case triggers an alert, a teammate asks the agent about it.</text>
+</g></svg>

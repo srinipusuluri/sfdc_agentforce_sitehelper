@@ -100,6 +100,16 @@ details pre{border:0;border-radius:0 0 8px 8px}
 .card .go{font-family:var(--mono);font-size:.8rem;color:var(--agent);margin-top:auto}
 .card svg{width:56px;height:56px}
 .hero-img{width:100%;height:auto;border-radius:10px;border:1px solid var(--line);display:block}
+
+.p-no{background:var(--line);color:var(--muted)}
+.two{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.two .col h3{font-size:1rem}
+.cmp td:first-child{font-family:var(--sans);font-size:.88rem;font-weight:600;white-space:normal;min-width:120px}
+.cmp td,.cmp th{min-width:180px}
+.cmp td:first-child,.cmp th:first-child{min-width:110px}
+.flow{counter-reset:f;list-style:none;padding:0;display:flex;flex-direction:column;gap:10px}
+.flow li{counter-increment:f;display:grid;grid-template-columns:2rem 1fr;gap:12px;max-width:none}
+.flow li::before{content:counter(f);font-family:var(--mono);color:var(--agent);background:var(--agent-soft);border-radius:50%;width:2rem;height:2rem;display:grid;place-items:center;font-size:.9rem}
 </style>
 
 
@@ -113,6 +123,8 @@ details pre{border:0;border-radius:0 0 8px 8px}
   <h1>Claudeforce: Claude working on Salesforce</h1>
   <p class="lede">How Claude was used to build, test and document this repo: which tool did what, where a human stayed in the loop, and what went wrong along the way.</p>
 </header>
+
+<section id="scope"><h2>What Claudeforce is for</h2><p>Claudeforce is <b>Claude as the builder and operator</b>. It works while a person is building or maintaining the project: writing and deploying code, testing agents, reading what is in an org, driving a web UI with approvals, and writing documentation. End users never see it and it is not in the run-time path.</p><div class="two"><div class="col"><h3><span class="pill p-ok">Meant for</span></h3><ul><li>Building and deploying Apex and agent metadata, with tests</li><li>Reading and documenting what already exists in an org</li><li>Diagnosing failures, such as an agent that answers Off Topic</li><li>Browser steps in Slack and Setup, with a person approving</li><li>Writing documentation and diagrams and pushing them</li></ul></div><div class="col"><h3><span class="pill p-no">Not meant for</span></h3><ul><li>Handling secrets, logins or verification codes</li><li>Approving permission screens on your behalf</li><li>Acting as the production support agent for customers</li><li>Deploying to production without review</li></ul></div></div><h3>Use cases</h3><div class="tbl"><table><thead><tr><th>Use case</th><th>Who</th><th>How it works</th><th>Status</th></tr></thead><tbody><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Build and deploy Apex with tests</td><td>Developer</td><td>Salesforce CLI, deploying only the new classes with specified tests</td><td><span class="pill p-ok">Built</span></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Create and wire an agent</td><td>Developer</td><td>Agent spec, actions with schemas, topic, bot user permission set</td><td><span class="pill p-ok">Built</span></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Test an agent with real utterances</td><td>Developer</td><td>Agent test spec and test run. Results were mixed and are listed on the Agentforce page</td><td><span class="pill p-ok">Built</span></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Retrieve and document an org</td><td>Admin</td><td>Retrieved the Site Helper agent, channel and queue and wrote them up</td><td><span class="pill p-ok">Built</span></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Load sample data</td><td>Developer</td><td>Apex scripts for Cases and Knowledge articles</td><td><span class="pill p-ok">Built</span></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Test the Slack alerts</td><td>Developer</td><td>Sent messages, created a High priority Case to fire the trigger, deleted it</td><td><span class="pill p-ok">Built</span></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Drive a web UI with approvals</td><td>Admin</td><td>Claude in Chrome. The Slackbot page had no agent builder, so instructions were written instead</td><td><span class="pill p-ok">Built</span><div style="color:var(--muted);font-size:.8rem;margin-top:4px">Instructions only</div></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Publish documentation and diagrams</td><td>Anyone</td><td>Pages and README written from real files and pushed to GitHub</td><td><span class="pill p-ok">Built</span></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Review code before a release</td><td>Developer</td><td>Run a Salesforce code review on the Apex</td><td><span class="pill p-have">Next</span></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Re-run agent tests on every change</td><td>Developer</td><td>Add the agent tests to a release checklist</td><td><span class="pill p-have">Next</span></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Log in, enter secrets, click Allow</td><td>Claude</td><td>Always left to a person</td><td><span class="pill p-no">Out of scope</span></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Answer customers in production</td><td>Claude</td><td>That is Agentforce</td><td><span class="pill p-no">Out of scope</span></td></tr></tbody></table></div></section>
 
 <section id="toolchain">
   <h2>The toolchain</h2>
@@ -187,14 +199,15 @@ details pre{border:0;border-radius:0 0 8px 8px}
       <tr><td>Agent actions and schemas</td><td>Claude Code</td><td>Fixed after the agent answered Off Topic. Missing schema files were the cause</td></tr>
       <tr><td>Bot user access</td><td>Claude Code</td><td>Permission set assigned after removing View All</td></tr>
       <tr><td>Knowledge and sample data</td><td>Claude Code</td><td>Knowledge enabled after you approved it. 5 articles, 10 Cases</td></tr>
-      <tr><td>Slack alerts</td><td>Claude Code</td><td>Deployed, 4 tests pass. Off until you set the webhook</td></tr>
+      <tr><td>Slack alerts</td><td>Claude Code</td><td>Deployed, 4 tests pass. After you set the webhook, a test Case fired the trigger and the alert arrived in Slack</td></tr>
+      <tr><td>Daily digest</td><td>Claude Code</td><td>Scheduled for 8:00 daily. A manual send was seen in Slack</td></tr>
       <tr><td>Site Helper agent, channel, queue</td><td>Claude Code, retrieve</td><td>Read from the org and documented. Built by you, not by Claude</td></tr>
       <tr><td>Slackbot page</td><td>Claude in Chrome</td><td>Found no agent builder, stopped, wrote instructions instead</td></tr>
       <tr><td>Architecture pages</td><td>Claude Code, artifacts</td><td>Written from the retrieved metadata and code</td></tr>
       <tr><td>This repo</td><td>Claude Code, git</td><td>Org usernames redacted before the public push</td></tr>
     </tbody>
   </table></div>
-  <div class="note"><b>Not verified by Claude.</b> A live Site Helper chat and an end-to-end escalation to a human were not run. Slack posting has not been tested because the webhook is not set. The pages say so where it applies.</div>
+  <div class="note"><b>Not verified by Claude.</b> A live Site Helper chat and an end-to-end escalation to a human were not run, and the Case Triage priority update was not run. The first scheduled digest has not fired yet. The pages say so where it applies.</div>
 </section>
 
 <section id="gates">
@@ -204,6 +217,7 @@ details pre{border:0;border-radius:0 0 8px 8px}
     <tbody>
       <tr><td>Enabling Knowledge</td><td>It cannot be undone, so Claude asked first and waited for a yes.</td></tr>
       <tr><td>Slack approach</td><td>Claude asked which way to build, since the Slackbot UI had no agent builder.</td></tr>
+      <tr><td>Webhook URL pasted in chat</td><td>Claude declined to enter it into Salesforce and opened the Custom Labels page so you could paste it yourself.</td></tr>
       <tr><td>Slack webhook URL</td><td>Treated as a secret. You paste it into Salesforce yourself. The Chrome instructions forbid reading it back.</td></tr>
       <tr><td>Public repo</td><td>Pushed because you asked. Usernames were replaced with placeholders first, and Pages was left off.</td></tr>
       <tr><td>A wrong earlier claim</td><td>The first architecture page said the chat had no routing. Claude retrieved the real metadata, found that wrong, and published a correction.</td></tr>
@@ -226,6 +240,7 @@ details pre{border:0;border-radius:0 0 8px 8px}
       <tr><td>Bot user rejected View All permissions</td><td>Use read access with sharing</td></tr>
       <tr><td>Apex would not compile: bind on the left, <code>String[][]</code></td><td>Two queries, and <code>List&lt;List&lt;String&gt;&gt;</code> with explicit inner lists</td></tr>
       <tr><td>Wider deploy failed the 75% coverage check</td><td>Deploy only the new classes with <code>RunSpecifiedTests</code></td></tr>
+      <tr><td>Webhook label reset to its placeholder, so no alert was sent</td><td>A project deploy overwrote it. The label file is now in <code>.forceignore</code>, and the README says to deploy first and paste the webhook after</td></tr>
       <tr><td>SSH push denied</td><td>Pushed over HTTPS with the existing <code>gh</code> login, no config change</td></tr>
     </tbody>
   </table></div>

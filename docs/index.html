@@ -100,6 +100,16 @@ details pre{border:0;border-radius:0 0 8px 8px}
 .card .go{font-family:var(--mono);font-size:.8rem;color:var(--agent);margin-top:auto}
 .card svg{width:56px;height:56px}
 .hero-img{width:100%;height:auto;border-radius:10px;border:1px solid var(--line);display:block}
+
+.p-no{background:var(--line);color:var(--muted)}
+.two{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.two .col h3{font-size:1rem}
+.cmp td:first-child{font-family:var(--sans);font-size:.88rem;font-weight:600;white-space:normal;min-width:120px}
+.cmp td,.cmp th{min-width:180px}
+.cmp td:first-child,.cmp th:first-child{min-width:110px}
+.flow{counter-reset:f;list-style:none;padding:0;display:flex;flex-direction:column;gap:10px}
+.flow li{counter-increment:f;display:grid;grid-template-columns:2rem 1fr;gap:12px;max-width:none}
+.flow li::before{content:counter(f);font-family:var(--mono);color:var(--agent);background:var(--agent-soft);border-radius:50%;width:2rem;height:2rem;display:grid;place-items:center;font-size:.9rem}
 </style>
 
 
@@ -122,11 +132,127 @@ details pre{border:0;border-radius:0 0 8px 8px}
     <a class="card" href="claudeforce.html"><svg viewBox="0 0 56 56" aria-hidden="true"><path d="M28 8 L34 22 L50 24 L38 35 L41 51 L28 43 L15 51 L18 35 L6 24 L22 22 Z" fill="#3b5b8c"/></svg><h3>Claudeforce</h3><p>How Claude Code and Claude in Chrome were used, where a human approved, and what went wrong along the way.</p><span class="go">Open claudeforce.html</span></a>
   </div>
 </section>
-<section>
-  <h2>At a glance</h2>
-  <figure><img class="hero-img" src="images/agentforce-architecture.svg" alt="Architecture of the Site Helper agent: visitor, site, messaging channel, agent, escalation to Omni-Channel queue and human">
-  <figcaption>The Site Helper path from a website visitor to a human agent. Details on the Agentforce page.</figcaption></figure>
-</section>
+<section id="decide"><h2>Which one do I use?</h2><p>Start from what you are trying to do, not from the product name.</p><figure><div class="fig"><svg viewBox="0 0 1000 400" role="img" aria-label="Decision guide. If someone asks in their own words and needs an answer or action, use Agentforce. If a team should be told when something happens and nobody asks, use Slackforce. If you are building, changing, testing or documenting the project, use Claudeforce.">
+<defs><marker id="d1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+<g font-family="IBM Plex Sans, system-ui, sans-serif" font-size="13" fill="currentColor" stroke="currentColor">
+<text x="10" y="24" stroke="none" font-size="15" font-weight="600">What are you trying to do?</text>
+
+<rect x="10" y="44" width="440" height="78" rx="8" fill="var(--surface)"/>
+<text x="26" y="73" stroke="none">Someone asks, in their own words,</text><text x="26" y="93" stroke="none">and needs an answer or an action</text>
+<line x1="450" y1="83" x2="518" y2="83" stroke-width="1.5" marker-end="url(#d1)"/>
+<rect x="520" y="44" width="170" height="78" rx="8" fill="var(--agent-soft)" stroke="var(--agent)" stroke-width="2"/>
+<text x="605" y="76" text-anchor="middle" stroke="none" font-weight="600" font-size="16" fill="var(--agent)">Agentforce</text><text x="605" y="98" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">a conversation</text>
+<text x="710" y="73" stroke="none" font-size="12" fill="var(--muted)">A visitor asks about products</text><text x="710" y="93" stroke="none" font-size="12" fill="var(--muted)">Staff ask for High priority cases</text>
+
+<rect x="10" y="142" width="440" height="78" rx="8" fill="var(--surface)"/>
+<text x="26" y="171" stroke="none">A team should be told when something</text><text x="26" y="191" stroke="none">happens, and nobody has to ask</text>
+<line x1="450" y1="181" x2="518" y2="181" stroke-width="1.5" marker-end="url(#d1)"/>
+<rect x="520" y="142" width="170" height="78" rx="8" fill="var(--human-soft)" stroke="var(--human)" stroke-width="2"/>
+<text x="605" y="174" text-anchor="middle" stroke="none" font-weight="600" font-size="16" fill="var(--human)">Slackforce</text><text x="605" y="196" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">a notification</text>
+<text x="710" y="171" stroke="none" font-size="12" fill="var(--muted)">A new High priority Case arrives</text><text x="710" y="191" stroke="none" font-size="12" fill="var(--muted)">A summary every morning at 8:00</text>
+
+<rect x="10" y="240" width="440" height="78" rx="8" fill="var(--surface)"/>
+<text x="26" y="269" stroke="none">You are building, changing, testing</text><text x="26" y="289" stroke="none">or documenting this project</text>
+<line x1="450" y1="279" x2="518" y2="279" stroke-width="1.5" marker-end="url(#d1)"/>
+<rect x="520" y="240" width="170" height="78" rx="8" fill="var(--have-soft)" stroke="var(--have)" stroke-width="2"/>
+<text x="605" y="272" text-anchor="middle" stroke="none" font-weight="600" font-size="16" fill="var(--have)">Claudeforce</text><text x="605" y="294" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">build-time help</text>
+<text x="710" y="269" stroke="none" font-size="12" fill="var(--muted)">Add an action and run its tests</text><text x="710" y="289" stroke="none" font-size="12" fill="var(--muted)">Write the docs, push to GitHub</text>
+
+<rect x="10" y="338" width="980" height="52" rx="8" fill="var(--surface)" stroke-dasharray="5 3"/>
+<text x="26" y="360" stroke="none" font-weight="600">Rule of thumb</text>
+<text x="140" y="360" stroke="none">a person asks → Agentforce · an event happens → Slackforce · a developer works → Claudeforce</text>
+<text x="26" y="379" stroke="none" font-size="12" fill="var(--muted)">Needs often combine: an escalated chat leads to a Case, the Case triggers an alert, a teammate asks the agent about it.</text>
+</g></svg></div><figcaption>Three questions cover most cases. If more than one answer is yes, combine them.</figcaption></figure><div class="grid">
+<div class="col"><h3><span class="pill p-ok">Use Agentforce</span></h3>
+<ul><li>The input is free text and the right answer depends on what was said</li><li>You want routine questions answered before they reach staff</li><li>The person may need a human, with the chat attached</li><li>You need to look up or change Salesforce data in plain language</li></ul>
+<p style="color:var(--muted);font-size:.9rem">Say: "I want visitors to get answers without waiting."</p></div>
+<div class="col"><h3><span class="pill" style="background:var(--human-soft);color:var(--human)">Use Slackforce</span></h3>
+<ul><li>Something happens in Salesforce and the team should know now</li><li>You want a regular summary nobody has to request</li><li>The message is the same shape every time</li><li>One-way is enough: no reply, no buttons</li></ul>
+<p style="color:var(--muted);font-size:.9rem">Say: "Tell the team when a High priority Case arrives."</p></div>
+<div class="col"><h3><span class="pill" style="background:var(--have-soft);color:var(--have)">Use Claudeforce</span></h3>
+<ul><li>You are adding or changing code, agents or configuration</li><li>You need to read and document what is already in an org</li><li>You want tests run, failures diagnosed, docs written</li><li>A web step needs doing, with a person approving it</li></ul>
+<p style="color:var(--muted);font-size:.9rem">Say: "Add an action to the agent and run the tests."</p></div></div></section>
+<section id="architecture"><h2>How they fit together</h2><p>Agentforce and Slackforce run in your Salesforce org, in front of people. Claudeforce sits underneath, at build time, and never talks to customers.</p><figure><div class="fig"><svg viewBox="0 0 1000 540" role="img" aria-label="Whole system. Visitors chat with the Site Helper agent and staff use the Case Triage agent, both Agentforce. Case records trigger Slackforce alerts and a daily digest to a Slack channel. Claudeforce sits underneath at build time and builds, deploys and tests the other two.">
+<defs>
+<marker id="o1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker>
+<marker id="o2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--agent)"/></marker>
+<marker id="o3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--human)"/></marker>
+<marker id="o4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--have)"/></marker>
+</defs>
+<g font-family="IBM Plex Sans, system-ui, sans-serif" font-size="12.5" fill="currentColor" stroke="currentColor">
+<text x="10" y="18" stroke="none" font-size="11" letter-spacing="1" fill="var(--muted)">RUN TIME</text>
+<rect x="190" y="28" width="540" height="372" rx="10" fill="var(--surface)" stroke="var(--line)" stroke-width="2"/>
+<text x="204" y="48" stroke="none" font-size="11" letter-spacing="1" fill="var(--muted)">SALESFORCE ORG</text>
+
+<rect x="10" y="85" width="140" height="64" rx="8" fill="var(--surface)"/>
+<text x="80" y="114" text-anchor="middle" stroke="none" font-weight="600">Website visitor</text><text x="80" y="132" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">types a question</text>
+<rect x="10" y="215" width="140" height="64" rx="8" fill="var(--surface)"/>
+<text x="80" y="244" text-anchor="middle" stroke="none" font-weight="600">Support staff</text><text x="80" y="262" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">asks about cases</text>
+
+<rect x="205" y="60" width="250" height="215" rx="8" fill="var(--agent-soft)" stroke="var(--agent)" stroke-width="2"/>
+<text x="330" y="82" text-anchor="middle" stroke="none" font-weight="600" fill="var(--agent)">AGENTFORCE</text>
+<rect x="222" y="94" width="216" height="40" rx="5" fill="var(--surface)" stroke="var(--agent)"/>
+<text x="330" y="111" text-anchor="middle" stroke="none">Site Helper agent</text><text x="330" y="126" text-anchor="middle" stroke="none" font-size="10.5" fill="var(--muted)">answers, captures, escalates</text>
+<rect x="222" y="150" width="216" height="40" rx="5" fill="var(--surface)" stroke="var(--agent)"/>
+<text x="330" y="167" text-anchor="middle" stroke="none">Omni-Channel queue</text><text x="330" y="182" text-anchor="middle" stroke="none" font-size="10.5" fill="var(--muted)">then a human agent</text>
+<rect x="222" y="214" width="216" height="40" rx="5" fill="var(--surface)" stroke="var(--agent)"/>
+<text x="330" y="231" text-anchor="middle" stroke="none">Case Triage agent</text><text x="330" y="246" text-anchor="middle" stroke="none" font-size="10.5" fill="var(--muted)">lists cases, sets priority</text>
+
+<rect x="480" y="60" width="235" height="215" rx="8" fill="var(--human-soft)" stroke="var(--human)" stroke-width="2"/>
+<text x="597" y="82" text-anchor="middle" stroke="none" font-weight="600" fill="var(--human)">SLACKFORCE</text>
+<rect x="497" y="94" width="201" height="40" rx="5" fill="var(--surface)" stroke="var(--human)"/>
+<text x="597" y="111" text-anchor="middle" stroke="none">SlackCaseNotifier</text><text x="597" y="126" text-anchor="middle" stroke="none" font-size="10.5" fill="var(--muted)">builds and posts the message</text>
+<rect x="497" y="182" width="96" height="48" rx="5" fill="var(--surface)" stroke="var(--human)"/>
+<text x="545" y="203" text-anchor="middle" stroke="none">Case trigger</text><text x="545" y="219" text-anchor="middle" stroke="none" font-size="10.5" fill="var(--muted)">High priority</text>
+<rect x="602" y="182" width="96" height="48" rx="5" fill="var(--surface)" stroke="var(--human)"/>
+<text x="650" y="203" text-anchor="middle" stroke="none">Daily digest</text><text x="650" y="219" text-anchor="middle" stroke="none" font-size="10.5" fill="var(--muted)">8:00 schedule</text>
+
+<rect x="300" y="322" width="330" height="50" rx="8" fill="var(--surface)" stroke-width="2"/>
+<text x="465" y="344" text-anchor="middle" stroke="none" font-weight="600">Shared data</text><text x="465" y="361" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">Case records · Knowledge articles</text>
+
+<rect x="790" y="85" width="200" height="64" rx="8" fill="var(--surface)" stroke-width="2"/>
+<text x="890" y="114" text-anchor="middle" stroke="none" font-weight="600">Slack channel</text><text x="890" y="132" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">team sees alerts and digest</text>
+
+<rect x="10" y="430" width="980" height="100" rx="10" fill="var(--have-soft)" stroke="var(--have)" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="26" y="452" stroke="none" font-size="11" letter-spacing="1" fill="var(--muted)">BUILD TIME</text>
+<text x="26" y="478" stroke="none" font-weight="600" fill="var(--have)" font-size="14">CLAUDEFORCE</text>
+<rect x="190" y="450" width="170" height="64" rx="8" fill="var(--surface)" stroke="var(--have)"/>
+<text x="275" y="477" text-anchor="middle" stroke="none">Claude Code</text><text x="275" y="495" text-anchor="middle" stroke="none" font-size="10.5" fill="var(--muted)">CLI, git, tests</text>
+<rect x="380" y="450" width="170" height="64" rx="8" fill="var(--surface)" stroke="var(--have)"/>
+<text x="465" y="477" text-anchor="middle" stroke="none">Claude in Chrome</text><text x="465" y="495" text-anchor="middle" stroke="none" font-size="10.5" fill="var(--muted)">Slack and Setup, with approval</text>
+<rect x="570" y="450" width="170" height="64" rx="8" fill="var(--surface)" stroke="var(--have)"/>
+<text x="655" y="477" text-anchor="middle" stroke="none">Docs and pages</text><text x="655" y="495" text-anchor="middle" stroke="none" font-size="10.5" fill="var(--muted)">diagrams, README</text>
+<rect x="780" y="450" width="200" height="64" rx="8" fill="var(--surface)" stroke="var(--have)"/>
+<text x="880" y="477" text-anchor="middle" stroke="none">A developer or admin</text><text x="880" y="495" text-anchor="middle" stroke="none" font-size="10.5" fill="var(--muted)">asks, reviews, approves</text>
+
+<g fill="none" stroke-width="1.5">
+<line x1="150" y1="115" x2="203" y2="115" stroke="var(--agent)" stroke-width="2" marker-end="url(#o2)"/>
+<path d="M150 247 H178 V234 H220" stroke="var(--agent)" stroke-width="2" marker-end="url(#o2)"/>
+<line x1="330" y1="134" x2="330" y2="148" stroke="var(--agent)" stroke-width="2" marker-end="url(#o2)"/>
+<path d="M330 254 V320" stroke="var(--agent)" stroke-width="2" marker-end="url(#o2)"/>
+<path d="M545 320 V232" stroke="var(--human)" stroke-width="2" marker-end="url(#o3)"/>
+<line x1="545" y1="182" x2="545" y2="136" stroke="var(--human)" stroke-width="2" marker-end="url(#o3)"/>
+<line x1="650" y1="182" x2="650" y2="136" stroke="var(--human)" stroke-width="2" marker-end="url(#o3)"/>
+<line x1="698" y1="115" x2="788" y2="115" stroke="var(--human)" stroke-width="2" marker-end="url(#o3)"/>
+<path d="M465 428 V374" stroke="var(--have)" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#o4)"/>
+</g>
+<g stroke="none" font-size="10.5">
+<text x="176" y="106" fill="var(--agent)" text-anchor="middle">chat</text>
+<text x="338" y="300" fill="var(--agent)">reads, edits</text>
+<text x="553" y="300" fill="var(--human)">new case</text>
+<text x="743" y="106" fill="var(--human)" text-anchor="middle">webhook</text>
+<text x="473" y="403" fill="var(--have)">builds, deploys, tests</text>
+</g>
+</g></svg></div><figcaption>Teal is Agentforce, amber is Slackforce, blue is Claudeforce. The two run-time parts share the Case object. Claudeforce builds, deploys and tests both.</figcaption></figure></section>
+<section><h2>Side by side</h2><p>The three do different jobs. They share one org and one Case object.</p><div class="tbl"><table class="cmp"><thead><tr><th></th><th>Agentforce</th><th>Slackforce</th><th>Claudeforce</th></tr></thead><tbody><tr><td>In one line</td><td>Conversational agents that understand free text and act on Salesforce data</td><td>Automatic Slack messages when something happens in Salesforce</td><td>Claude helping people build, test and document the project</td></tr><tr><td>Who it serves</td><td>Website visitors and support staff</td><td>The support team</td><td>The developer or admin</td></tr><tr><td>What starts it</td><td>Someone sends a message</td><td>A new Case, or the clock at 8:00</td><td>A person asks Claude to do a task</td></tr><tr><td>AI at run time</td><td>Yes, a language model reasons about each message</td><td>No. Plain Apex, the same output each time</td><td>Yes, but only while building, never in front of customers</td></tr><tr><td>Where it runs</td><td>Salesforce, in the chat on your site</td><td>Salesforce, posting to Slack</td><td>Your editor and your browser</td></tr><tr><td>Human in the loop</td><td>Hands over to a human through Omni-Channel</td><td>Humans read and act on the messages</td><td>A person approves secrets, logins, permission clicks and risky steps</td></tr><tr><td>Main pieces here</td><td>Site Helper agent, Case Triage agent, Apex actions, Knowledge, messaging channel, queue</td><td>Case trigger, digest job, notifier class, webhook label</td><td>Salesforce CLI, git, Claude in Chrome, published pages</td></tr><tr><td>Best for</td><td>Deflecting routine questions and answering in context</td><td>Making sure nothing urgent is missed</td><td>Doing repeatable build, test and documentation work fast</td></tr><tr><td>Not for</td><td>Plain notifications and fixed rules</td><td>Conversation, approvals, buttons</td><td>Secrets, production support, unreviewed production deploys</td></tr><tr><td>Status</td><td>Built. Live human handoff not run by Claude</td><td>Built and proven end to end</td><td>Used throughout this repo</td></tr></tbody></table></div></section>
+<section><h2>One issue through all three</h2><ol class="flow"><li><div><b>Agentforce.</b> A visitor chats that their generator will not start and asks for a person. The Site Helper router sends the chat to Escalation and Omni-Channel puts it in the queue.</div></li><li><div><b>A human.</b> A support agent accepts the chat and opens a High priority Case.</div></li><li><div><b>Slackforce.</b> The Case trigger posts an alert to the team channel within seconds.</div></li><li><div><b>Agentforce again.</b> A teammate asks the Case Triage Assistant for the open High priority Cases and gets the list.</div></li><li><div><b>Claudeforce.</b> Claude built the agents, the Apex and the alerts, wrote the tests and documented them. It plays no part in the customer conversation.</div></li></ol><p style="color:var(--muted);font-size:.92rem">An example flow. Each step exists, but they have not been run together as one scenario.</p></section>
+<section><h2>Common mix-ups</h2><div class="tbl"><table><thead><tr><th>You want</th><th>Use</th><th>Why</th></tr></thead><tbody>
+<tr><td style="font-family:var(--sans);white-space:normal">A notification when a Case is created</td><td>Slackforce</td><td style="white-space:normal">It is an event with a fixed message. An agent adds cost and variation for no gain.</td></tr>
+<tr><td style="font-family:var(--sans);white-space:normal">Visitors to get answers without waiting</td><td>Agentforce</td><td style="white-space:normal">It needs understanding of free text, and a path to a person.</td></tr>
+<tr><td style="font-family:var(--sans);white-space:normal">To change what the agent says, or give it a new action</td><td>Claudeforce, then Agentforce</td><td style="white-space:normal">Claude edits and tests it while you build. Agentforce is what runs afterwards.</td></tr>
+<tr><td style="font-family:var(--sans);white-space:normal">To use the Case Triage agent from Slack</td><td>Agentforce, reached from Slack</td><td style="white-space:normal">The agent does the work. Needs the Salesforce and Slack integration, which is unconfirmed on a free plan.</td></tr>
+<tr><td style="font-family:var(--sans);white-space:normal">A secret entered, or a permission screen approved</td><td>You</td><td style="white-space:normal">None of the three should do this for you.</td></tr>
+</tbody></table></div></section>
 </main>
 </body>
 </html>

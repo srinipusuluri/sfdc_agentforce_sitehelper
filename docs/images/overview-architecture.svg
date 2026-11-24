@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 540" width="1000" height="540" role="img" aria-label="Whole system. Visitors chat with the Site Helper agent and staff use the Case Triage agent, both Agentforce. Case records trigger Slackforce alerts and a daily digest to a Slack channel. Claudeforce sits underneath at build time and builds, deploys and tests the other two.">
+<rect width="1000" height="540" fill="#f6f8f8"/>
+<defs>
+<marker id="o1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#17232a"/></marker>
+<marker id="o2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#0b7a75"/></marker>
+<marker id="o3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#b45309"/></marker>
+<marker id="o4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#3b5b8c"/></marker>
+</defs>
+<g font-family="IBM Plex Sans, system-ui, sans-serif" font-size="12.5" fill="#17232a" stroke="#17232a">
+<text x="10" y="18" stroke="none" font-size="11" letter-spacing="1" fill="#58696f">RUN TIME</text>
+<rect x="190" y="28" width="540" height="372" rx="10" fill="#ffffff" stroke="#cfd9db" stroke-width="2"/>
+<text x="204" y="48" stroke="none" font-size="11" letter-spacing="1" fill="#58696f">SALESFORCE ORG</text>
+
+<rect x="10" y="85" width="140" height="64" rx="8" fill="#ffffff"/>
+<text x="80" y="114" text-anchor="middle" stroke="none" font-weight="600">Website visitor</text><text x="80" y="132" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">types a question</text>
+<rect x="10" y="215" width="140" height="64" rx="8" fill="#ffffff"/>
+<text x="80" y="244" text-anchor="middle" stroke="none" font-weight="600">Support staff</text><text x="80" y="262" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">asks about cases</text>
+
+<rect x="205" y="60" width="250" height="215" rx="8" fill="#dff1ef" stroke="#0b7a75" stroke-width="2"/>
+<text x="330" y="82" text-anchor="middle" stroke="none" font-weight="600" fill="#0b7a75">AGENTFORCE</text>
+<rect x="222" y="94" width="216" height="40" rx="5" fill="#ffffff" stroke="#0b7a75"/>
+<text x="330" y="111" text-anchor="middle" stroke="none">Site Helper agent</text><text x="330" y="126" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">answers, captures, escalates</text>
+<rect x="222" y="150" width="216" height="40" rx="5" fill="#ffffff" stroke="#0b7a75"/>
+<text x="330" y="167" text-anchor="middle" stroke="none">Omni-Channel queue</text><text x="330" y="182" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">then a human agent</text>
+<rect x="222" y="214" width="216" height="40" rx="5" fill="#ffffff" stroke="#0b7a75"/>
+<text x="330" y="231" text-anchor="middle" stroke="none">Case Triage agent</text><text x="330" y="246" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">lists cases, sets priority</text>
+
+<rect x="480" y="60" width="235" height="215" rx="8" fill="#fbeedb" stroke="#b45309" stroke-width="2"/>
+<text x="597" y="82" text-anchor="middle" stroke="none" font-weight="600" fill="#b45309">SLACKFORCE</text>
+<rect x="497" y="94" width="201" height="40" rx="5" fill="#ffffff" stroke="#b45309"/>
+<text x="597" y="111" text-anchor="middle" stroke="none">SlackCaseNotifier</text><text x="597" y="126" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">builds and posts the message</text>
+<rect x="497" y="182" width="96" height="48" rx="5" fill="#ffffff" stroke="#b45309"/>
+<text x="545" y="203" text-anchor="middle" stroke="none">Case trigger</text><text x="545" y="219" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">High priority</text>
+<rect x="602" y="182" width="96" height="48" rx="5" fill="#ffffff" stroke="#b45309"/>
+<text x="650" y="203" text-anchor="middle" stroke="none">Daily digest</text><text x="650" y="219" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">8:00 schedule</text>
+
+<rect x="300" y="322" width="330" height="50" rx="8" fill="#ffffff" stroke-width="2"/>
+<text x="465" y="344" text-anchor="middle" stroke="none" font-weight="600">Shared data</text><text x="465" y="361" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">Case records · Knowledge articles</text>
+
+<rect x="790" y="85" width="200" height="64" rx="8" fill="#ffffff" stroke-width="2"/>
+<text x="890" y="114" text-anchor="middle" stroke="none" font-weight="600">Slack channel</text><text x="890" y="132" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">team sees alerts and digest</text>
+
+<rect x="10" y="430" width="980" height="100" rx="10" fill="#e3eaf5" stroke="#3b5b8c" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="26" y="452" stroke="none" font-size="11" letter-spacing="1" fill="#58696f">BUILD TIME</text>
+<text x="26" y="478" stroke="none" font-weight="600" fill="#3b5b8c" font-size="14">CLAUDEFORCE</text>
+<rect x="190" y="450" width="170" height="64" rx="8" fill="#ffffff" stroke="#3b5b8c"/>
+<text x="275" y="477" text-anchor="middle" stroke="none">Claude Code</text><text x="275" y="495" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">CLI, git, tests</text>
+<rect x="380" y="450" width="170" height="64" rx="8" fill="#ffffff" stroke="#3b5b8c"/>
+<text x="465" y="477" text-anchor="middle" stroke="none">Claude in Chrome</text><text x="465" y="495" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">Slack and Setup, with approval</text>
+<rect x="570" y="450" width="170" height="64" rx="8" fill="#ffffff" stroke="#3b5b8c"/>
+<text x="655" y="477" text-anchor="middle" stroke="none">Docs and pages</text><text x="655" y="495" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">diagrams, README</text>
+<rect x="780" y="450" width="200" height="64" rx="8" fill="#ffffff" stroke="#3b5b8c"/>
+<text x="880" y="477" text-anchor="middle" stroke="none">A developer or admin</text><text x="880" y="495" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">asks, reviews, approves</text>
+
+<g fill="none" stroke-width="1.5">
+<line x1="150" y1="115" x2="203" y2="115" stroke="#0b7a75" stroke-width="2" marker-end="url(#o2)"/>
+<path d="M150 247 H178 V234 H220" stroke="#0b7a75" stroke-width="2" marker-end="url(#o2)"/>
+<line x1="330" y1="134" x2="330" y2="148" stroke="#0b7a75" stroke-width="2" marker-end="url(#o2)"/>
+<path d="M330 254 V320" stroke="#0b7a75" stroke-width="2" marker-end="url(#o2)"/>
+<path d="M545 320 V232" stroke="#b45309" stroke-width="2" marker-end="url(#o3)"/>
+<line x1="545" y1="182" x2="545" y2="136" stroke="#b45309" stroke-width="2" marker-end="url(#o3)"/>
+<line x1="650" y1="182" x2="650" y2="136" stroke="#b45309" stroke-width="2" marker-end="url(#o3)"/>
+<line x1="698" y1="115" x2="788" y2="115" stroke="#b45309" stroke-width="2" marker-end="url(#o3)"/>
+<path d="M465 428 V374" stroke="#3b5b8c" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#o4)"/>
+</g>
+<g stroke="none" font-size="10.5">
+<text x="176" y="106" fill="#0b7a75" text-anchor="middle">chat</text>
+<text x="338" y="300" fill="#0b7a75">reads, edits</text>
+<text x="553" y="300" fill="#b45309">new case</text>
+<text x="743" y="106" fill="#b45309" text-anchor="middle">webhook</text>
+<text x="473" y="403" fill="#3b5b8c">builds, deploys, tests</text>
+</g>
+</g></svg>

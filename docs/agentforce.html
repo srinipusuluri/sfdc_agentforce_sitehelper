@@ -91,6 +91,16 @@ details pre{border:0;border-radius:0 0 8px 8px}
 .site-nav a{color:var(--muted);text-decoration:none;padding:6px 12px;border:1px solid var(--line);border-radius:99px;background:var(--surface)}
 .site-nav a:hover{color:var(--fg);border-color:var(--agent)}
 .site-nav a[aria-current="page"]{color:var(--agent);border-color:var(--agent);background:var(--agent-soft)}
+
+.p-no{background:var(--line);color:var(--muted)}
+.two{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.two .col h3{font-size:1rem}
+.cmp td:first-child{font-family:var(--sans);font-size:.88rem;font-weight:600;white-space:normal;min-width:120px}
+.cmp td,.cmp th{min-width:180px}
+.cmp td:first-child,.cmp th:first-child{min-width:110px}
+.flow{counter-reset:f;list-style:none;padding:0;display:flex;flex-direction:column;gap:10px}
+.flow li{counter-increment:f;display:grid;grid-template-columns:2rem 1fr;gap:12px;max-width:none}
+.flow li::before{content:counter(f);font-family:var(--mono);color:var(--agent);background:var(--agent-soft);border-radius:50%;width:2rem;height:2rem;display:grid;place-items:center;font-size:.9rem}
 </style>
 
 
@@ -121,18 +131,20 @@ details pre{border:0;border-radius:0 0 8px 8px}
       <ul>
         <li>Agent <code>Case_Triage_Assistant</code> with two Apex actions, 2 tests pass</li>
         <li>Knowledge enabled, 5 public articles, guest read access</li>
-        <li>Slack alert trigger and daily digest, 4 tests pass</li>
+        <li>Slack alert trigger, proven end to end, and a scheduled daily digest. See Slackforce</li>
         <li>10 sample Cases</li>
       </ul></div>
     <div class="col"><h3><span class="pill p-todo">Open</span> Worth knowing</h3>
       <ul>
         <li>Site Helper answers from facts typed into its script, not from the 5 Knowledge articles</li>
         <li>The queue has one member, the admin user</li>
-        <li>Slack webhook is unset, so nothing posts yet</li>
+        <li>Slack alerts are live. Rotate the webhook if its URL was ever shared</li>
         <li>The <code>Site Helper</code> Experience site is still UnderConstruction, separate from the live chat site</li>
       </ul></div>
   </div>
 </section>
+
+<section id="scope"><h2>What Agentforce is for</h2><p>Agentforce handles <b>conversations</b>. Someone types a request in their own words, and an agent decides what to do: answer, collect details, run an action on Salesforce data, or hand the person to a human. Use it when the input is free text and the right response depends on what was said.</p><div class="two"><div class="col"><h3><span class="pill p-ok">Meant for</span></h3><ul><li>Open questions from website visitors about the company and products</li><li>Guided capture, such as a demo or callback request</li><li>Answering routine questions before they reach staff, which is the deflection</li><li>Staff lookups and small updates in plain language</li><li>Handing a person to a human with the conversation attached</li></ul></div><div class="col"><h3><span class="pill p-no">Not meant for</span></h3><ul><li>Sending notifications nobody asked for. Use Slackforce.</li><li>Fixed rules that never vary. Use a Flow or a trigger.</li><li>Statements where a wrong answer costs money, such as prices or guarantees. The Site Helper script forbids them.</li><li>Letting anonymous visitors change records</li></ul></div></div><h3>Use cases</h3><div class="tbl"><table><thead><tr><th>Use case</th><th>Who</th><th>How it works</th><th>Status</th></tr></thead><tbody><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Answer product and company questions</td><td>Website visitor</td><td>General Info subagent answers only from approved facts and offers a follow-up for anything else</td><td><span class="pill p-ok">Built</span><div style="color:var(--muted);font-size:.8rem;margin-top:4px">Site Helper</div></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Request a demo or callback</td><td>Website visitor</td><td>Follow-Up Capture asks name, then email, and keeps them in agent variables</td><td><span class="pill p-ok">Built</span><div style="color:var(--muted);font-size:.8rem;margin-top:4px">Not saved to a Lead yet</div></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Talk to a person</td><td>Website visitor</td><td>Router sends requests for a person, or frustration, to Escalation. Omni-Channel transfers the chat to a queue</td><td><span class="pill p-ok">Built</span><div style="color:var(--muted);font-size:.8rem;margin-top:4px">Configured. A live human handoff was not run by Claude</div></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Decline unrelated requests</td><td>Website visitor</td><td>Off Topic subagent declines and redirects</td><td><span class="pill p-ok">Built</span><div style="color:var(--muted);font-size:.8rem;margin-top:4px">Site Helper</div></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">List open cases by priority</td><td>Support staff</td><td>Case Triage Assistant calls the List Open Cases Apex action</td><td><span class="pill p-ok">Built</span><div style="color:var(--muted);font-size:.8rem;margin-top:4px">Tested</div></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Change a case priority</td><td>Support staff</td><td>Set Case Priority action, with a confirmation step</td><td><span class="pill p-ok">Built</span><div style="color:var(--muted);font-size:.8rem;margin-top:4px">Confirmation prompt seen, update not run</div></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Answer from Knowledge articles</td><td>Website visitor</td><td>Connect a data library to General Info and add an answer action</td><td><span class="pill p-have">Next</span><div style="color:var(--muted);font-size:.8rem;margin-top:4px">5 articles exist, not connected</div></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Save visitor details as a Lead</td><td>Visitor, sales</td><td>Add a Lead-creating action to Follow-Up Capture</td><td><span class="pill p-have">Next</span></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Route by hours, language or VIP</td><td>Website visitor</td><td>Omni-Flow router in front of the agent</td><td><span class="pill p-have">Next</span></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Case status for a verified customer</td><td>Customer</td><td>Needs identity verification before any lookup</td><td><span class="pill p-have">Next</span></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">State prices, guarantees or take payments</td><td>Website visitor</td><td>Not allowed by the agent instructions</td><td><span class="pill p-no">Out of scope</span></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Let the public edit Cases</td><td>Anyone</td><td>Case Triage is internal only</td><td><span class="pill p-no">Out of scope</span></td></tr></tbody></table></div></section>
 
 <section id="architecture">
   <h2>Architecture</h2>
@@ -971,7 +983,7 @@ System.debug(&#x27;Published &#x27; + recs.size());</code></pre></details></div>
 
 <section id="slack">
   <h2>Slack alerts</h2>
-  <span class="pill p-todo" style="align-self:flex-start">Deployed, off until the webhook is set</span>
+  <span class="pill p-ok" style="align-self:flex-start">Live, tested end to end</span>
   <p>A trigger posts to Slack when a High priority Case is created, and a scheduled job posts a daily digest. Both go through one class that reads the webhook URL from the protected label <code>Slack_Webhook_Url</code>. While the label says <code>REPLACE_ME</code>, nothing is sent.</p>
   <figure>
     <div class="fig">
@@ -1218,7 +1230,7 @@ sf org open agent --api-name Site_Helper -o afdcnew</code></pre>
     <li>Add more people to <code>BYOC_Messaging_Queue</code> and test an escalation end to end with someone online in Omni-Channel.</li>
     <li>Ground Site Helper on the five Knowledge articles instead of typed-in facts.</li>
     <li>Make Follow-Up Capture create a Lead so contact details survive the session.</li>
-    <li>Create the Slack webhook, set the label, and schedule the digest.</li>
+    <li>Move the Slack webhook from a label to a Named Credential, and rotate it if its URL was ever shared.</li>
     <li>Decide whether you need an Omni-Flow router. Add one only when routing needs a decision.</li>
   </ol>
 </section>
