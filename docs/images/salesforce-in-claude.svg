@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 430" width="1000" height="430" role="img" aria-label="An admin requests access and connects Salesforce once for the organization. A seller works in Claude, where the plugin's skills use a Salesforce connector and a Slack connector. The connectors read and write the seller's Salesforce records within the seller's own permissions, and Slack deal channels. Claude asks the seller to approve each change before it is written.">
+<rect width="1000" height="430" fill="#f6f8f8"/>
+<defs>
+<marker id="k1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#17232a"/></marker>
+<marker id="k2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#0b7a75"/></marker>
+<marker id="k3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#b45309"/></marker>
+</defs>
+<g font-family="IBM Plex Sans, system-ui, sans-serif" font-size="12.5" fill="#17232a" stroke="#17232a">
+<rect x="270" y="10" width="330" height="62" rx="8" fill="#fbeedb" stroke="#b45309" stroke-width="2"/>
+<text x="435" y="34" text-anchor="middle" stroke="none" font-weight="600" fill="#b45309">Admin, once per organization</text>
+<text x="435" y="54" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">requests access, connects Salesforce, picks the groups</text>
+
+<rect x="10" y="150" width="120" height="90" rx="8" fill="#ffffff"/>
+<text x="70" y="188" text-anchor="middle" stroke="none" font-weight="600">Seller</text><text x="70" y="206" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">signs in with their</text><text x="70" y="220" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">Salesforce login</text>
+
+<rect x="170" y="110" width="250" height="170" rx="8" fill="#e3eaf5" stroke="#3b5b8c" stroke-width="2"/>
+<text x="295" y="134" text-anchor="middle" stroke="none" font-weight="600" fill="#3b5b8c">Claude</text>
+<rect x="186" y="146" width="218" height="52" rx="5" fill="#ffffff" stroke="#3b5b8c"/>
+<text x="295" y="167" text-anchor="middle" stroke="none">Plugin: 37 skills</text><text x="295" y="184" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">brief, prep, deal review, follow-ups</text>
+<rect x="186" y="208" width="218" height="52" rx="5" fill="#ffffff" stroke="#3b5b8c"/>
+<text x="295" y="229" text-anchor="middle" stroke="none">Setup skill</text><text x="295" y="246" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">finds your tools, builds a role artifact</text>
+
+<rect x="480" y="120" width="150" height="62" rx="8" fill="#ffffff" stroke-width="2"/>
+<text x="555" y="146" text-anchor="middle" stroke="none" font-weight="600">Salesforce connector</text><text x="555" y="164" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">read and act</text>
+<rect x="480" y="210" width="150" height="62" rx="8" fill="#ffffff" stroke-width="2"/>
+<text x="555" y="236" text-anchor="middle" stroke="none" font-weight="600">Slack connector</text><text x="555" y="254" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">read and write threads</text>
+
+<rect x="720" y="105" width="270" height="95" rx="8" fill="#ffffff" stroke-width="2"/>
+<text x="855" y="131" text-anchor="middle" stroke="none" font-weight="600">Salesforce org</text>
+<text x="855" y="151" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">accounts, opportunities, pipeline, tasks</text>
+<text x="855" y="170" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">the seller sees only what</text><text x="855" y="185" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">their own permissions allow</text>
+<rect x="720" y="215" width="270" height="62" rx="8" fill="#ffffff" stroke-width="2"/>
+<text x="855" y="241" text-anchor="middle" stroke="none" font-weight="600">Slack</text><text x="855" y="259" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">deal channels, account-team threads</text>
+
+<rect x="170" y="320" width="460" height="64" rx="8" fill="#dff1ef" stroke="#0b7a75" stroke-width="2"/>
+<text x="400" y="346" text-anchor="middle" stroke="none" font-weight="600" fill="#0b7a75">Approval gate</text>
+<text x="400" y="366" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">by default Claude shows each proposed change and waits for the seller before writing it</text>
+
+<g fill="none" stroke-width="1.5">
+<line x1="130" y1="195" x2="168" y2="195" marker-end="url(#k1)"/>
+<line x1="420" y1="152" x2="478" y2="152" marker-end="url(#k1)"/>
+<line x1="420" y1="240" x2="478" y2="240" marker-end="url(#k1)"/>
+<line x1="630" y1="152" x2="718" y2="152" marker-end="url(#k1)"/>
+<line x1="630" y1="241" x2="718" y2="241" marker-end="url(#k1)"/>
+<path d="M435 72 V96 H555 V118" stroke="#b45309" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#k3)"/>
+<path d="M295 282 V318" stroke="#0b7a75" stroke-width="2" marker-end="url(#k2)"/>
+</g>
+<text x="305" y="302" stroke="none" font-size="10.5" fill="#0b7a75">every write</text>
+<text x="450" y="90" stroke="none" font-size="10.5" fill="#b45309">one connection for all</text>
+</g></svg>

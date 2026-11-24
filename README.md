@@ -6,6 +6,8 @@ A working example of **Salesforce agents** for self-service and human handoff, t
 
 **Live site:** https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/
 
+Pages: [Home](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/) · [Agentforce](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/agentforce.html) · [Slackforce](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/slackforce.html) · [Claudeforce](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/claudeforce.html) · [Salesforce in Claude](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/salesforce-in-claude.html)
+
 ## Which one do I use?
 
 Start from what you are trying to do, not from the product name.
@@ -17,6 +19,7 @@ Start from what you are trying to do, not from the product name.
 | **Agentforce** | Someone asks in their own words and needs an answer or an action. The right response depends on what was said, and the person may need a human. |
 | **Slackforce** | Something happens in Salesforce and a team should be told, with nobody asking. The message has the same shape every time. |
 | **Claudeforce** | You are building, changing, testing or documenting the project. It works for the developer, not for end users. |
+| **Salesforce in Claude** (reference) | Sellers want Claude itself to work with their Salesforce accounts and pipeline. Described on its own page. It is not set up in this repo. |
 
 ## How they fit together
 
@@ -48,6 +51,7 @@ Agentforce and Slackforce run in your Salesforce org, in front of people. Claude
 | Visitors to get answers without waiting | Agentforce | It needs understanding of free text and a path to a person. |
 | To change what the agent says or give it a new action | Claudeforce, then Agentforce | Claude edits and tests it while you build. Agentforce is what runs afterwards. |
 | To use the Case Triage agent from Slack | Agentforce, reached from Slack | Needs the Salesforce and Slack integration, which is unconfirmed on a free plan. |
+| Sellers to ask Claude about their pipeline and update the CRM from there | Salesforce in Claude | Claude is the interface and Salesforce is the data. Reference only, not set up here. |
 | A secret entered, or a permission screen approved | You | None of the three should do this for you. |
 
 ## Agentforce
@@ -119,6 +123,27 @@ Claudeforce is **Claude as the builder and operator**. It works while a person i
 | Review the Apex before a release | Next |
 | Log in, enter secrets, click Allow | Out of scope, left to a person |
 | Answer customers in production | Out of scope, that is Agentforce |
+
+## Salesforce in Claude (reference)
+
+A separate product, summarised on its own page: [Salesforce in Claude](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/salesforce-in-claude.html). It is a beta plugin, built with Salesforce, that lets sellers work with their accounts, opportunities and pipeline from inside Claude. The details below come from the Anthropic article [Salesforce in Claude](https://claude.com/resources/articles/salesforce-in-claude), dated 15 September 2026, and are summarised in my own words.
+
+![How Salesforce in Claude works](docs/images/salesforce-in-claude.svg)
+
+**How it works.** An admin requests access through Salesforce AgentExchange, connects Salesforce once for the organization, and chooses which groups get the plugin. Each seller signs in with their own Salesforce login. The plugin brings a Salesforce connector, to read and act on records, and a Slack connector, to read and write deal-channel threads, plus 37 skills for tasks such as a morning brief, meeting prep, deal review, post-meeting follow-ups and pipeline dashboards. Claude sees only what the seller's permissions allow, and by default asks the seller to approve each change before it is written.
+
+**How it differs from the rest of this repo.**
+
+| | Salesforce in Claude | Agentforce | Slackforce | Claudeforce |
+|---|---|---|---|---|
+| **Who uses it** | Sellers and sales leaders | Website visitors and support staff | The support team | The developer or admin |
+| **Where it appears** | In the Claude app | In a website chat, or inside Salesforce | In a Slack channel | In your editor and browser |
+| **Data it touches** | Accounts, opportunities, pipeline | Cases and Knowledge | Cases | Code and metadata |
+| **Status here** | Not set up, reference only | Built | Built, proven end to end | Used throughout |
+
+**Fit.** This repo is service work (Cases, Knowledge, website visitors). The article describes sales work and does not say how the plugin handles Cases.
+
+**Not stated in the article:** required Salesforce editions and admin permissions, how sign-in works technically, whether Claude Code or the API support the plugin, whether the separate Salesforce MCP in the Claude directory is the same as the plugin's connector, pricing, and audit or retention details. Check the [admin setup guide](https://support.claude.com/en/articles/16952184) before a rollout.
 
 ## Repository layout
 

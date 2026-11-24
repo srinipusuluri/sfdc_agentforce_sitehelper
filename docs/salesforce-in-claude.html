@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Salesforce in Claude</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column, wide figures scroll inside their own box. Slate neutrals tinted toward teal; teal = agent path, amber = human path. */
+:root{
+  --bg:#f6f8f8; --surface:#ffffff; --fg:#17232a; --muted:#58696f; --line:#cfd9db;
+  --agent:#0b7a75; --agent-soft:#dff1ef; --human:#b45309; --human-soft:#fbeedb;
+  --ok:#1f7a45; --ok-soft:#e1f3e8; --have:#3b5b8c; --have-soft:#e3eaf5; --todo:#a3560a; --todo-soft:#fbeedb;
+  --code:#eef3f3;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1719; --surface:#162124; --fg:#e4eded; --muted:#9db0b3; --line:#2b3b3f;
+  --agent:#4fd1c5; --agent-soft:#12312f; --human:#f0a65a; --human-soft:#3a2a14;
+  --ok:#6fd08f; --ok-soft:#14301f; --have:#8fb0e6; --have-soft:#1a2740; --todo:#f0a65a; --todo-soft:#3a2a14; --code:#1b2a2d; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1719; --surface:#162124; --fg:#e4eded; --muted:#9db0b3; --line:#2b3b3f;
+  --agent:#4fd1c5; --agent-soft:#12312f; --human:#f0a65a; --human-soft:#3a2a14;
+  --ok:#6fd08f; --ok-soft:#14301f; --have:#8fb0e6; --have-soft:#1a2740; --todo:#f0a65a; --todo-soft:#3a2a14; --code:#1b2a2d; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:16px;line-height:1.6;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 80px}
+main{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:48px}
+section{display:flex;flex-direction:column;gap:16px;min-width:0}
+h1,h2,h3{font-weight:600;line-height:1.2;text-wrap:balance;margin:0}
+h1{font-size:clamp(1.9rem,4vw,2.6rem);letter-spacing:-.01em}
+h2{font-size:1.5rem;padding-top:8px;border-top:1px solid var(--line)}
+h3{font-size:1.05rem}
+p{margin:0;max-width:68ch}
+.lede{font-size:1.1rem;color:var(--muted);max-width:62ch}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--agent)}
+code{font-family:var(--mono);font-size:.86em;background:var(--code);padding:.1em .35em;border-radius:4px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.col{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.col h3{display:flex;align-items:center;gap:8px}
+.pill{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:99px;white-space:nowrap}
+.p-ok{background:var(--ok-soft);color:var(--ok)} .p-have{background:var(--have-soft);color:var(--have)} .p-todo{background:var(--todo-soft);color:var(--todo)}
+ul,ol{margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:6px}
+li{max-width:66ch}
+figure{margin:0;display:flex;flex-direction:column;gap:10px}
+.fig{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px;overflow-x:auto}
+.fig svg{display:block;min-width:760px;width:100%;height:auto;color:var(--fg)}
+figcaption{color:var(--muted);font-size:.92rem;max-width:72ch}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+td:first-child{font-family:var(--mono);font-size:.84rem;white-space:nowrap}
+.note{border-left:3px solid var(--todo);background:var(--todo-soft);padding:12px 16px;border-radius:0 8px 8px 0;max-width:72ch}
+.steps{counter-reset:s;list-style:none;padding:0;gap:12px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:2rem 1fr;gap:12px;max-width:none}
+.steps li::before{content:counter(s);font-family:var(--mono);font-weight:500;color:var(--agent);background:var(--agent-soft);border-radius:50%;width:2rem;height:2rem;display:grid;place-items:center;font-size:.9rem}
+:focus-visible{outline:2px solid var(--agent);outline-offset:2px}
+@media (max-width:520px){body{padding-block:24px 48px}}
+
+pre{background:var(--code);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto;font-family:var(--mono);font-size:.78rem;line-height:1.55;margin:0;max-width:100%;tab-size:2}
+pre code{background:none;padding:0;font-size:inherit}
+details{border:1px solid var(--line);border-radius:8px;background:var(--surface);min-width:0}
+details>summary{cursor:pointer;padding:10px 14px;font-family:var(--mono);font-size:.82rem;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+details>summary .path{color:var(--agent);word-break:break-all}
+details>summary .meta{color:var(--muted);font-size:.74rem}
+details[open]>summary{border-bottom:1px solid var(--line)}
+details pre{border:0;border-radius:0 0 8px 8px}
+.stack{display:flex;flex-direction:column;gap:12px}
+.fix{border-left:3px solid var(--ok);background:var(--ok-soft);padding:12px 16px;border-radius:0 8px 8px 0;max-width:72ch}
+.kv{display:grid;grid-template-columns:minmax(150px,max-content) 1fr;gap:6px 16px;font-size:.92rem}
+.kv dt{font-family:var(--mono);font-size:.82rem;color:var(--muted)} .kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+@media (max-width:520px){.kv{grid-template-columns:1fr}}
+
+pre{background:var(--code);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto;font-family:var(--mono);font-size:.78rem;line-height:1.55;margin:0;max-width:100%;tab-size:2}
+pre code{background:none;padding:0;font-size:inherit}
+details{border:1px solid var(--line);border-radius:8px;background:var(--surface);min-width:0}
+details>summary{cursor:pointer;padding:10px 14px;font-family:var(--mono);font-size:.82rem;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+details>summary .path{color:var(--agent);word-break:break-all}
+details>summary .meta{color:var(--muted);font-size:.74rem}
+details[open]>summary{border-bottom:1px solid var(--line)}
+details pre{border:0;border-radius:0 0 8px 8px}
+.stack{display:flex;flex-direction:column;gap:12px}
+.fix{border-left:3px solid var(--ok);background:var(--ok-soft);padding:12px 16px;border-radius:0 8px 8px 0;max-width:72ch}
+.kv{display:grid;grid-template-columns:minmax(150px,max-content) 1fr;gap:6px 16px;font-size:.92rem}
+.kv dt{font-family:var(--mono);font-size:.82rem;color:var(--muted)} .kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+@media (max-width:520px){.kv{grid-template-columns:1fr}}
+
+.site-nav{max-width:980px;margin:0 auto 28px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-family:var(--mono);font-size:.8rem}
+.site-nav a{color:var(--muted);text-decoration:none;padding:6px 12px;border:1px solid var(--line);border-radius:99px;background:var(--surface)}
+.site-nav a:hover{color:var(--fg);border-color:var(--agent)}
+.site-nav a[aria-current="page"]{color:var(--agent);border-color:var(--agent);background:var(--agent-soft)}
+
+.cards{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.card{display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;text-decoration:none;color:var(--fg);min-width:0}
+.card:hover{border-color:var(--agent)}
+.card h3{font-size:1.2rem}
+.card p{color:var(--muted);font-size:.95rem}
+.card .go{font-family:var(--mono);font-size:.8rem;color:var(--agent);margin-top:auto}
+.card svg{width:56px;height:56px}
+.hero-img{width:100%;height:auto;border-radius:10px;border:1px solid var(--line);display:block}
+
+.p-no{background:var(--line);color:var(--muted)}
+.two{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.two .col h3{font-size:1rem}
+.cmp td:first-child{font-family:var(--sans);font-size:.88rem;font-weight:600;white-space:normal;min-width:120px}
+.cmp td,.cmp th{min-width:180px}
+.cmp td:first-child,.cmp th:first-child{min-width:110px}
+.flow{counter-reset:f;list-style:none;padding:0;display:flex;flex-direction:column;gap:10px}
+.flow li{counter-increment:f;display:grid;grid-template-columns:2rem 1fr;gap:12px;max-width:none}
+.flow li::before{content:counter(f);font-family:var(--mono);color:var(--agent);background:var(--agent-soft);border-radius:50%;width:2rem;height:2rem;display:grid;place-items:center;font-size:.9rem}
+</style>
+
+
+
+</head>
+<body>
+<main>
+<nav class="site-nav" aria-label="Site"><a href="index.html">Home</a><a href="agentforce.html">Agentforce</a><a href="slackforce.html">Slackforce</a><a href="claudeforce.html">Claudeforce</a><a href="salesforce-in-claude.html" aria-current="page">Salesforce in Claude</a></nav>
+<header style="display:flex;flex-direction:column;gap:14px">
+  <span class="eyebrow">Reference · beta · summarised from an Anthropic article dated 15 September 2026</span>
+  <h1>Salesforce in Claude</h1>
+  <p class="lede">A plugin that lets Claude work with a seller's Salesforce accounts and pipeline, under that seller's own permissions. This page explains how it works, who it is for, and how it differs from the Agentforce, Slackforce and Claudeforce work in this repo.</p>
+</header>
+
+<div class="note"><b>Source and scope.</b> Everything below about the plugin comes from the article at <a href="https://claude.com/resources/articles/salesforce-in-claude">https://claude.com/resources/articles/salesforce-in-claude</a>, summarised in my own words. It is a beta, and the article is Anthropic marketing, so verify details with the admin guide before a rollout. <b>This repo does not use the plugin.</b> Nothing here was set up or tested with it.</div>
+
+<section id="what">
+  <h2>What it is</h2>
+  <p>Salesforce in Claude is a beta plugin, built with Salesforce, for account executives and the leaders who manage them. It brings accounts, opportunities and pipeline into Claude. It bundles 37 skills for daily seller work: account research, call prep, pipeline review and CRM updates. It is listed under Claude Enterprise and is available on paid Claude plans.</p>
+  <div class="two">
+    <div class="col"><h3><span class="pill p-ok">Meant for</span></h3><ul><li>Account executives who want account research, call prep and CRM updates done inside Claude</li><li>Sales leaders who want team-wide pipeline views and forecasts</li><li>Organizations that want sellers to keep Salesforce as the system of record</li></ul></div>
+    <div class="col"><h3><span class="pill p-no">Not described as</span></h3><ul><li>A customer-facing agent. Sellers use it, not your visitors</li><li>A notification system. It responds when a seller asks, or on a schedule the seller sets</li><li>A tool for building or deploying Salesforce metadata. That is Claudeforce</li></ul></div>
+  </div>
+</section>
+
+<section id="how">
+  <h2>How it works</h2>
+  <p>An admin connects Salesforce once for the whole organization and chooses which groups get the plugin. Each seller then signs in with their own Salesforce login. The plugin brings two connectors. The Salesforce connector lets Claude read records and act on them. The Slack connector lets the skills read and write deal-channel summaries and account-team threads. A first-use setup skill detects the seller's connected tools and builds a role-specific Claude Artifact, which is a small page of their own.</p>
+  <figure>
+    <div class="fig"><svg viewBox="0 0 1000 430" role="img" aria-label="An admin requests access and connects Salesforce once for the organization. A seller works in Claude, where the plugin's skills use a Salesforce connector and a Slack connector. The connectors read and write the seller's Salesforce records within the seller's own permissions, and Slack deal channels. Claude asks the seller to approve each change before it is written.">
+<defs>
+<marker id="k1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker>
+<marker id="k2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--agent)"/></marker>
+<marker id="k3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--human)"/></marker>
+</defs>
+<g font-family="IBM Plex Sans, system-ui, sans-serif" font-size="12.5" fill="currentColor" stroke="currentColor">
+<rect x="270" y="10" width="330" height="62" rx="8" fill="var(--human-soft)" stroke="var(--human)" stroke-width="2"/>
+<text x="435" y="34" text-anchor="middle" stroke="none" font-weight="600" fill="var(--human)">Admin, once per organization</text>
+<text x="435" y="54" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">requests access, connects Salesforce, picks the groups</text>
+
+<rect x="10" y="150" width="120" height="90" rx="8" fill="var(--surface)"/>
+<text x="70" y="188" text-anchor="middle" stroke="none" font-weight="600">Seller</text><text x="70" y="206" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">signs in with their</text><text x="70" y="220" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">Salesforce login</text>
+
+<rect x="170" y="110" width="250" height="170" rx="8" fill="var(--have-soft)" stroke="var(--have)" stroke-width="2"/>
+<text x="295" y="134" text-anchor="middle" stroke="none" font-weight="600" fill="var(--have)">Claude</text>
+<rect x="186" y="146" width="218" height="52" rx="5" fill="var(--surface)" stroke="var(--have)"/>
+<text x="295" y="167" text-anchor="middle" stroke="none">Plugin: 37 skills</text><text x="295" y="184" text-anchor="middle" stroke="none" font-size="10.5" fill="var(--muted)">brief, prep, deal review, follow-ups</text>
+<rect x="186" y="208" width="218" height="52" rx="5" fill="var(--surface)" stroke="var(--have)"/>
+<text x="295" y="229" text-anchor="middle" stroke="none">Setup skill</text><text x="295" y="246" text-anchor="middle" stroke="none" font-size="10.5" fill="var(--muted)">finds your tools, builds a role artifact</text>
+
+<rect x="480" y="120" width="150" height="62" rx="8" fill="var(--surface)" stroke-width="2"/>
+<text x="555" y="146" text-anchor="middle" stroke="none" font-weight="600">Salesforce connector</text><text x="555" y="164" text-anchor="middle" stroke="none" font-size="10.5" fill="var(--muted)">read and act</text>
+<rect x="480" y="210" width="150" height="62" rx="8" fill="var(--surface)" stroke-width="2"/>
+<text x="555" y="236" text-anchor="middle" stroke="none" font-weight="600">Slack connector</text><text x="555" y="254" text-anchor="middle" stroke="none" font-size="10.5" fill="var(--muted)">read and write threads</text>
+
+<rect x="720" y="105" width="270" height="95" rx="8" fill="var(--surface)" stroke-width="2"/>
+<text x="855" y="131" text-anchor="middle" stroke="none" font-weight="600">Salesforce org</text>
+<text x="855" y="151" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">accounts, opportunities, pipeline, tasks</text>
+<text x="855" y="170" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">the seller sees only what</text><text x="855" y="185" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">their own permissions allow</text>
+<rect x="720" y="215" width="270" height="62" rx="8" fill="var(--surface)" stroke-width="2"/>
+<text x="855" y="241" text-anchor="middle" stroke="none" font-weight="600">Slack</text><text x="855" y="259" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">deal channels, account-team threads</text>
+
+<rect x="170" y="320" width="460" height="64" rx="8" fill="var(--agent-soft)" stroke="var(--agent)" stroke-width="2"/>
+<text x="400" y="346" text-anchor="middle" stroke="none" font-weight="600" fill="var(--agent)">Approval gate</text>
+<text x="400" y="366" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">by default Claude shows each proposed change and waits for the seller before writing it</text>
+
+<g fill="none" stroke-width="1.5">
+<line x1="130" y1="195" x2="168" y2="195" marker-end="url(#k1)"/>
+<line x1="420" y1="152" x2="478" y2="152" marker-end="url(#k1)"/>
+<line x1="420" y1="240" x2="478" y2="240" marker-end="url(#k1)"/>
+<line x1="630" y1="152" x2="718" y2="152" marker-end="url(#k1)"/>
+<line x1="630" y1="241" x2="718" y2="241" marker-end="url(#k1)"/>
+<path d="M435 72 V96 H555 V118" stroke="var(--human)" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#k3)"/>
+<path d="M295 282 V318" stroke="var(--agent)" stroke-width="2" marker-end="url(#k2)"/>
+</g>
+<text x="305" y="302" stroke="none" font-size="10.5" fill="var(--agent)">every write</text>
+<text x="450" y="90" stroke="none" font-size="10.5" fill="var(--human)">one connection for all</text>
+</g></svg></div>
+    <figcaption>Claude is the interface. Salesforce stays the system of record. Claude only sees what the seller's own permissions allow, and by default asks before it writes anything.</figcaption>
+  </figure>
+  <div class="tbl"><table><thead><tr><th>Piece</th><th>What the article says it does</th></tr></thead><tbody><tr><td style="font-family:var(--sans);white-space:normal">Salesforce connector</td><td style="white-space:normal">Lets Claude read Salesforce data and act on it: summarise account history, update opportunities, log calls, create follow-up tasks.</td></tr><tr><td style="font-family:var(--sans);white-space:normal">Slack connector</td><td style="white-space:normal">Lets skills read and write deal-channel summaries and account-team threads.</td></tr><tr><td style="font-family:var(--sans);white-space:normal">37 skills</td><td style="white-space:normal">Packaged workflows for seller tasks such as a morning brief, meeting prep, deal review and post-call follow-up.</td></tr><tr><td style="font-family:var(--sans);white-space:normal">Setup skill</td><td style="white-space:normal">Runs on first use, detects the seller's tools and builds a role-tailored Artifact.</td></tr><tr><td style="font-family:var(--sans);white-space:normal">Admin connection</td><td style="white-space:normal">One connection for the organization, with a choice of which groups get the plugin.</td></tr></tbody></table></div>
+</section>
+
+<section id="can-do">
+  <h2>What Claude can do with it</h2>
+  <div class="tbl"><table><thead><tr><th>Task</th><th>What happens</th></tr></thead><tbody><tr><td style="font-family:var(--sans);white-space:normal">Morning brief</td><td style="white-space:normal">Lists meetings, deals closing soon, at-risk opportunities and threads needing a reply. It can run on a schedule, and drafts a weekly wrap-up for a manager on Fridays. From it you can change a close date or stage, or add a follow-up task.</td></tr><tr><td style="font-family:var(--sans);white-space:normal">Meeting prep</td><td style="white-space:normal">Pulls open opportunities, Slack discussion, email threads and open questions. It can add stakeholders it finds as contacts on the account.</td></tr><tr><td style="font-family:var(--sans);white-space:normal">Deal review</td><td style="white-space:normal">Scores an opportunity against the team's method, flags qualification gaps and close-date risk, and can draft a business case, a dated close plan, qualification fields and contact roles.</td></tr><tr><td style="font-family:var(--sans);white-space:normal">After a meeting</td><td style="white-space:normal">Turns a transcript or notes into a follow-up email, a Slack deal-channel summary and draft opportunity updates.</td></tr><tr><td style="font-family:var(--sans);white-space:normal">Pipeline view</td><td style="white-space:normal">Builds an interactive dashboard of coverage by stage and deals likely to slip, with drill-down by account. It can be shared and can draft the forecast narrative.</td></tr></tbody></table></div>
+</section>
+
+<section id="setup">
+  <h2>Setup, as described</h2>
+  <ol class="steps">
+    <li><div><h3>Request access</h3><p>An admin asks for access to the plugin through Salesforce AgentExchange, using the link on the article.</p></div></li>
+    <li><div><h3>Connect Salesforce once</h3><p>The admin connects Salesforce for the organization and chooses which groups get the plugin.</p></div></li>
+    <li><div><h3>Sellers sign in</h3><p>Each seller signs in with their Salesforce credentials. Claude then reads only what that person is allowed to see.</p></div></li>
+    <li><div><h3>Run the setup skill</h3><p>On first use it finds the seller's tools and builds a role-tailored Artifact, which holds their morning brief.</p></div></li>
+  </ol>
+  <p>The article also lists a separate <b>Salesforce MCP</b> that can be installed from the Claude directory today. It does not say whether that is the same thing as the plugin's Salesforce connector, so check the directory page and the admin setup guide.</p>
+</section>
+
+<section id="safety">
+  <h2>Permissions and safety</h2>
+  <div class="tbl"><table><thead><tr><th>Topic</th><th>What the article says</th></tr></thead><tbody><tr><td style="font-family:var(--sans);white-space:normal">Whose permissions</td><td style="white-space:normal">The seller signs in with their own Salesforce login, and Claude reads only what those permissions allow.</td></tr><tr><td style="font-family:var(--sans);white-space:normal">Writes</td><td style="white-space:normal">By default Claude asks the seller to approve each proposed change before it is written to Salesforce.</td></tr><tr><td style="font-family:var(--sans);white-space:normal">System of record</td><td style="white-space:normal">Salesforce remains the system of record.</td></tr><tr><td style="font-family:var(--sans);white-space:normal">Training on data</td><td style="white-space:normal">On Team and Enterprise plans, the article says Anthropic does not train its models on customer data by default.</td></tr></tbody></table></div>
+</section>
+
+<section id="compare">
+  <h2>How it differs from the other three</h2>
+  <p>The key difference is who is in the middle. In Salesforce in Claude, <b>Claude is the interface</b> and Salesforce is the data. In Agentforce, the <b>agent lives inside Salesforce</b>. Slackforce has no interface at all, only notifications. Claudeforce is Claude building the things.</p>
+  <div class="tbl"><table class="cmp"><thead><tr><th></th><th>Salesforce in Claude</th><th>Agentforce</th><th>Slackforce</th><th>Claudeforce</th></tr></thead><tbody><tr><td style="font-family:var(--sans);white-space:normal">Who uses it</td><td style="white-space:normal">Sellers and sales leaders</td><td style="white-space:normal">Website visitors and support staff</td><td style="white-space:normal">The support team</td><td style="white-space:normal">The developer or admin</td></tr><tr><td style="font-family:var(--sans);white-space:normal">Where it appears</td><td style="white-space:normal">In the Claude app</td><td style="white-space:normal">In a website chat, or inside Salesforce</td><td style="white-space:normal">In a Slack channel</td><td style="white-space:normal">In your editor and browser</td></tr><tr><td style="font-family:var(--sans);white-space:normal">Powered by</td><td style="white-space:normal">Claude with Salesforce and Slack connectors</td><td style="white-space:normal">Agentforce agents running in Salesforce</td><td style="white-space:normal">Apex posting to a Slack webhook</td><td style="white-space:normal">Claude Code and Claude in Chrome</td></tr><tr><td style="font-family:var(--sans);white-space:normal">Typical task</td><td style="white-space:normal">Prepare for a meeting, review a deal</td><td style="white-space:normal">Answer a visitor, hand off to a human</td><td style="white-space:normal">Alert on a new High priority Case</td><td style="white-space:normal">Deploy and test an agent</td></tr><tr><td style="font-family:var(--sans);white-space:normal">Data it touches</td><td style="white-space:normal">Accounts, opportunities, pipeline, per the article</td><td style="white-space:normal">Cases and Knowledge</td><td style="white-space:normal">Cases</td><td style="white-space:normal">Code and metadata</td></tr><tr><td style="font-family:var(--sans);white-space:normal">Set up by</td><td style="white-space:normal">Admin connects once, sellers sign in</td><td style="white-space:normal">Admin and developer</td><td style="white-space:normal">Developer</td><td style="white-space:normal">Developer</td></tr><tr><td style="font-family:var(--sans);white-space:normal">Status in this repo</td><td style="white-space:normal">Not set up, reference only</td><td style="white-space:normal">Built</td><td style="white-space:normal">Built, proven end to end</td><td style="white-space:normal">Used throughout</td></tr></tbody></table></div>
+  <div class="note"><b>Fit with this repo.</b> This repo is about service work: website visitors, Cases and Knowledge. The article describes sales work: accounts, opportunities and pipeline. It does not say how the plugin handles Cases, so check before expecting support staff to use it.</div>
+</section>
+
+<section id="when">
+  <h2>When to choose it</h2>
+  <div class="tbl"><table><thead><tr><th>You want</th><th>Use</th></tr></thead><tbody><tr><td style="font-family:var(--sans);white-space:normal">Sellers to ask Claude about their pipeline and update CRM from there</td><td style="white-space:normal">Salesforce in Claude</td></tr><tr><td style="font-family:var(--sans);white-space:normal">Website visitors to get answers and reach a person</td><td style="white-space:normal">Agentforce</td></tr><tr><td style="font-family:var(--sans);white-space:normal">The team to hear about an urgent Case without asking</td><td style="white-space:normal">Slackforce</td></tr><tr><td style="font-family:var(--sans);white-space:normal">Help building or testing the Salesforce work itself</td><td style="white-space:normal">Claudeforce</td></tr></tbody></table></div>
+</section>
+
+<section id="unstated">
+  <h2>What the article does not say</h2>
+  <p>Check these in the admin guide or with Salesforce before you rely on the plugin.</p>
+  <ul><li>Required Salesforce editions or licences, and the admin permissions needed</li><li>How sign-in works under the hood. The article says only that sellers sign in with their Salesforce credentials</li><li>Whether Claude Code, the desktop app or the API support the plugin. It mentions the Claude app and paid plans</li><li>Whether the Salesforce MCP in the directory is the same as the plugin's connector</li><li>Pricing, or whether the plugin is included in a plan</li><li>Audit logging, data residency and retention</li><li>Whether it handles service objects such as Cases, since the examples are sales work</li></ul>
+</section>
+
+<section id="links">
+  <h2>Sources and links</h2>
+  <ul>
+    <li>Article: <a href="https://claude.com/resources/articles/salesforce-in-claude">Salesforce in Claude</a></li>
+    <li>Admin setup guide: <a href="https://support.claude.com/en/articles/16952184">support.claude.com, article 16952184</a></li>
+    <li>Access request: <a href="https://agentexchange.salesforce.com/sales-cloud-in-claude-beta-access">Salesforce AgentExchange</a></li>
+    <li>Guide to running a sales organization with Claude: <a href="https://claude.com/resources/articles/building-an-ai-native-revenue-organization">Anthropic article</a></li>
+    <li>Skills: <a href="https://claude.com/resources/articles/skills">Anthropic article</a></li>
+  </ul>
+</section>
+</main>
+</body>
+</html>
