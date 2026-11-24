@@ -21,7 +21,7 @@ Support staff -> Case Triage Assistant -> Apex actions -> Case records
 Case insert (High) / daily job -> SlackCaseNotifier -> Slack webhook
 ```
 
-A full write-up with diagrams, code listings and configuration is in [docs/agentforce-self-service-architecture.html](docs/agentforce-self-service-architecture.html). Download the file and open it in a browser.
+A full write-up with diagrams, code listings and configuration is in [docs/index.html](docs/index.html). Download the file and open it in a browser, or serve it with GitHub Pages from the `/docs` folder.
 
 ## Repository layout
 
