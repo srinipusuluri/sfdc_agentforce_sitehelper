@@ -6,7 +6,7 @@ A working example of **Salesforce agents** for self-service and human handoff, t
 
 **Live site:** https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/
 
-Pages: [Home](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/) · [Agentforce](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/agentforce.html) · [Slackforce](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/slackforce.html) · [Claudeforce](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/claudeforce.html) · [Salesforce in Claude](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/salesforce-in-claude.html) · [Claude Agents on AWS](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/claude-agents-aws.html)
+Pages: [Home](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/) · [Agentforce](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/agentforce.html) · [Slackforce](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/slackforce.html) · [Claudeforce](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/claudeforce.html) · [Salesforce in Claude](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/salesforce-in-claude.html) · [Claude Agents on AWS](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/claude-agents-aws.html) · [Agent catalog](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/agents.html)
 
 ## Which one do I use?
 
@@ -201,6 +201,20 @@ Then follow the page to create the secrets, run `sam deploy --guided`, create th
 **What was tested.** The agent code type-checks and passes 5 unit tests that use a fake Claude client. The Salesforce side passes 10 Apex tests and both LWCs deploy. **What was not:** a deployment to AWS, a live Claude call, the Named Credential, the OAuth app, or a guest user on a real site. No AWS account was used, so treat those steps as a guide to verify.
 
 **Security basics built in.** Tools are bound to one record, and the model never picks an Id. Apex checks the signed-in user can see the Case. The public site reaches one agent only. Errors to callers are generic. Secrets live in Secrets Manager. See the page for the full list.
+
+## Agent catalog
+
+Every agent in this project on one page: [Agent catalog](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/agents.html). It records, for each agent, what it is for, who uses it, how it is reached, what it can read and change, its guardrails and limits, what was tested, and where its source lives. It also has a template for documenting the next agent.
+
+![Map of the five agents](docs/images/agent-map.svg)
+
+| Agent | Platform | For | Can change data? | Status |
+|---|---|---|---|---|
+| Site Helper | Agentforce | Website visitors | No | Active, version 4 |
+| Case Triage Assistant | Agentforce | Support staff | A Case priority, after confirmation | Active, version 1 |
+| kb-answer | Claude on AWS | Website visitors | No | Built, not deployed to AWS |
+| case-summary | Claude on AWS | Support staff | No | Built, not deployed to AWS |
+| case-triage | Claude on AWS | Background, on a new High priority Case | One internal comment | Example, dry-run validated, not deployed |
 
 ## Repository layout
 
