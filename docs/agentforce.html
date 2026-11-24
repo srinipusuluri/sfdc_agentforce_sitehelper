@@ -1,5 +1,9 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Agentforce Self-Service Architecture</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: single reading column, wide figures scroll inside their own box. Slate neutrals tinted toward teal; teal = agent path, amber = human path. */
@@ -82,11 +86,19 @@ details pre{border:0;border-radius:0 0 8px 8px}
 .kv{display:grid;grid-template-columns:minmax(150px,max-content) 1fr;gap:6px 16px;font-size:.92rem}
 .kv dt{font-family:var(--mono);font-size:.82rem;color:var(--muted)} .kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
 @media (max-width:520px){.kv{grid-template-columns:1fr}}
+
+.site-nav{max-width:980px;margin:0 auto 28px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-family:var(--mono);font-size:.8rem}
+.site-nav a{color:var(--muted);text-decoration:none;padding:6px 12px;border:1px solid var(--line);border-radius:99px;background:var(--surface)}
+.site-nav a:hover{color:var(--fg);border-color:var(--agent)}
+.site-nav a[aria-current="page"]{color:var(--agent);border-color:var(--agent);background:var(--agent-soft)}
 </style>
 
 
 
+</head>
+<body>
 <main>
+<nav class="site-nav" aria-label="Site"><a href="index.html">Home</a><a href="agentforce.html" aria-current="page">Agentforce</a><a href="slackforce.html">Slackforce</a><a href="claudeforce.html">Claudeforce</a></nav>
 <header style="display:flex;flex-direction:column;gap:14px">
   <span class="eyebrow">Salesforce org afdcnew · Developer Edition · updated 24 Nov 2026</span>
   <h1>Agentforce self-service, with a path to a human</h1>
@@ -1226,3 +1238,5 @@ sf org open agent --api-name Site_Helper -o afdcnew</code></pre>
   </table></div>
 </section>
 </main>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claudeforce</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column, wide figures scroll inside their own box. Slate neutrals tinted toward teal; teal = agent path, amber = human path. */
+:root{
+  --bg:#f6f8f8; --surface:#ffffff; --fg:#17232a; --muted:#58696f; --line:#cfd9db;
+  --agent:#0b7a75; --agent-soft:#dff1ef; --human:#b45309; --human-soft:#fbeedb;
+  --ok:#1f7a45; --ok-soft:#e1f3e8; --have:#3b5b8c; --have-soft:#e3eaf5; --todo:#a3560a; --todo-soft:#fbeedb;
+  --code:#eef3f3;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1719; --surface:#162124; --fg:#e4eded; --muted:#9db0b3; --line:#2b3b3f;
+  --agent:#4fd1c5; --agent-soft:#12312f; --human:#f0a65a; --human-soft:#3a2a14;
+  --ok:#6fd08f; --ok-soft:#14301f; --have:#8fb0e6; --have-soft:#1a2740; --todo:#f0a65a; --todo-soft:#3a2a14; --code:#1b2a2d; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1719; --surface:#162124; --fg:#e4eded; --muted:#9db0b3; --line:#2b3b3f;
+  --agent:#4fd1c5; --agent-soft:#12312f; --human:#f0a65a; --human-soft:#3a2a14;
+  --ok:#6fd08f; --ok-soft:#14301f; --have:#8fb0e6; --have-soft:#1a2740; --todo:#f0a65a; --todo-soft:#3a2a14; --code:#1b2a2d; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:16px;line-height:1.6;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 80px}
+main{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:48px}
+section{display:flex;flex-direction:column;gap:16px;min-width:0}
+h1,h2,h3{font-weight:600;line-height:1.2;text-wrap:balance;margin:0}
+h1{font-size:clamp(1.9rem,4vw,2.6rem);letter-spacing:-.01em}
+h2{font-size:1.5rem;padding-top:8px;border-top:1px solid var(--line)}
+h3{font-size:1.05rem}
+p{margin:0;max-width:68ch}
+.lede{font-size:1.1rem;color:var(--muted);max-width:62ch}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--agent)}
+code{font-family:var(--mono);font-size:.86em;background:var(--code);padding:.1em .35em;border-radius:4px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.col{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.col h3{display:flex;align-items:center;gap:8px}
+.pill{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:99px;white-space:nowrap}
+.p-ok{background:var(--ok-soft);color:var(--ok)} .p-have{background:var(--have-soft);color:var(--have)} .p-todo{background:var(--todo-soft);color:var(--todo)}
+ul,ol{margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:6px}
+li{max-width:66ch}
+figure{margin:0;display:flex;flex-direction:column;gap:10px}
+.fig{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px;overflow-x:auto}
+.fig svg{display:block;min-width:760px;width:100%;height:auto;color:var(--fg)}
+figcaption{color:var(--muted);font-size:.92rem;max-width:72ch}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+td:first-child{font-family:var(--mono);font-size:.84rem;white-space:nowrap}
+.note{border-left:3px solid var(--todo);background:var(--todo-soft);padding:12px 16px;border-radius:0 8px 8px 0;max-width:72ch}
+.steps{counter-reset:s;list-style:none;padding:0;gap:12px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:2rem 1fr;gap:12px;max-width:none}
+.steps li::before{content:counter(s);font-family:var(--mono);font-weight:500;color:var(--agent);background:var(--agent-soft);border-radius:50%;width:2rem;height:2rem;display:grid;place-items:center;font-size:.9rem}
+:focus-visible{outline:2px solid var(--agent);outline-offset:2px}
+@media (max-width:520px){body{padding-block:24px 48px}}
+
+pre{background:var(--code);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto;font-family:var(--mono);font-size:.78rem;line-height:1.55;margin:0;max-width:100%;tab-size:2}
+pre code{background:none;padding:0;font-size:inherit}
+details{border:1px solid var(--line);border-radius:8px;background:var(--surface);min-width:0}
+details>summary{cursor:pointer;padding:10px 14px;font-family:var(--mono);font-size:.82rem;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+details>summary .path{color:var(--agent);word-break:break-all}
+details>summary .meta{color:var(--muted);font-size:.74rem}
+details[open]>summary{border-bottom:1px solid var(--line)}
+details pre{border:0;border-radius:0 0 8px 8px}
+.stack{display:flex;flex-direction:column;gap:12px}
+.fix{border-left:3px solid var(--ok);background:var(--ok-soft);padding:12px 16px;border-radius:0 8px 8px 0;max-width:72ch}
+.kv{display:grid;grid-template-columns:minmax(150px,max-content) 1fr;gap:6px 16px;font-size:.92rem}
+.kv dt{font-family:var(--mono);font-size:.82rem;color:var(--muted)} .kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+@media (max-width:520px){.kv{grid-template-columns:1fr}}
+
+pre{background:var(--code);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto;font-family:var(--mono);font-size:.78rem;line-height:1.55;margin:0;max-width:100%;tab-size:2}
+pre code{background:none;padding:0;font-size:inherit}
+details{border:1px solid var(--line);border-radius:8px;background:var(--surface);min-width:0}
+details>summary{cursor:pointer;padding:10px 14px;font-family:var(--mono);font-size:.82rem;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+details>summary .path{color:var(--agent);word-break:break-all}
+details>summary .meta{color:var(--muted);font-size:.74rem}
+details[open]>summary{border-bottom:1px solid var(--line)}
+details pre{border:0;border-radius:0 0 8px 8px}
+.stack{display:flex;flex-direction:column;gap:12px}
+.fix{border-left:3px solid var(--ok);background:var(--ok-soft);padding:12px 16px;border-radius:0 8px 8px 0;max-width:72ch}
+.kv{display:grid;grid-template-columns:minmax(150px,max-content) 1fr;gap:6px 16px;font-size:.92rem}
+.kv dt{font-family:var(--mono);font-size:.82rem;color:var(--muted)} .kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+@media (max-width:520px){.kv{grid-template-columns:1fr}}
+
+.site-nav{max-width:980px;margin:0 auto 28px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-family:var(--mono);font-size:.8rem}
+.site-nav a{color:var(--muted);text-decoration:none;padding:6px 12px;border:1px solid var(--line);border-radius:99px;background:var(--surface)}
+.site-nav a:hover{color:var(--fg);border-color:var(--agent)}
+.site-nav a[aria-current="page"]{color:var(--agent);border-color:var(--agent);background:var(--agent-soft)}
+
+.cards{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.card{display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;text-decoration:none;color:var(--fg);min-width:0}
+.card:hover{border-color:var(--agent)}
+.card h3{font-size:1.2rem}
+.card p{color:var(--muted);font-size:.95rem}
+.card .go{font-family:var(--mono);font-size:.8rem;color:var(--agent);margin-top:auto}
+.card svg{width:56px;height:56px}
+.hero-img{width:100%;height:auto;border-radius:10px;border:1px solid var(--line);display:block}
+</style>
+
+
+
+</head>
+<body>
+<main>
+<nav class="site-nav" aria-label="Site"><a href="index.html">Home</a><a href="agentforce.html">Agentforce</a><a href="slackforce.html">Slackforce</a><a href="claudeforce.html" aria-current="page">Claudeforce</a></nav>
+<header style="display:flex;flex-direction:column;gap:14px">
+  <span class="eyebrow">Claude Code · Claude in Chrome · private artifacts</span>
+  <h1>Claudeforce: Claude working on Salesforce</h1>
+  <p class="lede">How Claude was used to build, test and document this repo: which tool did what, where a human stayed in the loop, and what went wrong along the way.</p>
+</header>
+
+<section id="toolchain">
+  <h2>The toolchain</h2>
+  <p>Claude Code runs in your editor and works in the project folder. It deploys and tests through the Salesforce CLI, and pushes to GitHub with <code>git</code> and <code>gh</code>. Claude in Chrome drives the browser for steps that only exist in a web UI, such as Slack. Pages are published as private artifacts. Anything that needs a secret, a login or a permission click comes back to you.</p>
+  <figure>
+    <div class="fig">
+      <svg viewBox="0 0 1000 360" role="img" aria-label="You direct Claude Code and Claude in Chrome. Claude Code uses the Salesforce CLI to reach the org, git to reach GitHub, and the artifact tool to publish pages. Claude in Chrome reaches Slack and Salesforce Setup in the browser. Secrets and approvals go through you.">
+        <defs>
+          <marker id="c1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker>
+          <marker id="c2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--human)"/></marker>
+        </defs>
+        <g font-family="IBM Plex Sans, system-ui, sans-serif" font-size="12.5" fill="currentColor" stroke="currentColor">
+          <rect x="10" y="140" width="110" height="80" rx="8" fill="var(--human-soft)" stroke="var(--human)" stroke-width="2"/>
+          <text x="65" y="176" text-anchor="middle" stroke="none" font-weight="600" fill="var(--human)">You</text>
+          <text x="65" y="196" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">decide, approve</text>
+
+          <rect x="190" y="40" width="170" height="90" rx="8" fill="var(--agent-soft)" stroke="var(--agent)" stroke-width="2"/>
+          <text x="275" y="76" text-anchor="middle" stroke="none" font-weight="600" fill="var(--agent)">Claude Code</text>
+          <text x="275" y="96" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">editor, shell, files</text>
+          <rect x="190" y="230" width="170" height="90" rx="8" fill="var(--agent-soft)" stroke="var(--agent)" stroke-width="2"/>
+          <text x="275" y="266" text-anchor="middle" stroke="none" font-weight="600" fill="var(--agent)">Claude in Chrome</text>
+          <text x="275" y="286" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">your signed-in browser</text>
+
+          <rect x="440" y="10" width="150" height="56" rx="8" fill="var(--surface)"/>
+          <text x="515" y="34" text-anchor="middle" stroke="none">Salesforce CLI</text><text x="515" y="52" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">deploy, test, query</text>
+          <rect x="440" y="78" width="150" height="56" rx="8" fill="var(--surface)"/>
+          <text x="515" y="102" text-anchor="middle" stroke="none">git and gh</text><text x="515" y="120" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">commit, push</text>
+          <rect x="440" y="146" width="150" height="56" rx="8" fill="var(--surface)"/>
+          <text x="515" y="170" text-anchor="middle" stroke="none">Artifact tool</text><text x="515" y="188" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">private pages</text>
+
+          <rect x="440" y="244" width="150" height="56" rx="8" fill="var(--surface)"/>
+          <text x="515" y="268" text-anchor="middle" stroke="none">Slack web app</text><text x="515" y="286" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">apps, webhooks</text>
+          <rect x="440" y="312" width="150" height="40" rx="8" fill="var(--surface)"/>
+          <text x="515" y="337" text-anchor="middle" stroke="none">Salesforce Setup</text>
+
+          <rect x="690" y="20" width="150" height="70" rx="8" fill="var(--surface)" stroke-width="2"/>
+          <text x="765" y="50" text-anchor="middle" stroke="none" font-weight="600">Salesforce org</text><text x="765" y="70" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">agents · Apex · Knowledge</text>
+          <rect x="690" y="100" width="150" height="50" rx="8" fill="var(--surface)" stroke-width="2"/>
+          <text x="765" y="130" text-anchor="middle" stroke="none">GitHub repo</text>
+          <rect x="860" y="150" width="130" height="50" rx="8" fill="var(--surface)"/>
+          <text x="925" y="180" text-anchor="middle" stroke="none">Artifacts</text>
+
+          <g fill="none" stroke-width="1.5">
+            <path d="M120 170 H150 V85 H188" marker-end="url(#c1)"/>
+            <path d="M120 190 H150 V275 H188" marker-end="url(#c1)"/>
+            <path d="M360 70 H400 V38 H438" marker-end="url(#c1)"/>
+            <line x1="360" y1="85" x2="438" y2="106" marker-end="url(#c1)"/>
+            <path d="M360 110 H400 V174 H438" marker-end="url(#c1)"/>
+            <line x1="590" y1="38" x2="688" y2="55" marker-end="url(#c1)"/>
+            <line x1="590" y1="106" x2="688" y2="125" marker-end="url(#c1)"/>
+            <line x1="590" y1="174" x2="858" y2="174" marker-end="url(#c1)"/>
+            <path d="M360 270 H438" marker-end="url(#c1)"/>
+            <path d="M360 300 H400 V332 H438" marker-end="url(#c1)"/>
+          </g>
+          <text x="740" y="300" text-anchor="middle" stroke="none" font-size="11.5" font-weight="600" fill="var(--human)">stops for you:</text>
+          <text x="740" y="318" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">logins, permission clicks,</text>
+          <text x="740" y="334" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">secrets, irreversible steps</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption>Two Claude tools, each limited to what it can safely reach. The browser tool never receives the Slack webhook URL.</figcaption>
+  </figure>
+</section>
+
+<section id="done">
+  <h2>What Claude did in this repo</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Work</th><th>Tool</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>Apex actions for Cases</td><td>Claude Code, sf CLI</td><td>Deployed, 2 tests pass</td></tr>
+      <tr><td>Case Triage agent</td><td>Claude Code, <code>sf agent create</code></td><td>Created and activated. Agent test: the list-cases test passed, the priority-change test stopped at the confirmation prompt, one topic-name check mismatched</td></tr>
+      <tr><td>Agent actions and schemas</td><td>Claude Code</td><td>Fixed after the agent answered Off Topic. Missing schema files were the cause</td></tr>
+      <tr><td>Bot user access</td><td>Claude Code</td><td>Permission set assigned after removing View All</td></tr>
+      <tr><td>Knowledge and sample data</td><td>Claude Code</td><td>Knowledge enabled after you approved it. 5 articles, 10 Cases</td></tr>
+      <tr><td>Slack alerts</td><td>Claude Code</td><td>Deployed, 4 tests pass. Off until you set the webhook</td></tr>
+      <tr><td>Site Helper agent, channel, queue</td><td>Claude Code, retrieve</td><td>Read from the org and documented. Built by you, not by Claude</td></tr>
+      <tr><td>Slackbot page</td><td>Claude in Chrome</td><td>Found no agent builder, stopped, wrote instructions instead</td></tr>
+      <tr><td>Architecture pages</td><td>Claude Code, artifacts</td><td>Written from the retrieved metadata and code</td></tr>
+      <tr><td>This repo</td><td>Claude Code, git</td><td>Org usernames redacted before the public push</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><b>Not verified by Claude.</b> A live Site Helper chat and an end-to-end escalation to a human were not run. Slack posting has not been tested because the webhook is not set. The pages say so where it applies.</div>
+</section>
+
+<section id="gates">
+  <h2>Where a human stayed in charge</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Moment</th><th>What happened</th></tr></thead>
+    <tbody>
+      <tr><td>Enabling Knowledge</td><td>It cannot be undone, so Claude asked first and waited for a yes.</td></tr>
+      <tr><td>Slack approach</td><td>Claude asked which way to build, since the Slackbot UI had no agent builder.</td></tr>
+      <tr><td>Slack webhook URL</td><td>Treated as a secret. You paste it into Salesforce yourself. The Chrome instructions forbid reading it back.</td></tr>
+      <tr><td>Public repo</td><td>Pushed because you asked. Usernames were replaced with placeholders first, and Pages was left off.</td></tr>
+      <tr><td>A wrong earlier claim</td><td>The first architecture page said the chat had no routing. Claude retrieved the real metadata, found that wrong, and published a correction.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="instructions">
+  <h2>Instructions for Claude in Chrome</h2>
+  <p>The file <a href="slackforce-chrome-instructions.md">docs/slackforce-chrome-instructions.md</a> is a prompt you paste into Claude in Chrome. It creates the Slack app and webhook, stops for each approval, and checks whether the Salesforce and Slack integration is available. Replace the placeholders for your own org URL and Slack workspace ID first.</p>
+</section>
+
+<section id="lessons">
+  <h2>Things that went wrong, and the fix</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Problem</th><th>Fix</th></tr></thead>
+    <tbody>
+      <tr><td>Installed CLI too old for <code>sf agent publish</code></td><td>Create with <code>sf agent create</code>, then deploy metadata</td></tr>
+      <tr><td>Actions deployed but unusable</td><td>Add input and output <code>schema.json</code> beside each function</td></tr>
+      <tr><td>Bot user rejected View All permissions</td><td>Use read access with sharing</td></tr>
+      <tr><td>Apex would not compile: bind on the left, <code>String[][]</code></td><td>Two queries, and <code>List&lt;List&lt;String&gt;&gt;</code> with explicit inner lists</td></tr>
+      <tr><td>Wider deploy failed the 75% coverage check</td><td>Deploy only the new classes with <code>RunSpecifiedTests</code></td></tr>
+      <tr><td>SSH push denied</td><td>Pushed over HTTPS with the existing <code>gh</code> login, no config change</td></tr>
+    </tbody>
+  </table></div>
+</section>
+</main>
+</body>
+</html>

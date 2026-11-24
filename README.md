@@ -1,13 +1,40 @@
+<p align="center"><img src="docs/images/banner.svg" alt="Agentforce, Slackforce, Claudeforce" width="900"></p>
+
 # Agentforce Site Helper
 
-A Salesforce DX project that shows how to build Agentforce agents for self-service, deflection and human handoff:
+A working example of **Salesforce agents** for self-service and human handoff, the **Slack alerts** around them, and how **Claude** built and documented it. The code deploys with the Salesforce CLI. Source API version 68.0, tested in a Developer Edition org.
 
-- **Site Helper**: a public website chat agent, written in Agent Script. It answers questions, captures follow-up details, declines off-topic requests, and escalates to a human through Omni-Channel.
-- **Case Triage Assistant**: an internal agent with two Apex actions that lists open Cases and changes a Case's priority.
-- **Knowledge**: five sample public articles and guest access to them.
-- **Slack alerts**: a trigger and a scheduled job that post High priority Cases and a daily digest to Slack.
+| | What it covers | Page |
+|---|---|---|
+| **Agentforce** | Site Helper chat agent, escalation to a human through Omni-Channel, the internal Case Triage agent, Knowledge | [docs/agentforce.html](docs/agentforce.html) |
+| **Slackforce** | High priority case alerts and a daily digest posted from Salesforce to Slack, the agent-in-Slack option, setup roles | [docs/slackforce.html](docs/slackforce.html) |
+| **Claudeforce** | How Claude Code and Claude in Chrome were used, where a human approved, what went wrong | [docs/claudeforce.html](docs/claudeforce.html) |
 
-Source API version 68.0. Tested in a Developer Edition org.
+The pages are standalone HTML, starting at [docs/index.html](docs/index.html). On GitHub they show as source. Download them, or turn on GitHub Pages for the `/docs` folder to read them as web pages.
+
+## Agentforce
+
+A visitor chats on the site. The messaging channel hands the session to the Site Helper agent, whose router picks General Info, Follow-Up Capture, Off Topic or Escalation. Escalation transfers the chat to an Omni-Channel queue where a person accepts it.
+
+![Site Helper architecture](docs/images/agentforce-architecture.svg)
+
+![What Agentforce agents add](docs/images/agentforce-power.svg)
+
+## Slackforce
+
+A new High priority Case, or a daily schedule, builds a short message. One class posts it to a Slack incoming webhook. Nothing is sent until you set the webhook label.
+
+![Salesforce to Slack](docs/images/slackforce-alerts.svg)
+
+![Who does each setup step](docs/images/slackforce-setup.svg)
+
+Instructions you can paste into Claude in Chrome to set up the Slack side: [docs/slackforce-chrome-instructions.md](docs/slackforce-chrome-instructions.md). Replace the placeholders for your own org URL and Slack workspace ID first.
+
+## Claudeforce
+
+Claude Code deployed and tested through the Salesforce CLI and pushed to GitHub. Claude in Chrome handles web-only steps. Secrets, logins and permission clicks stay with you.
+
+![Claude toolchain](docs/images/claudeforce-toolchain.svg)
 
 ## How it fits together
 
@@ -21,7 +48,7 @@ Support staff -> Case Triage Assistant -> Apex actions -> Case records
 Case insert (High) / daily job -> SlackCaseNotifier -> Slack webhook
 ```
 
-A full write-up with diagrams, code listings and configuration is in [docs/index.html](docs/index.html). Download the file and open it in a browser, or serve it with GitHub Pages from the `/docs` folder.
+The full write-ups, with diagrams, code listings and configuration, are the three pages in `docs/`, linked above.
 
 ## Repository layout
 

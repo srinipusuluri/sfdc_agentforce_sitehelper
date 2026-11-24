@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 470" width="1000" height="470" role="img" aria-label="Visitor to site to messaging channel to the Site Helper agent. The agent router chooses General Info, Follow-Up Capture, Off Topic or Escalation. Escalation goes to Omni-Channel, the BYOC messaging queue, and a human agent.">
+<rect width="1000" height="470" fill="#f6f8f8"/>
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#17232a"/></marker>
+          <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#0b7a75"/></marker>
+          <marker id="hu" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#b45309"/></marker>
+        </defs>
+        <g font-family="IBM Plex Sans, system-ui, sans-serif" font-size="12.5" fill="#17232a">
+          <text x="10" y="22" font-size="11" letter-spacing="1" fill="#58696f">VISITOR SIDE</text>
+          <text x="340" y="22" font-size="11" letter-spacing="1" fill="#58696f">SALESFORCE</text>
+          <line x1="325" y1="10" x2="325" y2="455" stroke="#cfd9db" stroke-dasharray="4 4"/>
+
+          <rect x="10" y="170" width="100" height="90" rx="8" fill="#ffffff" stroke="#17232a"/>
+          <text x="60" y="209" text-anchor="middle" font-weight="600">Visitor</text>
+          <text x="60" y="227" text-anchor="middle" fill="#58696f">browser</text>
+
+          <rect x="150" y="150" width="155" height="130" rx="8" fill="#ffffff" stroke="#17232a"/>
+          <text x="227" y="178" text-anchor="middle" font-weight="600">Live site</text>
+          <text x="227" y="196" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="#58696f">ESW_Site_Helper_We_…</text>
+          <text x="227" y="224" text-anchor="middle">Embedded Service</text>
+          <text x="227" y="242" text-anchor="middle">chat deployment</text>
+          <text x="227" y="262" text-anchor="middle" font-size="10.5" fill="#58696f">Site_Helper_Web_Chat</text>
+
+          <rect x="350" y="165" width="150" height="100" rx="8" fill="#ffffff" stroke="#17232a" stroke-width="2"/>
+          <text x="425" y="192" text-anchor="middle" font-weight="600">Messaging channel</text>
+          <text x="425" y="211" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="#58696f">Site_Helper_Web_Chat</text>
+          <text x="425" y="234" text-anchor="middle" font-size="11" fill="#58696f">session handler:</text>
+          <text x="425" y="250" text-anchor="middle" font-size="11" fill="#58696f">Agentforce Service Agent</text>
+
+          <rect x="540" y="30" width="250" height="395" rx="8" fill="#dff1ef" stroke="#0b7a75" stroke-width="2"/>
+          <text x="665" y="56" text-anchor="middle" font-weight="600" fill="#0b7a75">Agentforce Service Agent</text>
+          <text x="665" y="73" text-anchor="middle" font-size="11" fill="#58696f">Site_Helper · v4 · Agent Script</text>
+
+          <rect x="560" y="90" width="210" height="46" rx="5" fill="#ffffff" stroke="#0b7a75" stroke-width="2"/>
+          <text x="665" y="110" text-anchor="middle" font-weight="600">Agent Router</text>
+          <text x="665" y="126" text-anchor="middle" font-size="11" fill="#58696f">picks a subagent by intent</text>
+
+          <rect x="560" y="160" width="210" height="46" rx="5" fill="#ffffff" stroke="#0b7a75"/>
+          <text x="665" y="180" text-anchor="middle">General Info</text>
+          <text x="665" y="196" text-anchor="middle" font-size="11" fill="#58696f">approved facts only</text>
+
+          <rect x="560" y="218" width="210" height="46" rx="5" fill="#ffffff" stroke="#0b7a75"/>
+          <text x="665" y="238" text-anchor="middle">Follow-Up Capture</text>
+          <text x="665" y="254" text-anchor="middle" font-size="11" fill="#58696f">name + email → variables</text>
+
+          <rect x="560" y="276" width="210" height="46" rx="5" fill="#ffffff" stroke="#0b7a75"/>
+          <text x="665" y="296" text-anchor="middle">Off Topic</text>
+          <text x="665" y="312" text-anchor="middle" font-size="11" fill="#58696f">polite decline</text>
+
+          <rect x="560" y="334" width="210" height="46" rx="5" fill="#fbeedb" stroke="#b45309" stroke-width="2"/>
+          <text x="665" y="354" text-anchor="middle" font-weight="600" fill="#b45309">Escalation</text>
+          <text x="665" y="370" text-anchor="middle" font-size="11" fill="#58696f">@utils.escalate</text>
+          <text x="665" y="406" text-anchor="middle" font-size="10.5" fill="#58696f">runs as bot user site_helper@…ext</text>
+
+          <rect x="830" y="150" width="160" height="290" rx="8" fill="#fbeedb" stroke="#b45309" stroke-width="2"/>
+          <text x="910" y="176" text-anchor="middle" font-weight="600" fill="#b45309">Omni-Channel</text>
+          <rect x="842" y="195" width="136" height="68" rx="5" fill="#ffffff" stroke="#b45309"/>
+          <text x="910" y="217" text-anchor="middle">Queue</text>
+          <text x="910" y="233" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9" fill="#58696f">BYOC_Messaging_Queue</text>
+          <text x="910" y="250" text-anchor="middle" font-size="10.5" fill="#58696f">least active routing</text>
+          <rect x="842" y="300" width="136" height="68" rx="5" fill="#ffffff" stroke="#b45309"/>
+          <text x="910" y="324" text-anchor="middle">Human agent</text>
+          <text x="910" y="342" text-anchor="middle" font-size="10.5" fill="#58696f">Service Console</text>
+          <text x="910" y="357" text-anchor="middle" font-size="10.5" fill="#58696f">sees transcript</text>
+
+          <line x1="110" y1="215" x2="148" y2="215" stroke="#17232a" stroke-width="1.5" marker-end="url(#ar)"/>
+          <line x1="305" y1="215" x2="348" y2="215" stroke="#17232a" stroke-width="1.5" marker-end="url(#ar)"/>
+          <text x="326" y="206" text-anchor="middle" font-size="10.5" fill="#58696f">chat</text>
+          <line x1="500" y1="215" x2="538" y2="215" stroke="#0b7a75" stroke-width="2" marker-end="url(#ag)"/>
+          <text x="520" y="206" text-anchor="middle" font-size="10.5" fill="#0b7a75">1</text>
+          <path d="M665 136 V158" stroke="#0b7a75" stroke-width="1.5" fill="none" marker-end="url(#ag)"/>
+          <path d="M770 357 H800 V229 H840" fill="none" stroke="#b45309" stroke-width="2" marker-end="url(#hu)"/>
+          <text x="810" y="296" font-size="11" font-weight="600" fill="#b45309" transform="rotate(-90 810 296)" text-anchor="middle">2 escalate</text>
+          <line x1="910" y1="263" x2="910" y2="298" stroke="#b45309" stroke-width="2" marker-end="url(#hu)"/>
+          <path d="M425 265 V440 H828" fill="none" stroke="#b45309" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#hu)"/>
+          <text x="560" y="456" font-size="11" fill="#b45309">fallback queue on the channel, if the agent is unavailable</text>
+        </g>
+      </svg>

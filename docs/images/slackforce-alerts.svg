@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 380" width="1000" height="380" role="img" aria-label="A new High priority Case fires a trigger, and a daily schedule runs a digest job. Both call SlackCaseNotifier, which checks the webhook label, then posts over HTTPS through the remote site to the Slack incoming webhook, which delivers to the channel.">
+<rect width="1000" height="380" fill="#f6f8f8"/>
+        <defs>
+          <marker id="s1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#17232a"/></marker>
+          <marker id="s2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#0b7a75"/></marker>
+        </defs>
+        <g font-family="IBM Plex Sans, system-ui, sans-serif" font-size="12.5" fill="#17232a" stroke="#17232a">
+          <text x="10" y="22" font-size="11" letter-spacing="1" stroke="none" fill="#58696f">SALESFORCE</text>
+          <text x="810" y="22" font-size="11" letter-spacing="1" stroke="none" fill="#58696f">SLACK</text>
+          <line x1="795" y1="10" x2="795" y2="365" stroke="#cfd9db" stroke-dasharray="4 4"/>
+
+          <rect x="10" y="45" width="150" height="60" rx="8" fill="#ffffff"/>
+          <text x="85" y="71" text-anchor="middle" stroke="none">New Case</text><text x="85" y="89" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">Priority = High</text>
+          <rect x="10" y="255" width="150" height="60" rx="8" fill="#ffffff"/>
+          <text x="85" y="281" text-anchor="middle" stroke="none">Daily schedule</text><text x="85" y="299" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">cron 0 0 8 * * ?</text>
+
+          <rect x="200" y="45" width="165" height="60" rx="8" fill="#fbeedb" stroke="#b45309"/>
+          <text x="282" y="71" text-anchor="middle" stroke="none">CaseSlackAlertTrigger</text><text x="282" y="89" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">after insert</text>
+          <rect x="200" y="255" width="165" height="60" rx="8" fill="#fbeedb" stroke="#b45309"/>
+          <text x="282" y="281" text-anchor="middle" stroke="none">SlackCaseDigestJob</text><text x="282" y="299" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">Schedulable</text>
+
+          <rect x="410" y="110" width="195" height="150" rx="8" fill="#dff1ef" stroke="#0b7a75" stroke-width="2"/>
+          <text x="507" y="136" text-anchor="middle" stroke="none" font-weight="600" fill="#0b7a75">SlackCaseNotifier</text>
+          <text x="507" y="160" text-anchor="middle" stroke="none" font-size="11.5">buildAlert / buildDigest</text>
+          <text x="507" y="180" text-anchor="middle" stroke="none" font-size="11.5">label unset? stop</text>
+          <text x="507" y="200" text-anchor="middle" stroke="none" font-size="11.5">send() builds JSON body</text>
+          <text x="507" y="220" text-anchor="middle" stroke="none" font-size="11.5">@future(callout=true)</text>
+          <text x="507" y="244" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">one message per insert batch</text>
+
+          <rect x="410" y="300" width="195" height="55" rx="8" fill="#ffffff" stroke-dasharray="5 3"/>
+          <text x="507" y="324" text-anchor="middle" stroke="none">Label Slack_Webhook_Url</text><text x="507" y="341" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">protected, holds the secret URL</text>
+
+          <rect x="645" y="140" width="130" height="90" rx="8" fill="#ffffff"/>
+          <text x="710" y="166" text-anchor="middle" stroke="none">Remote site</text><text x="710" y="184" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">hooks.slack.com</text><text x="710" y="204" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">allows the callout</text>
+
+          <rect x="815" y="110" width="175" height="150" rx="8" fill="#ffffff" stroke-width="2"/>
+          <text x="902" y="138" text-anchor="middle" stroke="none" font-weight="600">Incoming webhook</text>
+          <text x="902" y="158" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">app: Salesforce Case Alerts</text>
+          <line x1="835" y1="175" x2="970" y2="175" stroke="#cfd9db"/>
+          <text x="902" y="198" text-anchor="middle" stroke="none">#aiforall-central</text>
+          <text x="902" y="218" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">or the channel you pick</text>
+          <text x="902" y="244" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">plain text message</text>
+
+          <g fill="none" stroke-width="1.5">
+            <line x1="160" y1="75" x2="198" y2="75" marker-end="url(#s1)"/>
+            <line x1="160" y1="285" x2="198" y2="285" marker-end="url(#s1)"/>
+            <path d="M365 75 H388 V160 H408" marker-end="url(#s1)"/>
+            <path d="M365 285 H388 V210 H408" marker-end="url(#s1)"/>
+            <line x1="507" y1="298" x2="507" y2="262" stroke-dasharray="5 3" marker-end="url(#s1)"/>
+            <line x1="605" y1="185" x2="643" y2="185" stroke="#0b7a75" stroke-width="2" marker-end="url(#s2)"/>
+            <line x1="775" y1="185" x2="813" y2="185" stroke="#0b7a75" stroke-width="2" marker-end="url(#s2)"/>
+          </g>
+          <text x="624" y="176" text-anchor="middle" stroke="none" font-size="10.5" fill="#0b7a75">POST</text>
+          <text x="388" y="125" stroke="none" font-size="10.5" fill="#58696f" text-anchor="middle">alert</text>
+          <text x="388" y="262" stroke="none" font-size="10.5" fill="#58696f" text-anchor="middle">digest</text>
+        </g>
+      </svg>

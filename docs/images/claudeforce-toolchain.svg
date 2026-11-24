@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 360" width="1000" height="360" role="img" aria-label="You direct Claude Code and Claude in Chrome. Claude Code uses the Salesforce CLI to reach the org, git to reach GitHub, and the artifact tool to publish pages. Claude in Chrome reaches Slack and Salesforce Setup in the browser. Secrets and approvals go through you.">
+<rect width="1000" height="360" fill="#f6f8f8"/>
+        <defs>
+          <marker id="c1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#17232a"/></marker>
+          <marker id="c2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#b45309"/></marker>
+        </defs>
+        <g font-family="IBM Plex Sans, system-ui, sans-serif" font-size="12.5" fill="#17232a" stroke="#17232a">
+          <rect x="10" y="140" width="110" height="80" rx="8" fill="#fbeedb" stroke="#b45309" stroke-width="2"/>
+          <text x="65" y="176" text-anchor="middle" stroke="none" font-weight="600" fill="#b45309">You</text>
+          <text x="65" y="196" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">decide, approve</text>
+
+          <rect x="190" y="40" width="170" height="90" rx="8" fill="#dff1ef" stroke="#0b7a75" stroke-width="2"/>
+          <text x="275" y="76" text-anchor="middle" stroke="none" font-weight="600" fill="#0b7a75">Claude Code</text>
+          <text x="275" y="96" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">editor, shell, files</text>
+          <rect x="190" y="230" width="170" height="90" rx="8" fill="#dff1ef" stroke="#0b7a75" stroke-width="2"/>
+          <text x="275" y="266" text-anchor="middle" stroke="none" font-weight="600" fill="#0b7a75">Claude in Chrome</text>
+          <text x="275" y="286" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">your signed-in browser</text>
+
+          <rect x="440" y="10" width="150" height="56" rx="8" fill="#ffffff"/>
+          <text x="515" y="34" text-anchor="middle" stroke="none">Salesforce CLI</text><text x="515" y="52" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">deploy, test, query</text>
+          <rect x="440" y="78" width="150" height="56" rx="8" fill="#ffffff"/>
+          <text x="515" y="102" text-anchor="middle" stroke="none">git and gh</text><text x="515" y="120" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">commit, push</text>
+          <rect x="440" y="146" width="150" height="56" rx="8" fill="#ffffff"/>
+          <text x="515" y="170" text-anchor="middle" stroke="none">Artifact tool</text><text x="515" y="188" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">private pages</text>
+
+          <rect x="440" y="244" width="150" height="56" rx="8" fill="#ffffff"/>
+          <text x="515" y="268" text-anchor="middle" stroke="none">Slack web app</text><text x="515" y="286" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">apps, webhooks</text>
+          <rect x="440" y="312" width="150" height="40" rx="8" fill="#ffffff"/>
+          <text x="515" y="337" text-anchor="middle" stroke="none">Salesforce Setup</text>
+
+          <rect x="690" y="20" width="150" height="70" rx="8" fill="#ffffff" stroke-width="2"/>
+          <text x="765" y="50" text-anchor="middle" stroke="none" font-weight="600">Salesforce org</text><text x="765" y="70" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">agents · Apex · Knowledge</text>
+          <rect x="690" y="100" width="150" height="50" rx="8" fill="#ffffff" stroke-width="2"/>
+          <text x="765" y="130" text-anchor="middle" stroke="none">GitHub repo</text>
+          <rect x="860" y="150" width="130" height="50" rx="8" fill="#ffffff"/>
+          <text x="925" y="180" text-anchor="middle" stroke="none">Artifacts</text>
+
+          <g fill="none" stroke-width="1.5">
+            <path d="M120 170 H150 V85 H188" marker-end="url(#c1)"/>
+            <path d="M120 190 H150 V275 H188" marker-end="url(#c1)"/>
+            <path d="M360 70 H400 V38 H438" marker-end="url(#c1)"/>
+            <line x1="360" y1="85" x2="438" y2="106" marker-end="url(#c1)"/>
+            <path d="M360 110 H400 V174 H438" marker-end="url(#c1)"/>
+            <line x1="590" y1="38" x2="688" y2="55" marker-end="url(#c1)"/>
+            <line x1="590" y1="106" x2="688" y2="125" marker-end="url(#c1)"/>
+            <line x1="590" y1="174" x2="858" y2="174" marker-end="url(#c1)"/>
+            <path d="M360 270 H438" marker-end="url(#c1)"/>
+            <path d="M360 300 H400 V332 H438" marker-end="url(#c1)"/>
+          </g>
+          <text x="740" y="300" text-anchor="middle" stroke="none" font-size="11.5" font-weight="600" fill="#b45309">stops for you:</text>
+          <text x="740" y="318" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">logins, permission clicks,</text>
+          <text x="740" y="334" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">secrets, irreversible steps</text>
+        </g>
+      </svg>
