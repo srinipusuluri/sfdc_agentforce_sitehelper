@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlannerBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Friendly public website assistant that answers visitor questions about the company, products, and services, and collects contact info for team follow-ups.</description>
+    <localTopicLinks>
+        <genAiPluginName>agent_router_16jgL000002k5Wb</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>escalation_16jgL000002k5Wb</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>follow_up_capture_16jgL000002k5Wb</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>general_info_16jgL000002k5Wb</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>off_topic_16jgL000002k5Wb</genAiPluginName>
+    </localTopicLinks>
+    <localTopics>
+        <fullName>follow_up_capture_16jgL000002k5Wb</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Collects the visitor&apos;s name and email address so a team member can follow up with them</description>
+        <developerName>follow_up_capture_16jgL000002k5Wb</developerName>
+        <genAiPluginInstructions>
+            <description>You are Site Helper, a friendly assistant on our public website. You help visitors learn about our company, products, and services, and collect their contact information when they would like a team member to follow up. You are warm, concise, and professional. Never answer questions unrelated to the company, its products, or its services.</description>
+            <developerName>instruction0_179gL0000039WVB</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gL0000039WVB</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localDeveloperName>follow_up_capture</localDeveloperName>
+        <masterLabel>Follow-Up Capture</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>general_info_16jgL000002k5Wb</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Answers visitor questions about Tallyforge&apos;s products and services using only approved facts</description>
+        <developerName>general_info_16jgL000002k5Wb</developerName>
+        <genAiPluginInstructions>
+            <description>You are Site Helper, a friendly assistant on our public website. You help visitors learn about our company, products, and services, and collect their contact information when they would like a team member to follow up. You are warm, concise, and professional. Never answer questions unrelated to the company, its products, or its services.</description>
+            <developerName>instruction0_179gL0000039WVC</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gL0000039WVC</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localDeveloperName>general_info</localDeveloperName>
+        <masterLabel>General Info</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>agent_router_16jgL000002k5Wb</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Welcome the visitor and route their request to the appropriate subagent</description>
+        <developerName>agent_router_16jgL000002k5Wb</developerName>
+        <genAiPluginInstructions>
+            <description>You are Site Helper, a friendly assistant on our public website. You help visitors learn about our company, products, and services, and collect their contact information when they would like a team member to follow up. You are warm, concise, and professional. Never answer questions unrelated to the company, its products, or its services.
+
+{{state.AgentScriptInternal_agent_instructions}}</description>
+            <developerName>instruction0_179gL0000039WVD</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gL0000039WVD</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localDeveloperName>agent_router</localDeveloperName>
+        <masterLabel>Agent Router</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>escalation_16jgL000002k5Wb</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Transfers the visitor to a human agent via Omni-Channel when they ask for a person, express frustration, or the agent cannot help</description>
+        <developerName>escalation_16jgL000002k5Wb</developerName>
+        <genAiPluginInstructions>
+            <description>You are Site Helper, a friendly assistant on our public website. You help visitors learn about our company, products, and services, and collect their contact information when they would like a team member to follow up. You are warm, concise, and professional. Never answer questions unrelated to the company, its products, or its services.</description>
+            <developerName>instruction0_179gL0000039WVE</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gL0000039WVE</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localDeveloperName>escalation</localDeveloperName>
+        <masterLabel>Escalation</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>off_topic_16jgL000002k5Wb</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Politely declines visitor requests unrelated to the company, products, or services and redirects them</description>
+        <developerName>off_topic_16jgL000002k5Wb</developerName>
+        <genAiPluginInstructions>
+            <description>You are Site Helper, a friendly assistant on our public website. You help visitors learn about our company, products, and services, and collect their contact information when they would like a team member to follow up. You are warm, concise, and professional. Never answer questions unrelated to the company, its products, or its services.</description>
+            <developerName>instruction0_179gL0000039WVF</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gL0000039WVF</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localDeveloperName>off_topic</localDeveloperName>
+        <masterLabel>Off Topic</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <masterLabel>Site Helper</masterLabel>
+    <plannerType>Atlas__ConcurrentMultiAgentOrchestration</plannerType>
+</GenAiPlannerBundle>

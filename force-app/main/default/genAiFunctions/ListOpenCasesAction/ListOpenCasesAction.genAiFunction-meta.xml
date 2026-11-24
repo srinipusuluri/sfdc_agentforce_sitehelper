@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Lists up to 10 open cases, newest first, optionally filtered by priority (High, Medium, Low).</description>
+    <invocationTarget>CaseTriageListInvocable</invocationTarget>
+    <invocationTargetType>apex</invocationTargetType>
+    <isConfirmationRequired>false</isConfirmationRequired>
+    <masterLabel>List Open Cases</masterLabel>
+</GenAiFunction>

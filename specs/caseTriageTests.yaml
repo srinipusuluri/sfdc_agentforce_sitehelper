@@ -1,0 +1,20 @@
+name: Case Triage Assistant Tests
+description: Smoke tests for the Case Triage Assistant agent
+subjectType: AGENT
+subjectName: Case_Triage_Assistant
+testCases:
+  - utterance: Show me all open cases
+    expectedTopic: p_16jgL000002k4kD_Case_Triage
+    expectedActions:
+      - ListOpenCasesAction
+    expectedOutcome: The agent lists open cases including case numbers such as 00001002 and their priorities.
+  - utterance: Show me the open support cases that have High priority
+    expectedTopic: p_16jgL000002k4kD_Case_Triage
+    expectedActions:
+      - ListOpenCasesAction
+    expectedOutcome: The agent lists only open cases with High priority, or says none were found.
+  - utterance: Change the priority of case 99999999 to High
+    expectedTopic: p_16jgL000002k4kD_Case_Triage
+    expectedActions:
+      - SetCasePriorityAction
+    expectedOutcome: The agent reports that case 99999999 was not found.

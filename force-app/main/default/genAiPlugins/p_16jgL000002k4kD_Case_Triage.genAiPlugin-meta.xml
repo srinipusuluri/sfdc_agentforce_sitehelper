@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <canEscalate>false</canEscalate>
+    <description>Handles ANY request about support cases: show, list or view open cases, find high, medium or low priority cases, and change or escalate the priority of a case by case number. Use this topic whenever the user mentions cases, tickets or priorities.</description>
+    <developerName>p_16jgL000002k4kD_Case_Triage</developerName>
+    <genAiFunctions>
+        <functionName>ListOpenCasesAction</functionName>
+    </genAiFunctions>
+    <genAiFunctions>
+        <functionName>SetCasePriorityAction</functionName>
+    </genAiFunctions>
+    <genAiPluginInstructions>
+        <description>To show cases, call List Open Cases. Pass a priority only if the user asked for one (High, Medium or Low); otherwise leave it blank. Present the result as a short list.</description>
+        <developerName>instruction_0</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_0</masterLabel>
+        <sortOrder>0</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>To change a case priority, you need both the case number and the new priority (High, Medium or Low). Ask for whichever is missing, then call Set Case Priority and report its message exactly.</description>
+        <developerName>instruction_1</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_1</masterLabel>
+        <sortOrder>1</sortOrder>
+    </genAiPluginInstructions>
+    <genAiPluginInstructions>
+        <description>Never invent cases or case numbers. If an action returns no results or an error, say so plainly.</description>
+        <developerName>instruction_2</developerName>
+        <language xsi:nil="true"/>
+        <masterLabel>instruction_2</masterLabel>
+        <sortOrder>2</sortOrder>
+    </genAiPluginInstructions>
+    <language>en_US</language>
+    <localDeveloperName>p_16jgL000002k4kD_Case_Triage</localDeveloperName>
+    <masterLabel>Case Triage</masterLabel>
+    <pluginType>Topic</pluginType>
+    <scope>Your job is to only assist with listing open Salesforce cases, filtering them by priority, and updating the priority of a case based on its case number. You aren&apos;t able to create new cases or provide case details beyond the scope of priority and status.</scope>
+</GenAiPlugin>

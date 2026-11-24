@@ -1,0 +1,24 @@
+{
+  "required": [
+    "caseNumber",
+    "newPriority"
+  ],
+  "unevaluatedProperties": false,
+  "properties": {
+    "caseNumber": {
+      "title": "caseNumber",
+      "description": "The case number, e.g. 00001002",
+      "lightning:type": "lightning__textType",
+      "lightning:isPII": false,
+      "copilotAction:isUserInput": true
+    },
+    "newPriority": {
+      "title": "newPriority",
+      "description": "High, Medium or Low",
+      "lightning:type": "lightning__textType",
+      "lightning:isPII": false,
+      "copilotAction:isUserInput": true
+    }
+  },
+  "lightning:type": "lightning__objectType"
+}

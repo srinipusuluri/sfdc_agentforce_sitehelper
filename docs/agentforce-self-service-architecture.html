@@ -1,0 +1,1228 @@
+<title>Agentforce Self-Service Architecture</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column, wide figures scroll inside their own box. Slate neutrals tinted toward teal; teal = agent path, amber = human path. */
+:root{
+  --bg:#f6f8f8; --surface:#ffffff; --fg:#17232a; --muted:#58696f; --line:#cfd9db;
+  --agent:#0b7a75; --agent-soft:#dff1ef; --human:#b45309; --human-soft:#fbeedb;
+  --ok:#1f7a45; --ok-soft:#e1f3e8; --have:#3b5b8c; --have-soft:#e3eaf5; --todo:#a3560a; --todo-soft:#fbeedb;
+  --code:#eef3f3;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1719; --surface:#162124; --fg:#e4eded; --muted:#9db0b3; --line:#2b3b3f;
+  --agent:#4fd1c5; --agent-soft:#12312f; --human:#f0a65a; --human-soft:#3a2a14;
+  --ok:#6fd08f; --ok-soft:#14301f; --have:#8fb0e6; --have-soft:#1a2740; --todo:#f0a65a; --todo-soft:#3a2a14; --code:#1b2a2d; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1719; --surface:#162124; --fg:#e4eded; --muted:#9db0b3; --line:#2b3b3f;
+  --agent:#4fd1c5; --agent-soft:#12312f; --human:#f0a65a; --human-soft:#3a2a14;
+  --ok:#6fd08f; --ok-soft:#14301f; --have:#8fb0e6; --have-soft:#1a2740; --todo:#f0a65a; --todo-soft:#3a2a14; --code:#1b2a2d; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:16px;line-height:1.6;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 80px}
+main{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:48px}
+section{display:flex;flex-direction:column;gap:16px;min-width:0}
+h1,h2,h3{font-weight:600;line-height:1.2;text-wrap:balance;margin:0}
+h1{font-size:clamp(1.9rem,4vw,2.6rem);letter-spacing:-.01em}
+h2{font-size:1.5rem;padding-top:8px;border-top:1px solid var(--line)}
+h3{font-size:1.05rem}
+p{margin:0;max-width:68ch}
+.lede{font-size:1.1rem;color:var(--muted);max-width:62ch}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--agent)}
+code{font-family:var(--mono);font-size:.86em;background:var(--code);padding:.1em .35em;border-radius:4px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.col{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.col h3{display:flex;align-items:center;gap:8px}
+.pill{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:99px;white-space:nowrap}
+.p-ok{background:var(--ok-soft);color:var(--ok)} .p-have{background:var(--have-soft);color:var(--have)} .p-todo{background:var(--todo-soft);color:var(--todo)}
+ul,ol{margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:6px}
+li{max-width:66ch}
+figure{margin:0;display:flex;flex-direction:column;gap:10px}
+.fig{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px;overflow-x:auto}
+.fig svg{display:block;min-width:760px;width:100%;height:auto;color:var(--fg)}
+figcaption{color:var(--muted);font-size:.92rem;max-width:72ch}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+td:first-child{font-family:var(--mono);font-size:.84rem;white-space:nowrap}
+.note{border-left:3px solid var(--todo);background:var(--todo-soft);padding:12px 16px;border-radius:0 8px 8px 0;max-width:72ch}
+.steps{counter-reset:s;list-style:none;padding:0;gap:12px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:2rem 1fr;gap:12px;max-width:none}
+.steps li::before{content:counter(s);font-family:var(--mono);font-weight:500;color:var(--agent);background:var(--agent-soft);border-radius:50%;width:2rem;height:2rem;display:grid;place-items:center;font-size:.9rem}
+:focus-visible{outline:2px solid var(--agent);outline-offset:2px}
+@media (max-width:520px){body{padding-block:24px 48px}}
+
+pre{background:var(--code);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto;font-family:var(--mono);font-size:.78rem;line-height:1.55;margin:0;max-width:100%;tab-size:2}
+pre code{background:none;padding:0;font-size:inherit}
+details{border:1px solid var(--line);border-radius:8px;background:var(--surface);min-width:0}
+details>summary{cursor:pointer;padding:10px 14px;font-family:var(--mono);font-size:.82rem;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+details>summary .path{color:var(--agent);word-break:break-all}
+details>summary .meta{color:var(--muted);font-size:.74rem}
+details[open]>summary{border-bottom:1px solid var(--line)}
+details pre{border:0;border-radius:0 0 8px 8px}
+.stack{display:flex;flex-direction:column;gap:12px}
+.fix{border-left:3px solid var(--ok);background:var(--ok-soft);padding:12px 16px;border-radius:0 8px 8px 0;max-width:72ch}
+.kv{display:grid;grid-template-columns:minmax(150px,max-content) 1fr;gap:6px 16px;font-size:.92rem}
+.kv dt{font-family:var(--mono);font-size:.82rem;color:var(--muted)} .kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+@media (max-width:520px){.kv{grid-template-columns:1fr}}
+
+pre{background:var(--code);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto;font-family:var(--mono);font-size:.78rem;line-height:1.55;margin:0;max-width:100%;tab-size:2}
+pre code{background:none;padding:0;font-size:inherit}
+details{border:1px solid var(--line);border-radius:8px;background:var(--surface);min-width:0}
+details>summary{cursor:pointer;padding:10px 14px;font-family:var(--mono);font-size:.82rem;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+details>summary .path{color:var(--agent);word-break:break-all}
+details>summary .meta{color:var(--muted);font-size:.74rem}
+details[open]>summary{border-bottom:1px solid var(--line)}
+details pre{border:0;border-radius:0 0 8px 8px}
+.stack{display:flex;flex-direction:column;gap:12px}
+.fix{border-left:3px solid var(--ok);background:var(--ok-soft);padding:12px 16px;border-radius:0 8px 8px 0;max-width:72ch}
+.kv{display:grid;grid-template-columns:minmax(150px,max-content) 1fr;gap:6px 16px;font-size:.92rem}
+.kv dt{font-family:var(--mono);font-size:.82rem;color:var(--muted)} .kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+@media (max-width:520px){.kv{grid-template-columns:1fr}}
+</style>
+
+
+
+<main>
+<header style="display:flex;flex-direction:column;gap:14px">
+  <span class="eyebrow">Salesforce org afdcnew · Developer Edition · updated 24 Nov 2026</span>
+  <h1>Agentforce self-service, with a path to a human</h1>
+  <p class="lede">Architecture, code, configuration and metadata for the Site Helper agent on the public chat, its escalation to a human through Omni-Channel, the internal Case Triage Assistant, and the Slack alerts built around them.</p>
+</header>
+
+<div class="fix"><b>Correction to the first version of this page.</b> It said the chat channel had no routing and that nothing reached the agent. That was wrong. The channel's session handler is the Agentforce Service Agent <code>Site_Helper</code>, with <code>BYOC_Messaging_Queue</code> as the human fallback. This version is rebuilt from the metadata retrieved from the org. I read that configuration but did not run a live chat myself.</div>
+
+<section id="status">
+  <h2>Where things stand</h2>
+  <div class="grid">
+    <div class="col"><h3><span class="pill p-ok">Working</span> Public chat</h3>
+      <ul>
+        <li>Agent <code>Site_Helper</code>, version 4 active, five topics written in Agent Script</li>
+        <li>Messaging channel <code>Site_Helper_Web_Chat</code> hands sessions to the agent</li>
+        <li>Embedded chat deployment on the live site <code>ESW_Site_Helper_We_17955492998421</code></li>
+        <li>Escalation action sends the chat to queue <code>BYOC_Messaging_Queue</code></li>
+      </ul></div>
+    <div class="col"><h3><span class="pill p-ok">Built and tested</span> Internal and Slack</h3>
+      <ul>
+        <li>Agent <code>Case_Triage_Assistant</code> with two Apex actions, 2 tests pass</li>
+        <li>Knowledge enabled, 5 public articles, guest read access</li>
+        <li>Slack alert trigger and daily digest, 4 tests pass</li>
+        <li>10 sample Cases</li>
+      </ul></div>
+    <div class="col"><h3><span class="pill p-todo">Open</span> Worth knowing</h3>
+      <ul>
+        <li>Site Helper answers from facts typed into its script, not from the 5 Knowledge articles</li>
+        <li>The queue has one member, the admin user</li>
+        <li>Slack webhook is unset, so nothing posts yet</li>
+        <li>The <code>Site Helper</code> Experience site is still UnderConstruction, separate from the live chat site</li>
+      </ul></div>
+  </div>
+</section>
+
+<section id="architecture">
+  <h2>Architecture</h2>
+  <p>A visitor opens the chat on the site. The Embedded Messaging deployment starts a messaging session on the channel, and the channel's session handler passes that session to the <code>Site_Helper</code> agent. The agent's router picks one of four subagents. Only the Escalation subagent leaves the agent: it calls <code>@utils.escalate</code>, and Omni-Channel routes the session to the fallback queue where a human accepts it in the Service Console.</p>
+  <figure>
+    <div class="fig">
+      <svg viewBox="0 0 1000 470" role="img" aria-label="Visitor to site to messaging channel to the Site Helper agent. The agent router chooses General Info, Follow-Up Capture, Off Topic or Escalation. Escalation goes to Omni-Channel, the BYOC messaging queue, and a human agent.">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker>
+          <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--agent)"/></marker>
+          <marker id="hu" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--human)"/></marker>
+        </defs>
+        <g font-family="IBM Plex Sans, system-ui, sans-serif" font-size="12.5" fill="currentColor">
+          <text x="10" y="22" font-size="11" letter-spacing="1" fill="var(--muted)">VISITOR SIDE</text>
+          <text x="340" y="22" font-size="11" letter-spacing="1" fill="var(--muted)">SALESFORCE</text>
+          <line x1="325" y1="10" x2="325" y2="455" stroke="var(--line)" stroke-dasharray="4 4"/>
+
+          <rect x="10" y="170" width="100" height="90" rx="8" fill="var(--surface)" stroke="currentColor"/>
+          <text x="60" y="209" text-anchor="middle" font-weight="600">Visitor</text>
+          <text x="60" y="227" text-anchor="middle" fill="var(--muted)">browser</text>
+
+          <rect x="150" y="150" width="155" height="130" rx="8" fill="var(--surface)" stroke="currentColor"/>
+          <text x="227" y="178" text-anchor="middle" font-weight="600">Live site</text>
+          <text x="227" y="196" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9.5" fill="var(--muted)">ESW_Site_Helper_We_…</text>
+          <text x="227" y="224" text-anchor="middle">Embedded Service</text>
+          <text x="227" y="242" text-anchor="middle">chat deployment</text>
+          <text x="227" y="262" text-anchor="middle" font-size="10.5" fill="var(--muted)">Site_Helper_Web_Chat</text>
+
+          <rect x="350" y="165" width="150" height="100" rx="8" fill="var(--surface)" stroke="currentColor" stroke-width="2"/>
+          <text x="425" y="192" text-anchor="middle" font-weight="600">Messaging channel</text>
+          <text x="425" y="211" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">Site_Helper_Web_Chat</text>
+          <text x="425" y="234" text-anchor="middle" font-size="11" fill="var(--muted)">session handler:</text>
+          <text x="425" y="250" text-anchor="middle" font-size="11" fill="var(--muted)">Agentforce Service Agent</text>
+
+          <rect x="540" y="30" width="250" height="395" rx="8" fill="var(--agent-soft)" stroke="var(--agent)" stroke-width="2"/>
+          <text x="665" y="56" text-anchor="middle" font-weight="600" fill="var(--agent)">Agentforce Service Agent</text>
+          <text x="665" y="73" text-anchor="middle" font-size="11" fill="var(--muted)">Site_Helper · v4 · Agent Script</text>
+
+          <rect x="560" y="90" width="210" height="46" rx="5" fill="var(--surface)" stroke="var(--agent)" stroke-width="2"/>
+          <text x="665" y="110" text-anchor="middle" font-weight="600">Agent Router</text>
+          <text x="665" y="126" text-anchor="middle" font-size="11" fill="var(--muted)">picks a subagent by intent</text>
+
+          <rect x="560" y="160" width="210" height="46" rx="5" fill="var(--surface)" stroke="var(--agent)"/>
+          <text x="665" y="180" text-anchor="middle">General Info</text>
+          <text x="665" y="196" text-anchor="middle" font-size="11" fill="var(--muted)">approved facts only</text>
+
+          <rect x="560" y="218" width="210" height="46" rx="5" fill="var(--surface)" stroke="var(--agent)"/>
+          <text x="665" y="238" text-anchor="middle">Follow-Up Capture</text>
+          <text x="665" y="254" text-anchor="middle" font-size="11" fill="var(--muted)">name + email → variables</text>
+
+          <rect x="560" y="276" width="210" height="46" rx="5" fill="var(--surface)" stroke="var(--agent)"/>
+          <text x="665" y="296" text-anchor="middle">Off Topic</text>
+          <text x="665" y="312" text-anchor="middle" font-size="11" fill="var(--muted)">polite decline</text>
+
+          <rect x="560" y="334" width="210" height="46" rx="5" fill="var(--human-soft)" stroke="var(--human)" stroke-width="2"/>
+          <text x="665" y="354" text-anchor="middle" font-weight="600" fill="var(--human)">Escalation</text>
+          <text x="665" y="370" text-anchor="middle" font-size="11" fill="var(--muted)">@utils.escalate</text>
+          <text x="665" y="406" text-anchor="middle" font-size="10.5" fill="var(--muted)">runs as bot user site_helper@…ext</text>
+
+          <rect x="830" y="150" width="160" height="290" rx="8" fill="var(--human-soft)" stroke="var(--human)" stroke-width="2"/>
+          <text x="910" y="176" text-anchor="middle" font-weight="600" fill="var(--human)">Omni-Channel</text>
+          <rect x="842" y="195" width="136" height="68" rx="5" fill="var(--surface)" stroke="var(--human)"/>
+          <text x="910" y="217" text-anchor="middle">Queue</text>
+          <text x="910" y="233" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9" fill="var(--muted)">BYOC_Messaging_Queue</text>
+          <text x="910" y="250" text-anchor="middle" font-size="10.5" fill="var(--muted)">least active routing</text>
+          <rect x="842" y="300" width="136" height="68" rx="5" fill="var(--surface)" stroke="var(--human)"/>
+          <text x="910" y="324" text-anchor="middle">Human agent</text>
+          <text x="910" y="342" text-anchor="middle" font-size="10.5" fill="var(--muted)">Service Console</text>
+          <text x="910" y="357" text-anchor="middle" font-size="10.5" fill="var(--muted)">sees transcript</text>
+
+          <line x1="110" y1="215" x2="148" y2="215" stroke="currentColor" stroke-width="1.5" marker-end="url(#ar)"/>
+          <line x1="305" y1="215" x2="348" y2="215" stroke="currentColor" stroke-width="1.5" marker-end="url(#ar)"/>
+          <text x="326" y="206" text-anchor="middle" font-size="10.5" fill="var(--muted)">chat</text>
+          <line x1="500" y1="215" x2="538" y2="215" stroke="var(--agent)" stroke-width="2" marker-end="url(#ag)"/>
+          <text x="520" y="206" text-anchor="middle" font-size="10.5" fill="var(--agent)">1</text>
+          <path d="M665 136 V158" stroke="var(--agent)" stroke-width="1.5" fill="none" marker-end="url(#ag)"/>
+          <path d="M770 357 H800 V229 H840" fill="none" stroke="var(--human)" stroke-width="2" marker-end="url(#hu)"/>
+          <text x="810" y="296" font-size="11" font-weight="600" fill="var(--human)" transform="rotate(-90 810 296)" text-anchor="middle">2 escalate</text>
+          <line x1="910" y1="263" x2="910" y2="298" stroke="var(--human)" stroke-width="2" marker-end="url(#hu)"/>
+          <path d="M425 265 V440 H828" fill="none" stroke="var(--human)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#hu)"/>
+          <text x="560" y="456" font-size="11" fill="var(--human)">fallback queue on the channel, if the agent is unavailable</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption>Teal is the agent, amber is the human path. Step 1 is the channel handing the session to the agent. Step 2 is the Escalation subagent transferring the session. The dashed line is the channel's own fallback queue setting (<code>sessionHandlerQueue</code>).</figcaption>
+  </figure>
+
+  <div class="note"><b>Omni-Flow router, as an option.</b> This org routes straight to the agent and uses a single queue, so no routing flow is needed. An Omni-Flow router becomes useful when you want a decision before the agent (business hours, language, VIP customers) or a choice of several queues or skills after escalation. The org already ships standard routing flows such as <code>MsgRouting</code>. The switch is on the channel: set the routing type to Omni-Flow and select a flow with a Route Work action that targets the agent first and a queue second. Nothing in the agent script changes.</div>
+</section>
+
+<section id="lifecycle">
+  <h2>One conversation, step by step</h2>
+  <figure>
+    <div class="fig">
+      <svg viewBox="0 0 1000 250" role="img" aria-label="Visitor message goes to the router. General questions are answered, demo requests go to follow-up capture, unrelated requests are declined, and requests for a person or frustration go to escalation, which transfers to the queue where a human accepts.">
+        <defs><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+        <g font-family="IBM Plex Sans, system-ui, sans-serif" font-size="12.5" fill="currentColor" stroke="currentColor">
+          <rect x="10" y="95" width="120" height="60" rx="8" fill="var(--surface)"/>
+          <text x="70" y="121" text-anchor="middle" stroke="none">Visitor sends</text><text x="70" y="138" text-anchor="middle" stroke="none">a message</text>
+          <rect x="175" y="95" width="130" height="60" rx="8" fill="var(--agent-soft)" stroke="var(--agent)" stroke-width="2"/>
+          <text x="240" y="121" text-anchor="middle" stroke="none">Agent Router</text><text x="240" y="138" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">classifies intent</text>
+
+          <rect x="470" y="8" width="170" height="50" rx="8" fill="var(--ok-soft)" stroke="var(--ok)"/>
+          <text x="555" y="29" text-anchor="middle" stroke="none">General Info</text><text x="555" y="46" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">answers, chat can end</text>
+          <rect x="470" y="70" width="170" height="50" rx="8" fill="var(--ok-soft)" stroke="var(--ok)"/>
+          <text x="555" y="91" text-anchor="middle" stroke="none">Follow-Up Capture</text><text x="555" y="108" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">demo or callback by email</text>
+          <rect x="470" y="132" width="170" height="50" rx="8" fill="var(--surface)"/>
+          <text x="555" y="153" text-anchor="middle" stroke="none">Off Topic</text><text x="555" y="170" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">declines, redirects</text>
+          <rect x="470" y="194" width="170" height="50" rx="8" fill="var(--human-soft)" stroke="var(--human)" stroke-width="2"/>
+          <text x="555" y="215" text-anchor="middle" stroke="none">Escalation</text><text x="555" y="232" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">asks for a person, frustrated</text>
+
+          <rect x="700" y="194" width="130" height="50" rx="8" fill="var(--human-soft)" stroke="var(--human)"/>
+          <text x="765" y="215" text-anchor="middle" stroke="none">Queue</text><text x="765" y="232" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">Omni-Channel routes</text>
+          <rect x="860" y="194" width="130" height="50" rx="8" fill="var(--human-soft)" stroke="var(--human)" stroke-width="2"/>
+          <text x="925" y="215" text-anchor="middle" stroke="none">Human accepts</text><text x="925" y="232" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">in Service Console</text>
+
+          <g fill="none" stroke-width="1.5">
+            <line x1="130" y1="125" x2="173" y2="125" marker-end="url(#a2)"/>
+            <path d="M305 125 H380 V33 H468" marker-end="url(#a2)"/>
+            <path d="M305 125 H380 V95 H468" marker-end="url(#a2)"/>
+            <path d="M305 125 H380 V157 H468" marker-end="url(#a2)"/>
+            <path d="M305 125 H380 V219 H468" marker-end="url(#a2)" stroke="var(--human)" stroke-width="2"/>
+            <line x1="640" y1="219" x2="698" y2="219" marker-end="url(#a2)" stroke="var(--human)" stroke-width="2"/>
+            <line x1="830" y1="219" x2="858" y2="219" marker-end="url(#a2)" stroke="var(--human)" stroke-width="2"/>
+          </g>
+          <g stroke="none" font-size="10.5" fill="var(--muted)">
+            <text x="388" y="28">company, product questions</text>
+            <text x="388" y="90">wants a demo</text>
+            <text x="388" y="152">unrelated</text>
+            <text x="388" y="214">person / frustration</text>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <figcaption>The rule that wins is written into the router: a request for a person or visible frustration overrides every other route, including demo requests. A chat that stays with General Info or Follow-Up Capture never reaches a human, which is the deflection.</figcaption>
+  </figure>
+</section>
+
+<section id="power">
+  <h2>What Agentforce agents add</h2>
+  <p>A chatbot follows a fixed script. An Agentforce agent reasons about each message, chooses from the topics and actions you gave it, runs them against live Salesforce data, and hands off to a person when it should. This project uses most of these pieces. The table says which.</p>
+  <figure>
+    <div class="fig">
+      <svg viewBox="0 0 1000 300" role="img" aria-label="Each visitor message goes to the planner, which chooses a topic and an action. The action runs against Salesforce data or a flow, the Einstein Trust Layer checks the model traffic, and the reply goes back to the visitor, or the planner escalates to a human through Omni-Channel.">
+        <defs>
+          <marker id="p1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker>
+          <marker id="p2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--human)"/></marker>
+        </defs>
+        <g font-family="IBM Plex Sans, system-ui, sans-serif" font-size="12.5" fill="currentColor" stroke="currentColor">
+          <rect x="10" y="100" width="120" height="70" rx="8" fill="var(--surface)"/>
+          <text x="70" y="130" text-anchor="middle" stroke="none">Visitor or</text><text x="70" y="148" text-anchor="middle" stroke="none">staff message</text>
+
+          <rect x="170" y="85" width="180" height="100" rx="8" fill="var(--agent-soft)" stroke="var(--agent)" stroke-width="2"/>
+          <text x="260" y="112" text-anchor="middle" stroke="none" font-weight="600">Planner</text>
+          <text x="260" y="132" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">reads the message, picks a</text>
+          <text x="260" y="148" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">topic, decides the next step</text>
+          <text x="260" y="168" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">script rules + model reasoning</text>
+
+          <rect x="400" y="20" width="190" height="52" rx="8" fill="var(--surface)"/>
+          <text x="495" y="42" text-anchor="middle" stroke="none">Apex action</text><text x="495" y="59" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">list cases, set priority</text>
+          <rect x="400" y="84" width="190" height="52" rx="8" fill="var(--surface)"/>
+          <text x="495" y="106" text-anchor="middle" stroke="none">Flow or prompt template</text><text x="495" y="123" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">available, not used here</text>
+          <rect x="400" y="148" width="190" height="52" rx="8" fill="var(--surface)"/>
+          <text x="495" y="170" text-anchor="middle" stroke="none">Knowledge or data library</text><text x="495" y="187" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">grounded answers, not yet wired</text>
+          <rect x="400" y="212" width="190" height="52" rx="8" fill="var(--human-soft)" stroke="var(--human)" stroke-width="2"/>
+          <text x="495" y="234" text-anchor="middle" stroke="none">Escalate</text><text x="495" y="251" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">to Omni-Channel queue</text>
+
+          <rect x="640" y="85" width="160" height="100" rx="8" fill="var(--surface)" stroke-dasharray="5 3"/>
+          <text x="720" y="115" text-anchor="middle" stroke="none" font-weight="600">Einstein Trust Layer</text>
+          <text x="720" y="136" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">sits between the agent</text>
+          <text x="720" y="152" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">and the language model:</text>
+          <text x="720" y="168" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">masking, safety checks</text>
+
+          <rect x="850" y="100" width="140" height="70" rx="8" fill="var(--surface)"/>
+          <text x="920" y="130" text-anchor="middle" stroke="none">Reply in the</text><text x="920" y="148" text-anchor="middle" stroke="none">same chat</text>
+
+          <g fill="none" stroke-width="1.5">
+            <line x1="130" y1="135" x2="168" y2="135" marker-end="url(#p1)"/>
+            <path d="M350 120 H375 V46 H398" marker-end="url(#p1)"/>
+            <path d="M350 135 H398" marker-end="url(#p1)"/>
+            <path d="M350 150 H375 V174 H398" marker-end="url(#p1)"/>
+            <path d="M350 170 H365 V238 H398" marker-end="url(#p2)" stroke="var(--human)" stroke-width="2"/>
+            <path d="M590 46 H615 V120 H638" marker-end="url(#p1)"/>
+            <path d="M590 110 H638" marker-end="url(#p1)"/>
+            <path d="M590 174 H615 V150 H638" marker-end="url(#p1)"/>
+            <line x1="800" y1="135" x2="848" y2="135" marker-end="url(#p1)"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <figcaption>The planner is the part a fixed chatbot does not have. It chooses the action for each message instead of matching keywords, and every action runs with the permissions of the agent's own user.</figcaption>
+  </figure>
+  <div class="tbl"><table>
+    <thead><tr><th>Capability</th><th>What it gives you</th><th>In this project</th></tr></thead>
+    <tbody>
+      <tr><td>Reasoning planner</td><td>Understands free-text requests and picks a topic and action, so visitors do not need menus or exact phrases.</td><td>Used. The router in Site Helper, the planner in Case Triage.</td></tr>
+      <tr><td>Topics with instructions</td><td>Business rules in plain language, such as never state prices, or escalate on frustration.</td><td>Used in both agents.</td></tr>
+      <tr><td>Agent Script</td><td>A text format that mixes fixed rules (transitions, variables) with model reasoning, and lives in source control.</td><td>Used for Site Helper.</td></tr>
+      <tr><td>Actions on your data</td><td>Apex, Flow, prompt templates and standard actions let the agent read and change Salesforce records.</td><td>Apex used for Cases. Flow and prompts not used.</td></tr>
+      <tr><td>Grounding</td><td>Answers drawn from Knowledge or a data library, so replies cite your content.</td><td>Not yet. Knowledge articles exist but are not connected.</td></tr>
+      <tr><td>Einstein Trust Layer</td><td>Masks sensitive data and applies safety checks on traffic to the language model.</td><td>Applies to any agent. Nothing to configure here.</td></tr>
+      <tr><td>Run-as user and permissions</td><td>The agent acts as its own user, so access is limited to what that user can see and do.</td><td>Used. Bot users, a permission set and user-mode queries.</td></tr>
+      <tr><td>Omni-Channel handoff</td><td>Escalation passes the live conversation, with its transcript, to the right queue or person.</td><td>Used by the Escalation subagent.</td></tr>
+      <tr><td>Many channels</td><td>The same agent can serve web chat, messaging apps, voice, email and Slack.</td><td>Web chat used. Slack is alerts only.</td></tr>
+      <tr><td>Agent testing</td><td>Test cases check the chosen topic, the actions called and the outcome before you release.</td><td>Used for Case Triage.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="site-helper">
+  <h2>The Site Helper agent</h2>
+  <span class="pill p-ok" style="align-self:flex-start">Active, version 4</span>
+  <p>Site Helper is a service agent written in Agent Script, Salesforce's text format for agents. The script defines the system prompt, the variables linked to the messaging session, a start router and four subagents. It answers about a finance automation product called Tallyforge, using only facts typed into the General Info subagent.</p>
+  <dl class="kv">
+    <dt>API name</dt><dd>Site_Helper (bot), Site_Helper_v4 (planner bundle)</dd>
+    <dt>Type</dt><dd>EinsteinServiceAgent, <code>agentDSLEnabled</code> true</dd>
+    <dt>Runs as</dt><dd>bot user <code>site_helper@…ext</code></dd>
+    <dt>Model</dt><dd>sfdc_ai__DefaultGPT41, router uses DefaultEinsteinHyperClassifier</dd>
+    <dt>Session variables</dt><dd>EndUserId, RoutableId, ContactId, EndUserLanguage (linked), visitor_name, visitor_email (mutable)</dd>
+    <dt>Escalation</dt><dd><code>@utils.escalate</code>, instructed to call it as the very first response with no questions</dd>
+    <dt>Knowledge grounding</dt><dd>none, <code>rag_feature_config_id</code> is empty</dd>
+  </dl>
+  <div class="tbl"><table>
+    <thead><tr><th>Subagent</th><th>Job</th><th>Leaves the agent?</th></tr></thead>
+    <tbody>
+      <tr><td>agent_router</td><td>Start point. Classifies intent. Escalation rule has highest priority.</td><td>No</td></tr>
+      <tr><td>general_info</td><td>Answers from the listed Tallyforge facts. Never states prices or turnaround times. Offers follow-up for anything it cannot answer.</td><td>No</td></tr>
+      <tr><td>follow_up_capture</td><td>Asks for name, then email, saves them with <code>@utils.setVariables</code>, thanks the visitor.</td><td>No</td></tr>
+      <tr><td>off_topic</td><td>Declines unrelated questions without answering them, redirects.</td><td>No</td></tr>
+      <tr><td>escalation</td><td>Calls <code>@utils.escalate</code> immediately. If the transfer fails, points to the support email.</td><td>Yes, to Omni-Channel</td></tr>
+    </tbody>
+  </table></div>
+  <div class="stack"><details><summary><span class="path">docs/site_helper_agent_script.agent.txt (decoded from the retrieved .agent file)</span><span class="meta">141 lines</span></summary><pre><code>system:
+    instructions: &quot;You are Site Helper, a friendly assistant on our public website. You help visitors learn about our company, products, and services, and collect their contact information when they would like a team member to follow up. You are warm, concise, and professional. Never answer questions unrelated to the company, its products, or its services.&quot;
+    messages:
+        welcome: |
+            Hi there! Welcome. I&#x27;m Site Helper — I can answer questions about our company, products, and services. How can I help you today?
+        error: &quot;Sorry, something went wrong. Please try again.&quot;
+
+config:
+    developer_name: &quot;Site_Helper&quot;
+    agent_label: &quot;Site Helper&quot;
+    description: &quot;Friendly public website assistant that answers visitor questions about the company, products, and services, and collects contact info for team follow-ups.&quot;
+
+access:
+    default_agent_user: &quot;AGENT_BOT_USER_PLACEHOLDER&quot;
+
+model_config:
+    model: &quot;model://sfdc_ai__DefaultGPT41&quot;
+
+language:
+    default_locale: &quot;en_US&quot;
+    additional_locales: &quot;&quot;
+    all_additional_locales: False
+
+variables:
+    EndUserId: linked string
+        source: @MessagingSession.MessagingEndUserId
+        description: &quot;This variable may also be referred to as MessagingEndUser Id&quot;
+    RoutableId: linked string
+        source: @MessagingSession.Id
+        description: &quot;This variable may also be referred to as MessagingSession Id&quot;
+    ContactId: linked string
+        source: @MessagingEndUser.ContactId
+        description: &quot;This variable may also be referred to as MessagingEndUser ContactId&quot;
+    EndUserLanguage: linked string
+        source: @MessagingSession.EndUserLanguage
+        description: &quot;This variable may also be referred to as MessagingSession EndUserLanguage&quot;
+    VerifiedCustomerId: mutable string
+        description: &quot;This variable may also be referred to as VerifiedCustomerId&quot;
+    visitor_name: mutable string = &quot;&quot;
+        description: &quot;The website visitor&#x27;s name, collected when they request a follow-up&quot;
+    visitor_email: mutable string = &quot;&quot;
+        description: &quot;The website visitor&#x27;s email address, collected when they request a follow-up&quot;
+
+knowledge:
+    rag_feature_config_id: &quot;&quot;
+    citations_url: &quot;&quot;
+    citations_enabled: False
+
+start_agent agent_router:
+    label: &quot;Agent Router&quot;
+    description: &quot;Welcome the visitor and route their request to the appropriate subagent&quot;
+    model_config:
+        model: &quot;model://sfdc_ai__DefaultEinsteinHyperClassifier&quot;
+    reasoning:
+        instructions: -&gt;
+            | Select the best tool to call based on the visitor&#x27;s intent.
+              HIGHEST PRIORITY — route to escalation immediately if the visitor:
+                - asks for a human, a person, a live agent, a representative, a sales rep, or someone to talk to
+                - expresses frustration, anger, or repeated dissatisfaction
+                - uses phrases like &quot;talk to someone&quot;, &quot;real person&quot;, &quot;speak with someone&quot;, or similar
+              This rule overrides all other routes, including follow_up_capture and general_info.
+              Route to follow_up_capture ONLY when the visitor wants a demo or a callback by email
+              AND has not asked for a live person.
+              Route to general_info for questions about the company, products, or services.
+              Route to off_topic for anything unrelated to the company, products, or services.
+        actions:
+            go_to_general_info: @utils.transition to @subagent.general_info
+            go_to_follow_up_capture: @utils.transition to @subagent.follow_up_capture
+            go_to_escalation: @utils.transition to @subagent.escalation
+            go_to_off_topic: @utils.transition to @subagent.off_topic
+
+subagent escalation:
+    label: &quot;Escalation&quot;
+    description: &quot;Transfers the visitor to a human agent via Omni-Channel when they ask for a person, express frustration, or the agent cannot help&quot;
+    reasoning:
+        instructions: -&gt;
+            | Immediately call {!@actions.escalate_to_human} to transfer this visitor to a human agent.
+              Do NOT ask for the visitor&#x27;s name, email, or any other information before calling the action.
+              Do NOT ask questions or add conversational steps — call the action as your very first response.
+              If the transfer fails, apologise briefly and direct the visitor to support@tallyforge.example,
+              Monday to Friday during business hours.
+        actions:
+            escalate_to_human: @utils.escalate
+                description: &quot;Transfer the conversation to a human agent via Omni-Channel.&quot;
+
+subagent follow_up_capture:
+    label: &quot;Follow-Up Capture&quot;
+    description: &quot;Collects the visitor&#x27;s name and email address so a team member can follow up with them&quot;
+    reasoning:
+        instructions: -&gt;
+            | Your goal is to collect the visitor&#x27;s name and email address for a follow-up from our team.
+              Ask for their first and last name first, then their email address. Keep the tone warm and brief.
+              Once you have both, use {!@actions.set_visitor_info} to save their details.
+              Then confirm: tell them a team member will be in touch soon, and thank them.
+              If the visitor declines to provide their details, acknowledge that politely and let them know
+              they are welcome to reach out again whenever they are ready.
+        actions:
+            set_visitor_info: @utils.setVariables
+                description: &quot;Save the visitor&#x27;s name and email once both have been provided.&quot;
+                with visitor_name=...
+                with visitor_email=...
+
+subagent general_info:
+    label: &quot;General Info&quot;
+    description: &quot;Answers visitor questions about Tallyforge&#x27;s products and services using only approved facts&quot;
+    reasoning:
+        instructions: -&gt;
+            | You represent Tallyforge, a finance automation platform for small and mid-sized businesses.
+              Answer ONLY from the facts listed below. If a visitor asks something not covered here,
+              say you are not sure and offer to have a team member follow up using {!@actions.go_to_follow_up}.
+              Never state prices, guarantees, or turnaround times.
+              Keep answers short and friendly. At natural points — especially when a visitor asks about
+              integrations, wants to get started, or has a question you cannot answer — offer to collect
+              their details for a demo or follow-up using {!@actions.go_to_follow_up}.
+
+              Facts you can share:
+              - AP Automation: capture vendor bills by email or upload, route them for approval, and pay
+                vendors by ACH, check, or virtual card.
+              - AR Automation: send professional invoices, accept card and bank payments, and send automatic
+                payment reminders.
+              - Spend Management: issue employee cards with budgets and limits, collect receipts, and sync
+                expenses.
+              - Integrations: connects with popular accounting systems and CRMs. Ask the visitor which system
+                they use and offer a follow-up via {!@actions.go_to_follow_up}.
+              - Security: role-based approvals, audit trails, and encryption in transit and at rest.
+              - Getting started: visitors can request a demo through this chat; a team member follows up by
+                email. Use {!@actions.go_to_follow_up} to collect their details.
+              - Support: contact support@tallyforge.example, Monday to Friday during business hours.
+        actions:
+            go_to_follow_up: @utils.transition to @subagent.follow_up_capture
+                description: &quot;Route the visitor to follow-up capture when they want a demo, ask about integrations, or ask something not covered by the available facts.&quot;
+
+subagent off_topic:
+    label: &quot;Off Topic&quot;
+    description: &quot;Politely declines visitor requests unrelated to the company, products, or services and redirects them&quot;
+    reasoning:
+        instructions: -&gt;
+            | The visitor has asked about something outside what you can help with.
+              Politely let them know you can only assist with questions about the company, products, and services, or help them request a follow-up with our team.
+              Be warm and brief — do not lecture or repeat yourself. Offer to help with something relevant instead.
+              Never answer the off-topic question, even partially.</code></pre></details></div>
+  <div class="note"><b>Visitor data.</b> Name and email are held in agent variables for the session. Nothing in the script writes them to a Lead or Contact, so a team member cannot yet find them after the chat ends. Adding a Lead-creating action to Follow-Up Capture is the natural next step.</div>
+</section>
+
+<section id="routing-config">
+  <h2>Channel, queue and deployment configuration</h2>
+  <p>These four files are what connect the website chat to the agent and to the humans. They were retrieved from the org and are now in the project.</p>
+  <dl class="kv">
+    <dt>sessionHandlerType</dt><dd>AgentforceServiceAgent</dd>
+    <dt>sessionHandlerAsa</dt><dd>Site_Helper, the agent that receives every new session</dd>
+    <dt>sessionHandlerQueue</dt><dd>BYOC_Messaging_Queue, the human fallback</dd>
+    <dt>Queue handles</dt><dd>MessagingSession records, one member, routing config BYOC_Messaging_Routing</dd>
+    <dt>Routing model</dt><dd>LEAST_ACTIVE, capacity inherited, priority 1</dd>
+    <dt>Deployment site</dt><dd>ESW_Site_Helper_We_17955492998421, guest users <code>false</code> in the deployment config</dd>
+  </dl>
+  <div class="stack"><details><summary><span class="path">force-app/main/default/messagingChannels/Site_Helper_Web_Chat.messagingChannel-meta.xml</span><span class="meta">35 lines</span></summary><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;MessagingChannel xmlns=&quot;http://soap.sforce.com/2006/04/metadata&quot;&gt;
+    &lt;automatedResponses&gt;
+        &lt;autoResponseContentType&gt;TextResponse&lt;/autoResponseContentType&gt;
+        &lt;language&gt;en_US&lt;/language&gt;
+        &lt;response&gt;You&amp;apos;ve opted out of receiving messages from us, so we won&amp;apos;t contact you again.&lt;/response&gt;
+        &lt;type&gt;OptOutConfirmation&lt;/type&gt;
+    &lt;/automatedResponses&gt;
+    &lt;automatedResponses&gt;
+        &lt;autoResponseContentType&gt;TextResponse&lt;/autoResponseContentType&gt;
+        &lt;language&gt;en_US&lt;/language&gt;
+        &lt;response&gt;Text STOP to opt out of further messages.&lt;/response&gt;
+        &lt;type&gt;HelpResponse&lt;/type&gt;
+    &lt;/automatedResponses&gt;
+    &lt;masterLabel&gt;Site Helper Web Chat&lt;/masterLabel&gt;
+    &lt;messagingChannelType&gt;EmbeddedMessaging&lt;/messagingChannelType&gt;
+    &lt;messagingKeywords&gt;
+        &lt;keyword&gt;cancel&lt;/keyword&gt;
+        &lt;keyword&gt;end&lt;/keyword&gt;
+        &lt;keyword&gt;quit&lt;/keyword&gt;
+        &lt;keyword&gt;stop&lt;/keyword&gt;
+        &lt;keyword&gt;stopall&lt;/keyword&gt;
+        &lt;keyword&gt;unsubscribe&lt;/keyword&gt;
+        &lt;keywordType&gt;OptOut&lt;/keywordType&gt;
+        &lt;language&gt;en_US&lt;/language&gt;
+    &lt;/messagingKeywords&gt;
+    &lt;messagingKeywords&gt;
+        &lt;keyword&gt;help&lt;/keyword&gt;
+        &lt;keywordType&gt;Help&lt;/keywordType&gt;
+        &lt;language&gt;en_US&lt;/language&gt;
+    &lt;/messagingKeywords&gt;
+    &lt;sessionHandlerAsa&gt;Site_Helper&lt;/sessionHandlerAsa&gt;
+    &lt;sessionHandlerQueue&gt;BYOC_Messaging_Queue&lt;/sessionHandlerQueue&gt;
+    &lt;sessionHandlerType&gt;AgentforceServiceAgent&lt;/sessionHandlerType&gt;
+&lt;/MessagingChannel&gt;</code></pre></details><details><summary><span class="path">force-app/main/default/queues/BYOC_Messaging_Queue.queue-meta.xml</span><span class="meta">15 lines</span></summary><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;Queue xmlns=&quot;http://soap.sforce.com/2006/04/metadata&quot;&gt;
+    &lt;doesIncludeBosses&gt;true&lt;/doesIncludeBosses&gt;
+    &lt;doesSendEmailToMembers&gt;false&lt;/doesSendEmailToMembers&gt;
+    &lt;name&gt;BYOC Messaging Queue&lt;/name&gt;
+    &lt;queueMembers&gt;
+        &lt;users&gt;
+            &lt;user&gt;ORG_USER_USERNAME_PLACEHOLDER&lt;/user&gt;
+        &lt;/users&gt;
+    &lt;/queueMembers&gt;
+    &lt;queueRoutingConfig&gt;BYOC_Messaging_Routing&lt;/queueRoutingConfig&gt;
+    &lt;queueSobject&gt;
+        &lt;sobjectType&gt;MessagingSession&lt;/sobjectType&gt;
+    &lt;/queueSobject&gt;
+&lt;/Queue&gt;</code></pre></details><details><summary><span class="path">force-app/main/default/queueRoutingConfigs/BYOC_Messaging_Routing.queueRoutingConfig-meta.xml</span><span class="meta">9 lines</span></summary><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;QueueRoutingConfig xmlns=&quot;http://soap.sforce.com/2006/04/metadata&quot;&gt;
+    &lt;capacityType&gt;INHERITED&lt;/capacityType&gt;
+    &lt;capacityWeight&gt;1.0&lt;/capacityWeight&gt;
+    &lt;isAttributeBased&gt;false&lt;/isAttributeBased&gt;
+    &lt;label&gt;BYOC Messaging Routing&lt;/label&gt;
+    &lt;routingModel&gt;LEAST_ACTIVE&lt;/routingModel&gt;
+    &lt;routingPriority&gt;1&lt;/routingPriority&gt;
+&lt;/QueueRoutingConfig&gt;</code></pre></details><details><summary><span class="path">force-app/main/default/EmbeddedServiceConfig/Site_Helper_Web_Chat.EmbeddedServiceConfig-meta.xml</span><span class="meta">29 lines</span></summary><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;EmbeddedServiceConfig xmlns=&quot;http://soap.sforce.com/2006/04/metadata&quot;&gt;
+    &lt;areGuestUsersAllowed&gt;false&lt;/areGuestUsersAllowed&gt;
+    &lt;branding&gt;EmbeddedServiceConfig_BrandingSet_1a20f143ec3&lt;/branding&gt;
+    &lt;deploymentFeature&gt;EmbeddedMessaging&lt;/deploymentFeature&gt;
+    &lt;deploymentType&gt;Web&lt;/deploymentType&gt;
+    &lt;embeddedServiceMessagingChannel&gt;
+        &lt;fabDisplayModeForMobileWeb&gt;IconAndLabel&lt;/fabDisplayModeForMobileWeb&gt;
+        &lt;fabDisplayModeForWeb&gt;IconAndLabel&lt;/fabDisplayModeForWeb&gt;
+        &lt;isChatInvitationCustomizable&gt;false&lt;/isChatInvitationCustomizable&gt;
+        &lt;isEnabled&gt;true&lt;/isEnabled&gt;
+        &lt;isInvitationEnabled&gt;false&lt;/isInvitationEnabled&gt;
+        &lt;isSendInvtAllowedAfterAccept&gt;false&lt;/isSendInvtAllowedAfterAccept&gt;
+        &lt;isSendInvtAllowedAfterReject&gt;false&lt;/isSendInvtAllowedAfterReject&gt;
+        &lt;messagingChannel&gt;Site_Helper_Web_Chat&lt;/messagingChannel&gt;
+        &lt;shouldShowAgentforceTagline&gt;true&lt;/shouldShowAgentforceTagline&gt;
+        &lt;shouldShowDeliveryReceipts&gt;false&lt;/shouldShowDeliveryReceipts&gt;
+        &lt;shouldShowEmojiSelection&gt;false&lt;/shouldShowEmojiSelection&gt;
+        &lt;shouldShowReadReceipts&gt;false&lt;/shouldShowReadReceipts&gt;
+        &lt;shouldShowTypingIndicators&gt;false&lt;/shouldShowTypingIndicators&gt;
+        &lt;shouldStartNewLineOnEnter&gt;false&lt;/shouldStartNewLineOnEnter&gt;
+    &lt;/embeddedServiceMessagingChannel&gt;
+    &lt;isEnabled&gt;true&lt;/isEnabled&gt;
+    &lt;isTermsAndConditionsEnabled&gt;false&lt;/isTermsAndConditionsEnabled&gt;
+    &lt;isTermsAndConditionsRequired&gt;false&lt;/isTermsAndConditionsRequired&gt;
+    &lt;masterLabel&gt;Site_Helper_Web_Chat&lt;/masterLabel&gt;
+    &lt;shouldHideAuthDialog&gt;false&lt;/shouldHideAuthDialog&gt;
+    &lt;site&gt;ESW_Site_Helper_We_17955492998421&lt;/site&gt;
+&lt;/EmbeddedServiceConfig&gt;</code></pre></details></div>
+</section>
+
+<section id="case-triage">
+  <h2>Case Triage Assistant, the internal agent</h2>
+  <span class="pill p-ok" style="align-self:flex-start">Built and tested</span>
+  <p>A second, separate agent for support staff. It lists open Cases and changes a Case's priority. It reads and writes Case data, so it should not face the public. It shows how to give an agent Apex actions.</p>
+  <ol class="steps">
+    <li><div><h3>Apex classes</h3><p>Two <code>@InvocableMethod</code> classes. Reads use <code>WITH USER_MODE</code>. The write action validates the priority and the case number.</p></div></li>
+    <li><div><h3>Agent action definitions</h3><p>Each class is wrapped by a <code>GenAiFunction</code>. The folder must contain <code>input/schema.json</code> and <code>output/schema.json</code>. Without them the action cannot be used and the agent falls into Off Topic.</p></div></li>
+    <li><div><h3>Topic</h3><p>The <code>GenAiPlugin</code> topic lists the two actions and holds the instructions. The write action asks for confirmation.</p></div></li>
+    <li><div><h3>Bot user access</h3><p>A permission set gives the bot user the two classes and Case read/edit. The Einstein Agent license rejects View All permissions.</p></div></li>
+  </ol>
+  <div class="stack"><details><summary><span class="path">force-app/main/default/classes/CaseTriageListInvocable.cls</span><span class="meta">63 lines</span></summary><pre><code>/**
+ * Agentforce action: list open (non-closed) Cases, optionally filtered by priority.
+ * Runs in user mode so the agent only sees what the running user can see.
+ */
+public with sharing class CaseTriageListInvocable {
+    private static final Integer MAX_ROWS = 10;
+
+    public class Request {
+        @InvocableVariable(label=&#x27;Priority&#x27; description=&#x27;Optional: High, Medium or Low. Leave blank for all open cases.&#x27;)
+        public String priority;
+    }
+
+    public class Result {
+        @InvocableVariable(label=&#x27;Summary&#x27; description=&#x27;Human-readable list of the matching open cases&#x27;)
+        public String summary;
+        @InvocableVariable(label=&#x27;Case Count&#x27;)
+        public Integer caseCount;
+    }
+
+    @InvocableMethod(
+        label=&#x27;List Open Cases&#x27;
+        description=&#x27;Returns up to 10 open cases (newest first), optionally filtered by priority.&#x27;
+        category=&#x27;Case Triage&#x27;
+    )
+    public static List&lt;Result&gt; listOpenCases(List&lt;Request&gt; requests) {
+        List&lt;Result&gt; results = new List&lt;Result&gt;();
+        for (Request req : requests) {
+            String prio = String.isBlank(req.priority) ? null : req.priority.trim();
+            List&lt;Case&gt; cases;
+            if (prio == null) {
+                cases = [
+                    SELECT CaseNumber, Subject, Status, Priority, Account.Name
+                    FROM Case
+                    WHERE IsClosed = FALSE
+                    WITH USER_MODE
+                    ORDER BY CreatedDate DESC
+                    LIMIT :MAX_ROWS
+                ];
+            } else {
+                cases = [
+                    SELECT CaseNumber, Subject, Status, Priority, Account.Name
+                    FROM Case
+                    WHERE IsClosed = FALSE AND Priority = :prio
+                    WITH USER_MODE
+                    ORDER BY CreatedDate DESC
+                    LIMIT :MAX_ROWS
+                ];
+            }
+            List&lt;String&gt; lines = new List&lt;String&gt;();
+            for (Case c : cases) {
+                lines.add(
+                    c.CaseNumber + &#x27; | &#x27; + c.Priority + &#x27; | &#x27; + c.Status + &#x27; | &#x27; +
+                    (c.Account.Name == null ? &#x27;No account&#x27; : c.Account.Name) + &#x27; | &#x27; + c.Subject
+                );
+            }
+            Result r = new Result();
+            r.caseCount = cases.size();
+            r.summary = cases.isEmpty() ? &#x27;No open cases found.&#x27; : String.join(lines, &#x27;\n&#x27;);
+            results.add(r);
+        }
+        return results;
+    }
+}</code></pre></details><details><summary><span class="path">force-app/main/default/classes/CaseTriageEscalateInvocable.cls</span><span class="meta">49 lines</span></summary><pre><code>/**
+ * Agentforce action: change the Priority of a Case identified by its case number.
+ */
+public with sharing class CaseTriageEscalateInvocable {
+    public class Request {
+        @InvocableVariable(label=&#x27;Case Number&#x27; description=&#x27;The case number, e.g. 00001002&#x27; required=true)
+        public String caseNumber;
+        @InvocableVariable(label=&#x27;New Priority&#x27; description=&#x27;High, Medium or Low&#x27; required=true)
+        public String newPriority;
+    }
+
+    public class Result {
+        @InvocableVariable(label=&#x27;Message&#x27; description=&#x27;Outcome of the update&#x27;)
+        public String message;
+    }
+
+    @InvocableMethod(
+        label=&#x27;Set Case Priority&#x27;
+        description=&#x27;Sets the priority of a case (High, Medium or Low) using its case number.&#x27;
+        category=&#x27;Case Triage&#x27;
+    )
+    public static List&lt;Result&gt; setPriority(List&lt;Request&gt; requests) {
+        List&lt;Result&gt; results = new List&lt;Result&gt;();
+        for (Request req : requests) {
+            Result r = new Result();
+            try {
+                if (req.newPriority == null || !new Set&lt;String&gt;{ &#x27;High&#x27;, &#x27;Medium&#x27;, &#x27;Low&#x27; }.contains(req.newPriority)) {
+                    r.message = &#x27;Priority must be High, Medium or Low.&#x27;;
+                } else {
+                    List&lt;Case&gt; found = [
+                        SELECT Id, Priority FROM Case WHERE CaseNumber = :req.caseNumber WITH USER_MODE LIMIT 1
+                    ];
+                    if (found.isEmpty()) {
+                        r.message = &#x27;Case &#x27; + req.caseNumber + &#x27; was not found.&#x27;;
+                    } else {
+                        String old = found[0].Priority;
+                        found[0].Priority = req.newPriority;
+                        update as user found;
+                        r.message = &#x27;Case &#x27; + req.caseNumber + &#x27; priority changed from &#x27; + old + &#x27; to &#x27; + req.newPriority + &#x27;.&#x27;;
+                    }
+                }
+            } catch (Exception e) {
+                r.message = &#x27;Could not update case: &#x27; + e.getMessage();
+            }
+            results.add(r);
+        }
+        return results;
+    }
+}</code></pre></details><details open><summary><span class="path">force-app/main/default/genAiFunctions/ListOpenCasesAction/ListOpenCasesAction.genAiFunction-meta.xml</span><span class="meta">8 lines</span></summary><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;GenAiFunction xmlns=&quot;http://soap.sforce.com/2006/04/metadata&quot;&gt;
+    &lt;description&gt;Lists up to 10 open cases, newest first, optionally filtered by priority (High, Medium, Low).&lt;/description&gt;
+    &lt;invocationTarget&gt;CaseTriageListInvocable&lt;/invocationTarget&gt;
+    &lt;invocationTargetType&gt;apex&lt;/invocationTargetType&gt;
+    &lt;isConfirmationRequired&gt;false&lt;/isConfirmationRequired&gt;
+    &lt;masterLabel&gt;List Open Cases&lt;/masterLabel&gt;
+&lt;/GenAiFunction&gt;</code></pre></details><details><summary><span class="path">force-app/main/default/genAiFunctions/ListOpenCasesAction/input/schema.json</span><span class="meta">14 lines</span></summary><pre><code>{
+  &quot;required&quot;: [],
+  &quot;unevaluatedProperties&quot;: false,
+  &quot;properties&quot;: {
+    &quot;priority&quot;: {
+      &quot;title&quot;: &quot;priority&quot;,
+      &quot;description&quot;: &quot;Optional: High, Medium or Low. Leave blank for all open cases.&quot;,
+      &quot;lightning:type&quot;: &quot;lightning__textType&quot;,
+      &quot;lightning:isPII&quot;: false,
+      &quot;copilotAction:isUserInput&quot;: true
+    }
+  },
+  &quot;lightning:type&quot;: &quot;lightning__objectType&quot;
+}</code></pre></details><details><summary><span class="path">force-app/main/default/genAiFunctions/ListOpenCasesAction/output/schema.json</span><span class="meta">14 lines</span></summary><pre><code>{
+  &quot;unevaluatedProperties&quot;: false,
+  &quot;properties&quot;: {
+    &quot;summary&quot;: {
+      &quot;title&quot;: &quot;summary&quot;,
+      &quot;description&quot;: &quot;Human-readable list of the matching open cases&quot;,
+      &quot;lightning:type&quot;: &quot;lightning__textType&quot;,
+      &quot;lightning:isPII&quot;: false,
+      &quot;copilotAction:isDisplayable&quot;: true,
+      &quot;copilotAction:isUsedByPlanner&quot;: true
+    }
+  },
+  &quot;lightning:type&quot;: &quot;lightning__objectType&quot;
+}</code></pre></details><details><summary><span class="path">force-app/main/default/genAiPlugins/p_16jgL000002k4kD_Case_Triage.genAiPlugin-meta.xml</span><span class="meta">38 lines</span></summary><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;GenAiPlugin xmlns=&quot;http://soap.sforce.com/2006/04/metadata&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
+    &lt;canEscalate&gt;false&lt;/canEscalate&gt;
+    &lt;description&gt;Handles ANY request about support cases: show, list or view open cases, find high, medium or low priority cases, and change or escalate the priority of a case by case number. Use this topic whenever the user mentions cases, tickets or priorities.&lt;/description&gt;
+    &lt;developerName&gt;p_16jgL000002k4kD_Case_Triage&lt;/developerName&gt;
+    &lt;genAiFunctions&gt;
+        &lt;functionName&gt;ListOpenCasesAction&lt;/functionName&gt;
+    &lt;/genAiFunctions&gt;
+    &lt;genAiFunctions&gt;
+        &lt;functionName&gt;SetCasePriorityAction&lt;/functionName&gt;
+    &lt;/genAiFunctions&gt;
+    &lt;genAiPluginInstructions&gt;
+        &lt;description&gt;To show cases, call List Open Cases. Pass a priority only if the user asked for one (High, Medium or Low); otherwise leave it blank. Present the result as a short list.&lt;/description&gt;
+        &lt;developerName&gt;instruction_0&lt;/developerName&gt;
+        &lt;language xsi:nil=&quot;true&quot;/&gt;
+        &lt;masterLabel&gt;instruction_0&lt;/masterLabel&gt;
+        &lt;sortOrder&gt;0&lt;/sortOrder&gt;
+    &lt;/genAiPluginInstructions&gt;
+    &lt;genAiPluginInstructions&gt;
+        &lt;description&gt;To change a case priority, you need both the case number and the new priority (High, Medium or Low). Ask for whichever is missing, then call Set Case Priority and report its message exactly.&lt;/description&gt;
+        &lt;developerName&gt;instruction_1&lt;/developerName&gt;
+        &lt;language xsi:nil=&quot;true&quot;/&gt;
+        &lt;masterLabel&gt;instruction_1&lt;/masterLabel&gt;
+        &lt;sortOrder&gt;1&lt;/sortOrder&gt;
+    &lt;/genAiPluginInstructions&gt;
+    &lt;genAiPluginInstructions&gt;
+        &lt;description&gt;Never invent cases or case numbers. If an action returns no results or an error, say so plainly.&lt;/description&gt;
+        &lt;developerName&gt;instruction_2&lt;/developerName&gt;
+        &lt;language xsi:nil=&quot;true&quot;/&gt;
+        &lt;masterLabel&gt;instruction_2&lt;/masterLabel&gt;
+        &lt;sortOrder&gt;2&lt;/sortOrder&gt;
+    &lt;/genAiPluginInstructions&gt;
+    &lt;language&gt;en_US&lt;/language&gt;
+    &lt;localDeveloperName&gt;p_16jgL000002k4kD_Case_Triage&lt;/localDeveloperName&gt;
+    &lt;masterLabel&gt;Case Triage&lt;/masterLabel&gt;
+    &lt;pluginType&gt;Topic&lt;/pluginType&gt;
+    &lt;scope&gt;Your job is to only assist with listing open Salesforce cases, filtering them by priority, and updating the priority of a case based on its case number. You aren&amp;apos;t able to create new cases or provide case details beyond the scope of priority and status.&lt;/scope&gt;
+&lt;/GenAiPlugin&gt;</code></pre></details><details><summary><span class="path">force-app/main/default/permissionsets/CaseTriage_Agent_Access.permissionset-meta.xml</span><span class="meta">37 lines</span></summary><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;PermissionSet xmlns=&quot;http://soap.sforce.com/2006/04/metadata&quot;&gt;
+    &lt;label&gt;Case Triage Agent Access&lt;/label&gt;
+    &lt;description&gt;Lets the Case Triage Assistant agent user run its Apex actions and read/edit Cases.&lt;/description&gt;
+    &lt;hasActivationRequired&gt;false&lt;/hasActivationRequired&gt;
+    &lt;classAccesses&gt;
+        &lt;apexClass&gt;CaseTriageListInvocable&lt;/apexClass&gt;
+        &lt;enabled&gt;true&lt;/enabled&gt;
+    &lt;/classAccesses&gt;
+    &lt;classAccesses&gt;
+        &lt;apexClass&gt;CaseTriageEscalateInvocable&lt;/apexClass&gt;
+        &lt;enabled&gt;true&lt;/enabled&gt;
+    &lt;/classAccesses&gt;
+    &lt;objectPermissions&gt;
+        &lt;allowCreate&gt;false&lt;/allowCreate&gt;
+        &lt;allowDelete&gt;false&lt;/allowDelete&gt;
+        &lt;allowEdit&gt;true&lt;/allowEdit&gt;
+        &lt;allowRead&gt;true&lt;/allowRead&gt;
+        &lt;modifyAllRecords&gt;false&lt;/modifyAllRecords&gt;
+        &lt;object&gt;Case&lt;/object&gt;
+        &lt;viewAllRecords&gt;false&lt;/viewAllRecords&gt;
+    &lt;/objectPermissions&gt;
+    &lt;objectPermissions&gt;
+        &lt;allowCreate&gt;false&lt;/allowCreate&gt;
+        &lt;allowDelete&gt;false&lt;/allowDelete&gt;
+        &lt;allowEdit&gt;false&lt;/allowEdit&gt;
+        &lt;allowRead&gt;true&lt;/allowRead&gt;
+        &lt;modifyAllRecords&gt;false&lt;/modifyAllRecords&gt;
+        &lt;object&gt;Account&lt;/object&gt;
+        &lt;viewAllRecords&gt;false&lt;/viewAllRecords&gt;
+    &lt;/objectPermissions&gt;
+    &lt;fieldPermissions&gt;
+        &lt;editable&gt;true&lt;/editable&gt;
+        &lt;field&gt;Case.Priority&lt;/field&gt;
+        &lt;readable&gt;true&lt;/readable&gt;
+    &lt;/fieldPermissions&gt;
+&lt;/PermissionSet&gt;</code></pre></details><details><summary><span class="path">force-app/main/default/classes/CaseTriageAgentActionsTest.cls</span><span class="meta">43 lines</span></summary><pre><code>@IsTest
+private class CaseTriageAgentActionsTest {
+    @TestSetup
+    static void setup() {
+        insert new List&lt;Case&gt;{
+            new Case(Subject = &#x27;A&#x27;, Status = &#x27;New&#x27;, Priority = &#x27;Low&#x27;),
+            new Case(Subject = &#x27;B&#x27;, Status = &#x27;New&#x27;, Priority = &#x27;High&#x27;)
+        };
+    }
+
+    @IsTest
+    static void listsAllAndFiltered() {
+        CaseTriageListInvocable.Request all = new CaseTriageListInvocable.Request();
+        CaseTriageListInvocable.Request high = new CaseTriageListInvocable.Request();
+        high.priority = &#x27;High&#x27;;
+        List&lt;CaseTriageListInvocable.Result&gt; res = CaseTriageListInvocable.listOpenCases(
+            new List&lt;CaseTriageListInvocable.Request&gt;{ all, high }
+        );
+        Assert.areEqual(2, res[0].caseCount);
+        Assert.areEqual(1, res[1].caseCount);
+    }
+
+    @IsTest
+    static void setsPriorityAndHandlesBadInput() {
+        Case c = [SELECT CaseNumber FROM Case WHERE Subject = &#x27;A&#x27;];
+        CaseTriageEscalateInvocable.Request ok = new CaseTriageEscalateInvocable.Request();
+        ok.caseNumber = c.CaseNumber;
+        ok.newPriority = &#x27;High&#x27;;
+        CaseTriageEscalateInvocable.Request badPrio = new CaseTriageEscalateInvocable.Request();
+        badPrio.caseNumber = c.CaseNumber;
+        badPrio.newPriority = &#x27;Urgent&#x27;;
+        CaseTriageEscalateInvocable.Request missing = new CaseTriageEscalateInvocable.Request();
+        missing.caseNumber = &#x27;99999999&#x27;;
+        missing.newPriority = &#x27;High&#x27;;
+        List&lt;CaseTriageEscalateInvocable.Result&gt; res = CaseTriageEscalateInvocable.setPriority(
+            new List&lt;CaseTriageEscalateInvocable.Request&gt;{ ok, badPrio, missing }
+        );
+        Assert.isTrue(res[0].message.contains(&#x27;changed from Low to High&#x27;));
+        Assert.isTrue(res[1].message.contains(&#x27;must be&#x27;));
+        Assert.isTrue(res[2].message.contains(&#x27;not found&#x27;));
+        Assert.areEqual(&#x27;High&#x27;, [SELECT Priority FROM Case WHERE Id = :c.Id].Priority);
+    }
+}</code></pre></details><details><summary><span class="path">specs/caseTriageAgent.yaml</span><span class="meta">8 lines</span></summary><pre><code>agentType: internal
+role: A support-team assistant that helps agents triage open Salesforce Cases, showing what is open and re-prioritizing cases when asked.
+companyName: srinip company
+companyDescription: A company that supports its customers through Salesforce Service Cloud cases.
+maxNumOfTopics: 1
+topics:
+  - name: Case Triage
+    description: Lists open support cases (optionally filtered by High, Medium or Low priority) and changes the priority of a case identified by its case number.</code></pre></details><details><summary><span class="path">specs/caseTriageTests.yaml</span><span class="meta">20 lines</span></summary><pre><code>name: Case Triage Assistant Tests
+description: Smoke tests for the Case Triage Assistant agent
+subjectType: AGENT
+subjectName: Case_Triage_Assistant
+testCases:
+  - utterance: Show me all open cases
+    expectedTopic: p_16jgL000002k4kD_Case_Triage
+    expectedActions:
+      - ListOpenCasesAction
+    expectedOutcome: The agent lists open cases including case numbers such as 00001002 and their priorities.
+  - utterance: Show me the open support cases that have High priority
+    expectedTopic: p_16jgL000002k4kD_Case_Triage
+    expectedActions:
+      - ListOpenCasesAction
+    expectedOutcome: The agent lists only open cases with High priority, or says none were found.
+  - utterance: Change the priority of case 99999999 to High
+    expectedTopic: p_16jgL000002k4kD_Case_Triage
+    expectedActions:
+      - SetCasePriorityAction
+    expectedOutcome: The agent reports that case 99999999 was not found.</code></pre></details></div>
+</section>
+
+<section id="knowledge">
+  <h2>Knowledge and guest access</h2>
+  <p>Five articles are published to the Public Knowledge Base, and the Site Helper site's guest user can read them. The Site Helper agent does not use them yet. To use them, connect a Knowledge data library to the agent and add an answer action to General Info.</p>
+  <div class="stack"><details><summary><span class="path">force-app/main/default/settings/Knowledge.settings-meta.xml</span><span class="meta">13 lines</span></summary><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;KnowledgeSettings xmlns=&quot;http://soap.sforce.com/2006/04/metadata&quot;&gt;
+    &lt;enableKnowledge&gt;true&lt;/enableKnowledge&gt;
+    &lt;enableLightningKnowledge&gt;true&lt;/enableLightningKnowledge&gt;
+    &lt;enableCreateEditOnArticlesTab&gt;true&lt;/enableCreateEditOnArticlesTab&gt;
+    &lt;defaultLanguage&gt;en_US&lt;/defaultLanguage&gt;
+    &lt;languages&gt;
+        &lt;language&gt;
+            &lt;active&gt;true&lt;/active&gt;
+            &lt;name&gt;en_US&lt;/name&gt;
+        &lt;/language&gt;
+    &lt;/languages&gt;
+&lt;/KnowledgeSettings&gt;</code></pre></details><details><summary><span class="path">force-app/main/default/objects/Knowledge__kav/fields/Article_Body__c.field-meta.xml</span><span class="meta">9 lines</span></summary><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;CustomField xmlns=&quot;http://soap.sforce.com/2006/04/metadata&quot;&gt;
+    &lt;fullName&gt;Article_Body__c&lt;/fullName&gt;
+    &lt;label&gt;Article Body&lt;/label&gt;
+    &lt;type&gt;Html&lt;/type&gt;
+    &lt;length&gt;32768&lt;/length&gt;
+    &lt;visibleLines&gt;25&lt;/visibleLines&gt;
+    &lt;required&gt;false&lt;/required&gt;
+&lt;/CustomField&gt;</code></pre></details><details><summary><span class="path">force-app/main/default/permissionsets/Knowledge_Guest_Read.permissionset-meta.xml</span><span class="meta">20 lines</span></summary><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;PermissionSet xmlns=&quot;http://soap.sforce.com/2006/04/metadata&quot;&gt;
+    &lt;label&gt;Knowledge Guest Read&lt;/label&gt;
+    &lt;description&gt;Lets the Site Helper guest user read published public knowledge articles.&lt;/description&gt;
+    &lt;hasActivationRequired&gt;false&lt;/hasActivationRequired&gt;
+    &lt;objectPermissions&gt;
+        &lt;allowCreate&gt;false&lt;/allowCreate&gt;
+        &lt;allowDelete&gt;false&lt;/allowDelete&gt;
+        &lt;allowEdit&gt;false&lt;/allowEdit&gt;
+        &lt;allowRead&gt;true&lt;/allowRead&gt;
+        &lt;modifyAllRecords&gt;false&lt;/modifyAllRecords&gt;
+        &lt;object&gt;Knowledge__kav&lt;/object&gt;
+        &lt;viewAllRecords&gt;false&lt;/viewAllRecords&gt;
+    &lt;/objectPermissions&gt;
+    &lt;fieldPermissions&gt;
+        &lt;editable&gt;false&lt;/editable&gt;
+        &lt;field&gt;Knowledge__kav.Article_Body__c&lt;/field&gt;
+        &lt;readable&gt;true&lt;/readable&gt;
+    &lt;/fieldPermissions&gt;
+&lt;/PermissionSet&gt;</code></pre></details><details><summary><span class="path">scripts/apex/createKnowledge.apex</span><span class="meta">21 lines</span></summary><pre><code>List&lt;Map&lt;String,String&gt;&gt; arts = new List&lt;Map&lt;String,String&gt;&gt;{
+  new Map&lt;String,String&gt;{&#x27;t&#x27;=&gt;&#x27;How to Perform Routine Generator Maintenance&#x27;,&#x27;u&#x27;=&gt;&#x27;generator-routine-maintenance&#x27;,&#x27;s&#x27;=&gt;&#x27;A simple schedule for keeping your generator reliable.&#x27;,
+    &#x27;b&#x27;=&gt;&#x27;&lt;h2&gt;Maintenance schedule&lt;/h2&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;Weekly:&lt;/b&gt; check oil, coolant and fuel levels; run the unit for 10 minutes.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Every 100 hours:&lt;/b&gt; change the oil and inspect air filters.&lt;/li&gt;&lt;li&gt;&lt;b&gt;Annually:&lt;/b&gt; replace spark plugs or fuel filters and test the battery.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Always switch the generator off and let it cool before servicing.&lt;/p&gt;&#x27;},
+  new Map&lt;String,String&gt;{&#x27;t&#x27;=&gt;&#x27;Electrical Wiring Installation Guidelines for the GC5060&#x27;,&#x27;u&#x27;=&gt;&#x27;gc5060-wiring-installation&#x27;,&#x27;s&#x27;=&gt;&#x27;Key safety and wiring steps before installing the GC5060.&#x27;,
+    &#x27;b&#x27;=&gt;&#x27;&lt;h2&gt;Before you start&lt;/h2&gt;&lt;ol&gt;&lt;li&gt;Isolate power and lock out the supply.&lt;/li&gt;&lt;li&gt;Use cable rated for the unit load and run it in conduit.&lt;/li&gt;&lt;li&gt;Connect protective earth first, then neutral, then phases.&lt;/li&gt;&lt;li&gt;Have a licensed electrician inspect the installation before commissioning.&lt;/li&gt;&lt;/ol&gt;&#x27;},
+  new Map&lt;String,String&gt;{&#x27;t&#x27;=&gt;&#x27;Troubleshooting Mechanical Rotor Vibration&#x27;,&#x27;u&#x27;=&gt;&#x27;rotor-vibration-troubleshooting&#x27;,&#x27;s&#x27;=&gt;&#x27;Common causes of excessive rotor vibration and how to fix them.&#x27;,
+    &#x27;b&#x27;=&gt;&#x27;&lt;h2&gt;Common causes&lt;/h2&gt;&lt;ul&gt;&lt;li&gt;Worn or damaged bearings&lt;/li&gt;&lt;li&gt;Imbalanced rotor or loose mounting bolts&lt;/li&gt;&lt;li&gt;Shaft misalignment&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Stop the machine, inspect mountings, and contact support if vibration persists after re-tightening.&lt;/p&gt;&#x27;},
+  new Map&lt;String,String&gt;{&#x27;t&#x27;=&gt;&#x27;How to Contact Support and What to Include in a Case&#x27;,&#x27;u&#x27;=&gt;&#x27;contacting-support&#x27;,&#x27;s&#x27;=&gt;&#x27;Get faster answers by including the right details.&#x27;,
+    &#x27;b&#x27;=&gt;&#x27;&lt;p&gt;When you open a case, include the product model, serial number, a clear description, and any error codes or photos. Cases are prioritised as High, Medium or Low based on business impact.&lt;/p&gt;&#x27;},
+  new Map&lt;String,String&gt;{&#x27;t&#x27;=&gt;&#x27;Warranty and Service Coverage FAQ&#x27;,&#x27;u&#x27;=&gt;&#x27;warranty-faq&#x27;,&#x27;s&#x27;=&gt;&#x27;Answers to common warranty questions.&#x27;,
+    &#x27;b&#x27;=&gt;&#x27;&lt;h2&gt;FAQ&lt;/h2&gt;&lt;p&gt;&lt;b&gt;How long is the warranty?&lt;/b&gt; Standard equipment carries a 12-month warranty from delivery.&lt;/p&gt;&lt;p&gt;&lt;b&gt;What voids it?&lt;/b&gt; Unauthorised modification or skipped scheduled maintenance.&lt;/p&gt;&#x27;}
+};
+List&lt;Knowledge__kav&gt; recs = new List&lt;Knowledge__kav&gt;();
+for (Map&lt;String,String&gt; a : arts) {
+  recs.add(new Knowledge__kav(Title=a.get(&#x27;t&#x27;), UrlName=a.get(&#x27;u&#x27;), Summary=a.get(&#x27;s&#x27;), Article_Body__c=a.get(&#x27;b&#x27;), Language=&#x27;en_US&#x27;, IsVisibleInPkb=true, IsVisibleInCsp=true));
+}
+insert recs;
+for (Knowledge__kav k : [SELECT KnowledgeArticleId FROM Knowledge__kav WHERE Id IN :recs]) {
+  KbManagement.PublishingService.publishArticle(k.KnowledgeArticleId, true);
+}
+System.debug(&#x27;Published &#x27; + recs.size());</code></pre></details></div>
+</section>
+
+<section id="slack">
+  <h2>Slack alerts</h2>
+  <span class="pill p-todo" style="align-self:flex-start">Deployed, off until the webhook is set</span>
+  <p>A trigger posts to Slack when a High priority Case is created, and a scheduled job posts a daily digest. Both go through one class that reads the webhook URL from the protected label <code>Slack_Webhook_Url</code>. While the label says <code>REPLACE_ME</code>, nothing is sent.</p>
+  <figure>
+    <div class="fig">
+      <svg viewBox="0 0 1000 330" role="img" aria-label="Staff talk to Case Triage Assistant, which calls Apex actions on Case records. A Case insert with High priority fires a trigger, and a daily job, both call SlackCaseNotifier, which posts to a Slack webhook.">
+        <defs><marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+        <g font-family="IBM Plex Sans, system-ui, sans-serif" font-size="12.5" fill="currentColor" stroke="currentColor">
+          <rect x="10" y="40" width="100" height="70" rx="8" fill="var(--surface)"/><text x="60" y="80" text-anchor="middle" stroke="none">Support staff</text>
+          <rect x="140" y="40" width="150" height="70" rx="8" fill="var(--agent-soft)" stroke="var(--agent)" stroke-width="2"/>
+          <text x="215" y="68" text-anchor="middle" stroke="none" font-weight="600">Case Triage</text><text x="215" y="86" text-anchor="middle" stroke="none" font-weight="600">Assistant</text>
+          <rect x="320" y="40" width="140" height="70" rx="8" fill="var(--surface)"/>
+          <text x="390" y="68" text-anchor="middle" stroke="none">Apex actions</text><text x="390" y="86" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">list · set priority</text>
+          <rect x="490" y="40" width="130" height="70" rx="8" fill="var(--surface)"/>
+          <text x="555" y="80" text-anchor="middle" stroke="none">Case records</text>
+
+          <rect x="490" y="170" width="130" height="60" rx="8" fill="var(--human-soft)" stroke="var(--human)"/>
+          <text x="555" y="196" text-anchor="middle" stroke="none">Trigger</text><text x="555" y="214" text-anchor="middle" stroke="none" font-size="10.5" fill="var(--muted)">after insert, High</text>
+          <rect x="650" y="150" width="150" height="100" rx="8" fill="var(--surface)" stroke-width="2"/>
+          <text x="725" y="188" text-anchor="middle" stroke="none" font-weight="600">SlackCaseNotifier</text>
+          <text x="725" y="208" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">future callout</text>
+          <text x="725" y="224" text-anchor="middle" stroke="none" font-size="11" fill="var(--muted)">skips if unset</text>
+          <rect x="650" y="275" width="150" height="45" rx="8" fill="var(--surface)"/>
+          <text x="725" y="302" text-anchor="middle" stroke="none">Daily digest job</text>
+          <rect x="840" y="170" width="150" height="60" rx="8" fill="var(--surface)" stroke-dasharray="5 3"/>
+          <text x="915" y="196" text-anchor="middle" stroke="none">Slack webhook</text><text x="915" y="214" text-anchor="middle" stroke="none" font-size="10.5" fill="var(--muted)">to set</text>
+
+          <g fill="none" stroke-width="1.5">
+            <line x1="110" y1="75" x2="138" y2="75" marker-end="url(#a3)"/>
+            <line x1="290" y1="75" x2="318" y2="75" marker-end="url(#a3)"/>
+            <line x1="460" y1="75" x2="488" y2="75" marker-end="url(#a3)"/>
+            <line x1="555" y1="110" x2="555" y2="168" marker-end="url(#a3)"/>
+            <line x1="620" y1="200" x2="648" y2="200" marker-end="url(#a3)"/>
+            <line x1="725" y1="275" x2="725" y2="252" marker-end="url(#a3)"/>
+            <line x1="800" y1="200" x2="838" y2="200" marker-end="url(#a3)"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <figcaption>The internal agent and the Slack alerts share only the Case object. The dashed box is the part you still have to create in Slack.</figcaption>
+  </figure>
+  <div class="stack"><details><summary><span class="path">force-app/main/default/classes/SlackCaseNotifier.cls</span><span class="meta">66 lines</span></summary><pre><code>/**
+ * Posts Case summaries to Slack through an incoming webhook.
+ * The webhook URL lives in the protected custom label Slack_Webhook_Url.
+ * While the label still says REPLACE_ME, nothing is sent.
+ */
+public with sharing class SlackCaseNotifier {
+    @TestVisible
+    private static String webhookOverride;
+
+    private static String webhookUrl() {
+        String url = webhookOverride != null ? webhookOverride : Label.Slack_Webhook_Url;
+        return (String.isBlank(url) || url == &#x27;REPLACE_ME&#x27;) ? null : url;
+    }
+
+    public static String buildDigest() {
+        List&lt;AggregateResult&gt; rows = [
+            SELECT Priority p, COUNT(Id) n FROM Case WHERE IsClosed = FALSE GROUP BY Priority
+        ];
+        Map&lt;String, Integer&gt; counts = new Map&lt;String, Integer&gt;{ &#x27;High&#x27; =&gt; 0, &#x27;Medium&#x27; =&gt; 0, &#x27;Low&#x27; =&gt; 0 };
+        for (AggregateResult r : rows) {
+            counts.put((String) r.get(&#x27;p&#x27;), (Integer) r.get(&#x27;n&#x27;));
+        }
+        return &#x27;:clipboard: *Daily case digest*\n&#x27; +
+            &#x27;:red_circle: High: &#x27; + counts.get(&#x27;High&#x27;) + &#x27;\n&#x27; +
+            &#x27;:large_orange_circle: Medium: &#x27; + counts.get(&#x27;Medium&#x27;) + &#x27;\n&#x27; +
+            &#x27;:large_green_circle: Low: &#x27; + counts.get(&#x27;Low&#x27;);
+    }
+
+    public static String buildAlert(List&lt;Case&gt; cases) {
+        List&lt;String&gt; lines = new List&lt;String&gt;();
+        for (Case c : cases) {
+            lines.add(&#x27;• &#x27; + c.CaseNumber + &#x27; - &#x27; + c.Subject);
+        }
+        return &#x27;:rotating_light: *New High priority case(s)*\n&#x27; + String.join(lines, &#x27;\n&#x27;);
+    }
+
+    public static void send(String text) {
+        String url = webhookUrl();
+        if (url == null) {
+            return;
+        }
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint(url);
+        req.setMethod(&#x27;POST&#x27;);
+        req.setHeader(&#x27;Content-Type&#x27;, &#x27;application/json&#x27;);
+        req.setBody(JSON.serialize(new Map&lt;String, String&gt;{ &#x27;text&#x27; =&gt; text }));
+        new Http().send(req);
+    }
+
+    @future(callout=true)
+    public static void sendAsync(String text) {
+        send(text);
+    }
+
+    public static void alertHighPriority(List&lt;Case&gt; cases) {
+        List&lt;Case&gt; high = new List&lt;Case&gt;();
+        for (Case c : cases) {
+            if (c.Priority == &#x27;High&#x27;) {
+                high.add(c);
+            }
+        }
+        if (!high.isEmpty() &amp;&amp; webhookUrl() != null &amp;&amp; !System.isFuture() &amp;&amp; !System.isBatch()) {
+            sendAsync(buildAlert(high));
+        }
+    }
+}</code></pre></details><details open><summary><span class="path">force-app/main/default/classes/SlackCaseDigestJob.cls</span><span class="meta">9 lines</span></summary><pre><code>/**
+ * Schedulable job that posts the daily case digest to Slack.
+ * Schedule: System.schedule(&#x27;Slack case digest&#x27;, &#x27;0 0 8 * * ?&#x27;, new SlackCaseDigestJob());
+ */
+public with sharing class SlackCaseDigestJob implements Schedulable, Database.AllowsCallouts {
+    public void execute(SchedulableContext sc) {
+        SlackCaseNotifier.sendAsync(SlackCaseNotifier.buildDigest());
+    }
+}</code></pre></details><details open><summary><span class="path">force-app/main/default/triggers/CaseSlackAlertTrigger.trigger</span><span class="meta">3 lines</span></summary><pre><code>trigger CaseSlackAlertTrigger on Case (after insert) {
+    SlackCaseNotifier.alertHighPriority(Trigger.new);
+}</code></pre></details><details open><summary><span class="path">force-app/main/default/labels/CustomLabels.labels-meta.xml</span><span class="meta">10 lines</span></summary><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;CustomLabels xmlns=&quot;http://soap.sforce.com/2006/04/metadata&quot;&gt;
+    &lt;labels&gt;
+        &lt;fullName&gt;Slack_Webhook_Url&lt;/fullName&gt;
+        &lt;language&gt;en_US&lt;/language&gt;
+        &lt;protected&gt;true&lt;/protected&gt;
+        &lt;shortDescription&gt;Slack incoming webhook URL&lt;/shortDescription&gt;
+        &lt;value&gt;REPLACE_ME&lt;/value&gt;
+    &lt;/labels&gt;
+&lt;/CustomLabels&gt;</code></pre></details><details open><summary><span class="path">force-app/main/default/remoteSiteSettings/Slack_Hooks.remoteSite-meta.xml</span><span class="meta">6 lines</span></summary><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;RemoteSiteSetting xmlns=&quot;http://soap.sforce.com/2006/04/metadata&quot;&gt;
+    &lt;disableProtocolSecurity&gt;false&lt;/disableProtocolSecurity&gt;
+    &lt;isActive&gt;true&lt;/isActive&gt;
+    &lt;url&gt;https://hooks.slack.com&lt;/url&gt;
+&lt;/RemoteSiteSetting&gt;</code></pre></details><details><summary><span class="path">force-app/main/default/classes/SlackCaseNotifierTest.cls</span><span class="meta">58 lines</span></summary><pre><code>@IsTest
+private class SlackCaseNotifierTest {
+    private class Mock implements HttpCalloutMock {
+        public Integer calls = 0;
+        public HttpResponse respond(HttpRequest req) {
+            calls++;
+            HttpResponse res = new HttpResponse();
+            res.setStatusCode(200);
+            return res;
+        }
+    }
+
+    @IsTest
+    static void digestCountsOpenCasesByPriority() {
+        insert new List&lt;Case&gt;{
+            new Case(Subject = &#x27;a&#x27;, Status = &#x27;New&#x27;, Priority = &#x27;High&#x27;),
+            new Case(Subject = &#x27;b&#x27;, Status = &#x27;New&#x27;, Priority = &#x27;Low&#x27;)
+        };
+        String d = SlackCaseNotifier.buildDigest();
+        Assert.isTrue(d.contains(&#x27;High: 1&#x27;));
+        Assert.isTrue(d.contains(&#x27;Low: 1&#x27;));
+    }
+
+    @IsTest
+    static void doesNothingWithoutWebhook() {
+        Mock m = new Mock();
+        Test.setMock(HttpCalloutMock.class, m);
+        Test.startTest();
+        insert new Case(Subject = &#x27;c&#x27;, Status = &#x27;New&#x27;, Priority = &#x27;High&#x27;);
+        Test.stopTest();
+        Assert.areEqual(0, m.calls);
+    }
+
+    @IsTest
+    static void highPriorityInsertPostsOnce() {
+        SlackCaseNotifier.webhookOverride = &#x27;https://hooks.slack.com/services/T/B/X&#x27;;
+        Mock m = new Mock();
+        Test.setMock(HttpCalloutMock.class, m);
+        Test.startTest();
+        insert new List&lt;Case&gt;{
+            new Case(Subject = &#x27;d&#x27;, Status = &#x27;New&#x27;, Priority = &#x27;High&#x27;),
+            new Case(Subject = &#x27;e&#x27;, Status = &#x27;New&#x27;, Priority = &#x27;Low&#x27;)
+        };
+        Test.stopTest();
+        Assert.areEqual(1, m.calls);
+    }
+
+    @IsTest
+    static void digestJobPosts() {
+        SlackCaseNotifier.webhookOverride = &#x27;https://hooks.slack.com/services/T/B/X&#x27;;
+        Mock m = new Mock();
+        Test.setMock(HttpCalloutMock.class, m);
+        Test.startTest();
+        new SlackCaseDigestJob().execute(null);
+        Test.stopTest();
+        Assert.areEqual(1, m.calls);
+    }
+}</code></pre></details></div>
+</section>
+
+<section id="commands">
+  <h2>Commands used</h2>
+  <pre><code># deploy Apex actions with their tests (specified tests, only these classes)
+sf project deploy start -o afdcnew -m ApexClass:CaseTriageListInvocable -m ApexClass:CaseTriageEscalateInvocable \
+  -m ApexClass:CaseTriageAgentActionsTest -l RunSpecifiedTests -t CaseTriageAgentActionsTest
+
+# create an agent from a spec, then activate it
+sf agent create -o afdcnew --name "Case Triage Assistant" --api-name Case_Triage_Assistant --spec specs/caseTriageAgent.yaml
+sf agent activate   -o afdcnew --api-name Case_Triage_Assistant
+sf agent deactivate -o afdcnew --api-name Case_Triage_Assistant   # before deploying topic changes
+
+# agent actions and topic
+sf project deploy start -o afdcnew -m GenAiFunction:ListOpenCasesAction -m GenAiFunction:SetCasePriorityAction \
+  -m GenAiPlugin:p_16jgL000002k4kD_Case_Triage
+
+# test the live agent with real utterances
+sf agent test create -o afdcnew --spec specs/caseTriageTests.yaml --api-name Case_Triage_Assistant_Tests --force-overwrite
+sf agent test run    -o afdcnew -n Case_Triage_Assistant_Tests -w 10 --result-format human
+
+# bot user permissions
+sf org assign permset -o afdcnew -n CaseTriage_Agent_Access -b &lt;bot user name&gt;
+
+# retrieve the Site Helper agent, channel, queue and deployment
+sf project retrieve start -o afdcnew -m Bot:Site_Helper -m GenAiPlannerBundle:Site_Helper_v4 \
+  -m MessagingChannel:Site_Helper_Web_Chat -m EmbeddedServiceConfig:Site_Helper_Web_Chat \
+  -m Queue:BYOC_Messaging_Queue -m QueueRoutingConfig:BYOC_Messaging_Routing
+
+# seed data and schedule the digest
+sf apex run -o afdcnew -f scripts/apex/createKnowledge.apex
+sf apex run -o afdcnew -f scripts/apex/ingestCases.apex
+# Execute Anonymous, after the webhook label is set:
+System.schedule('Slack case digest', '0 0 8 * * ?', new SlackCaseDigestJob());
+sf org open agent --api-name Site_Helper -o afdcnew</code></pre>
+</section>
+
+<section id="lessons">
+  <h2>Problems hit and fixes</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Symptom</th><th>Cause</th><th>Fix</th></tr></thead>
+    <tbody>
+      <tr><td>Agent answered Off_Topic</td><td>Actions had no input/output schema</td><td>Add <code>schema.json</code> under the function folder</td></tr>
+      <tr><td>Function deploy failed with an unexpected error</td><td>A function without a schema cannot be updated in place</td><td>Create it under a new name, repoint the topic, delete the old one</td></tr>
+      <tr><td>Permission set would not assign to the bot user</td><td>Einstein Agent license rejects View All Account and Case</td><td>Set <code>viewAllRecords</code> false</td></tr>
+      <tr><td>Knowledge articles had no body</td><td>Default article type has title and summary only</td><td>Add a rich text field and a permission set</td></tr>
+      <tr><td>Apex: bind variable on the left of a comparison</td><td>SOQL requires the field on the left</td><td>Branch into two queries</td></tr>
+      <tr><td>Apex: <code>String[][]</code> does not compile</td><td>No multi-dimensional arrays</td><td>Use <code>List&lt;List&lt;String&gt;&gt;</code> with explicit inner lists</td></tr>
+      <tr><td>Test report shows topic "p"</td><td>Topic name in the test spec differs from the runtime topic name</td><td>The action ran, so routing was right. Align the expected topic name.</td></tr>
+      <tr><td>Earlier page said chat reached nobody</td><td>Read the channel's routing type, which is empty for direct agent handling</td><td>Read <code>sessionHandlerType</code> and <code>sessionHandlerAsa</code> instead</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="next">
+  <h2>Suggested next steps</h2>
+  <ol>
+    <li>Add more people to <code>BYOC_Messaging_Queue</code> and test an escalation end to end with someone online in Omni-Channel.</li>
+    <li>Ground Site Helper on the five Knowledge articles instead of typed-in facts.</li>
+    <li>Make Follow-Up Capture create a Lead so contact details survive the session.</li>
+    <li>Create the Slack webhook, set the label, and schedule the digest.</li>
+    <li>Decide whether you need an Omni-Flow router. Add one only when routing needs a decision.</li>
+  </ol>
+</section>
+
+<section id="files">
+  <h2>Where things live in the project</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Path</th><th>Contents</th></tr></thead>
+    <tbody>
+      <tr><td>force-app/main/default/bots/Site_Helper, genAiPlannerBundles/Site_Helper_v4</td><td>Public agent and its Agent Script (retrieved)</td></tr>
+      <tr><td>force-app/main/default/messagingChannels, queues, queueRoutingConfigs, EmbeddedServiceConfig</td><td>Channel, queue, routing and chat deployment (retrieved)</td></tr>
+      <tr><td>force-app/main/default/bots/Case_Triage_Assistant, genAiPlannerBundles/Case_Triage_Assistant, genAiPlugins, genAiFunctions</td><td>Internal agent, topic, actions</td></tr>
+      <tr><td>force-app/main/default/classes, triggers, labels, remoteSiteSettings</td><td>Apex actions, Slack alerts, tests</td></tr>
+      <tr><td>force-app/main/default/permissionsets, settings, objects/Knowledge__kav</td><td>Access, Knowledge setting, article body field</td></tr>
+      <tr><td>specs/, scripts/apex/, docs/</td><td>Agent and test specs, seed scripts, this page, Slack notes</td></tr>
+    </tbody>
+  </table></div>
+</section>
+</main>

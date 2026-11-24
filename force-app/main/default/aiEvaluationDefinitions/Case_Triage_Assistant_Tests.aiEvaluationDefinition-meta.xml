@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AiEvaluationDefinition xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Smoke tests for the Case Triage Assistant agent</description>
+    <name>Case Triage Assistant Tests</name>
+    <subjectName>Case_Triage_Assistant</subjectName>
+    <subjectType>AGENT</subjectType>
+    <testCase>
+        <expectation>
+            <expectedValue>p_16jgL000002k4kD_Case_Triage</expectedValue>
+            <name>topic_assertion</name>
+        </expectation>
+        <expectation>
+            <expectedValue>[&apos;ListOpenCasesAction&apos;]</expectedValue>
+            <name>actions_assertion</name>
+        </expectation>
+        <expectation>
+            <expectedValue>The agent lists open cases including case numbers such as 00001002 and their priorities.</expectedValue>
+            <name>output_validation</name>
+        </expectation>
+        <inputs>
+            <utterance>Show me all open cases</utterance>
+        </inputs>
+        <number>1</number>
+    </testCase>
+    <testCase>
+        <expectation>
+            <expectedValue>p_16jgL000002k4kD_Case_Triage</expectedValue>
+            <name>topic_assertion</name>
+        </expectation>
+        <expectation>
+            <expectedValue>[&apos;ListOpenCasesAction&apos;]</expectedValue>
+            <name>actions_assertion</name>
+        </expectation>
+        <expectation>
+            <expectedValue>The agent lists only open cases with High priority, or says none were found.</expectedValue>
+            <name>output_validation</name>
+        </expectation>
+        <inputs>
+            <utterance>Show me the open support cases that have High priority</utterance>
+        </inputs>
+        <number>2</number>
+    </testCase>
+    <testCase>
+        <expectation>
+            <expectedValue>p_16jgL000002k4kD_Case_Triage</expectedValue>
+            <name>topic_assertion</name>
+        </expectation>
+        <expectation>
+            <expectedValue>[&apos;SetCasePriorityAction&apos;]</expectedValue>
+            <name>actions_assertion</name>
+        </expectation>
+        <expectation>
+            <expectedValue>The agent reports that case 99999999 was not found.</expectedValue>
+            <name>output_validation</name>
+        </expectation>
+        <inputs>
+            <utterance>Change the priority of case 99999999 to High</utterance>
+        </inputs>
+        <number>3</number>
+    </testCase>
+</AiEvaluationDefinition>

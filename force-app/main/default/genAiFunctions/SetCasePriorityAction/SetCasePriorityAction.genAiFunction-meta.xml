@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Sets the priority of a case (High, Medium or Low) using its case number.</description>
+    <invocationTarget>CaseTriageEscalateInvocable</invocationTarget>
+    <invocationTargetType>apex</invocationTargetType>
+    <isConfirmationRequired>true</isConfirmationRequired>
+    <masterLabel>Set Case Priority</masterLabel>
+</GenAiFunction>

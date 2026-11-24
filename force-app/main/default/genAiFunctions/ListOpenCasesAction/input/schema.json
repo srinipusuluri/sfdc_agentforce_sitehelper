@@ -1,0 +1,14 @@
+{
+  "required": [],
+  "unevaluatedProperties": false,
+  "properties": {
+    "priority": {
+      "title": "priority",
+      "description": "Optional: High, Medium or Low. Leave blank for all open cases.",
+      "lightning:type": "lightning__textType",
+      "lightning:isPII": false,
+      "copilotAction:isUserInput": true
+    }
+  },
+  "lightning:type": "lightning__objectType"
+}
