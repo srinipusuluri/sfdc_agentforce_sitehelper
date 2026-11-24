@@ -75,7 +75,7 @@ Agentforce handles **conversations**. Someone types a request in their own words
 | Decline unrelated requests | Website visitor | Built |
 | List open Cases by priority | Support staff | Built, tested |
 | Change a Case priority, with confirmation | Support staff | Built, confirmation seen, update not run |
-| Answer from the 5 Knowledge articles | Website visitor | Next |
+| Answer from the 14 Knowledge articles | Website visitor | Next |
 | Save visitor details as a Lead | Visitor, sales | Next |
 | Route by hours, language or VIP with an Omni-Flow | Website visitor | Next |
 | State prices or guarantees, take payments | | Out of scope |
@@ -295,10 +295,11 @@ sf project deploy start -o <org> -m Settings:Knowledge
 sf project deploy start -o <org> -m CustomField:Knowledge__kav.Article_Body__c \
   -m PermissionSet:Knowledge_Article_Body_Access
 sf org assign permset -o <org> -n Knowledge_Article_Body_Access
-sf apex run -o <org> -f scripts/apex/createKnowledge.apex
+sf apex run -o <org> -f scripts/apex/createKnowledge.apex       # 5 articles
+sf apex run -o <org> -f scripts/apex/createMoreKnowledge.apex   # 9 more, 14 in all
 ```
 
-Enabling Knowledge cannot be undone. Run `ingestCases.apex` and `createKnowledge.apex` once only. A second run duplicates Cases and fails on the duplicate article URL names.
+Enabling Knowledge cannot be undone. Run `ingestCases.apex`, `createKnowledge.apex` and `createMoreKnowledge.apex` once only. A second run duplicates Cases and fails on the duplicate article URL names.
 
 ### 7. Create the Site Helper agent, channel and queue
 
