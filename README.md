@@ -6,11 +6,13 @@ A working example of **Salesforce agents** for self-service and human handoff, t
 
 | | What it covers | Page |
 |---|---|---|
-| **Agentforce** | Site Helper chat agent, escalation to a human through Omni-Channel, the internal Case Triage agent, Knowledge | [docs/agentforce.html](docs/agentforce.html) |
-| **Slackforce** | High priority case alerts and a daily digest posted from Salesforce to Slack, the agent-in-Slack option, setup roles | [docs/slackforce.html](docs/slackforce.html) |
-| **Claudeforce** | How Claude Code and Claude in Chrome were used, where a human approved, what went wrong | [docs/claudeforce.html](docs/claudeforce.html) |
+| **Agentforce** | Site Helper chat agent, escalation to a human through Omni-Channel, the internal Case Triage agent, Knowledge | [Open the page](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/agentforce.html) |
+| **Slackforce** | High priority case alerts and a daily digest posted from Salesforce to Slack, the agent-in-Slack option, setup roles | [Open the page](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/slackforce.html) |
+| **Claudeforce** | How Claude Code and Claude in Chrome were used, where a human approved, what went wrong | [Open the page](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/claudeforce.html) |
 
-The pages are standalone HTML, starting at [docs/index.html](docs/index.html). On GitHub they show as source. Download them, or turn on GitHub Pages for the `/docs` folder to read them as web pages.
+**Live site:** https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/
+
+The pages are standalone HTML in `docs/`, served by GitHub Pages from the `/docs` folder of `main`.
 
 ## Agentforce
 
