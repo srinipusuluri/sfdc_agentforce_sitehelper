@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 330" width="1000" height="330" role="img" aria-label="Two patterns. Synchronous: a person clicks in an LWC, Apex calls the agent and waits up to 120 seconds, and the answer is shown. Event-driven: a new High priority Case fires a trigger, which queues a background job that calls the agent. The agent writes an internal comment back with the REST API.">
+<rect width="1000" height="330" fill="#f6f8f8"/>
+<defs>
+<marker id="p1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#17232a"/></marker>
+</defs>
+<g font-family="IBM Plex Sans, system-ui, sans-serif" font-size="12.5" fill="#17232a" stroke="#17232a">
+<rect x="10" y="10" width="980" height="140" rx="10" fill="#dff1ef" stroke="#0b7a75" stroke-width="2"/>
+<text x="26" y="32" stroke="none" font-weight="600" fill="#0b7a75">SYNCHRONOUS: someone is waiting for the answer</text>
+<rect x="26" y="52" width="130" height="62" rx="6" fill="#ffffff"/><text x="91" y="78" text-anchor="middle" stroke="none">Person clicks</text><text x="91" y="96" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">in an LWC</text>
+<rect x="206" y="52" width="150" height="62" rx="6" fill="#ffffff"/><text x="281" y="78" text-anchor="middle" stroke="none">Apex callout</text><text x="281" y="96" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">waits, max 120 s</text>
+<rect x="406" y="52" width="170" height="62" rx="6" fill="#ffffff"/><text x="491" y="78" text-anchor="middle" stroke="none">Lambda agent</text><text x="491" y="96" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">reads, reasons, answers</text>
+<rect x="626" y="52" width="150" height="62" rx="6" fill="#ffffff"/><text x="701" y="78" text-anchor="middle" stroke="none">Answer returned</text><text x="701" y="96" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">in the same call</text>
+<rect x="826" y="52" width="150" height="62" rx="6" fill="#ffffff"/><text x="901" y="78" text-anchor="middle" stroke="none">Shown in the UI</text><text x="901" y="96" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">Case summary, site Q&amp;A</text>
+
+<rect x="10" y="175" width="980" height="145" rx="10" fill="#fbeedb" stroke="#b45309" stroke-width="2"/>
+<text x="26" y="197" stroke="none" font-weight="600" fill="#b45309">EVENT-DRIVEN: nobody waits, the result lands in Salesforce</text>
+<rect x="26" y="217" width="130" height="62" rx="6" fill="#ffffff"/><text x="91" y="243" text-anchor="middle" stroke="none">New High</text><text x="91" y="261" text-anchor="middle" stroke="none">priority Case</text>
+<rect x="206" y="217" width="150" height="62" rx="6" fill="#ffffff"/><text x="281" y="243" text-anchor="middle" stroke="none">Case trigger</text><text x="281" y="261" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">queues a job</text>
+<rect x="406" y="217" width="170" height="62" rx="6" fill="#ffffff"/><text x="491" y="243" text-anchor="middle" stroke="none">Queueable job</text><text x="491" y="261" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">one Case per job</text>
+<rect x="626" y="217" width="150" height="62" rx="6" fill="#ffffff"/><text x="701" y="243" text-anchor="middle" stroke="none">Lambda agent</text><text x="701" y="261" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">triages the Case</text>
+<rect x="826" y="217" width="150" height="62" rx="6" fill="#ffffff"/><text x="901" y="243" text-anchor="middle" stroke="none">Internal comment</text><text x="901" y="261" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">written back by REST</text>
+<g fill="none" stroke-width="1.5">
+<line x1="156" y1="83" x2="204" y2="83" marker-end="url(#p1)"/><line x1="356" y1="83" x2="404" y2="83" marker-end="url(#p1)"/><line x1="576" y1="83" x2="624" y2="83" marker-end="url(#p1)"/><line x1="776" y1="83" x2="824" y2="83" marker-end="url(#p1)"/>
+<line x1="156" y1="248" x2="204" y2="248" marker-end="url(#p1)"/><line x1="356" y1="248" x2="404" y2="248" marker-end="url(#p1)"/><line x1="576" y1="248" x2="624" y2="248" marker-end="url(#p1)"/><line x1="776" y1="248" x2="824" y2="248" marker-end="url(#p1)"/>
+</g>
+<text x="500" y="308" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">Longer jobs: put a queue (SQS) in front of the agent, or run it on a container service, and write the result back when done.</text>
+</g></svg>

@@ -1,29 +1,47 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300" width="1000" height="300" role="img" aria-label="Agentforce, Slackforce, Claudeforce: build, connect and operate Salesforce agents with Claude">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 420" width="1000" height="420" role="img" aria-label="Agentforce, Slackforce, Claudeforce, plus Salesforce in Claude and Claude Agents on AWS: build, connect and operate Salesforce agents with Claude">
 <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0f1719"/><stop offset="1" stop-color="#14302f"/></linearGradient></defs>
-<rect width="1000" height="300" rx="14" fill="url(#g)"/>
+<rect width="1000" height="420" rx="14" fill="url(#g)"/>
 <g font-family="IBM Plex Sans, system-ui, -apple-system, Segoe UI, sans-serif">
 <text x="40" y="70" font-size="34" font-weight="600" fill="#e4eded">Agentforce · Slackforce · Claudeforce</text>
 <text x="40" y="102" font-size="16" fill="#9db0b3">Build, connect and operate Salesforce agents with Claude</text>
+
 <g>
-<rect x="40" y="135" width="280" height="130" rx="12" fill="#12312f" stroke="#4fd1c5" stroke-width="2"/>
-<circle cx="80" cy="175" r="18" fill="none" stroke="#4fd1c5" stroke-width="3"/><circle cx="80" cy="175" r="5" fill="#4fd1c5"/>
-<text x="112" y="182" font-size="22" font-weight="600" fill="#4fd1c5">Agentforce</text>
-<text x="60" y="222" font-size="13" fill="#9db0b3">Site Helper chat agent, Case Triage,</text>
-<text x="60" y="241" font-size="13" fill="#9db0b3">escalation to humans in Omni-Channel</text>
+<rect x="40" y="130" width="280" height="130" rx="12" fill="#12312f" stroke="#4fd1c5" stroke-width="2"/>
+<circle cx="80" cy="170" r="18" fill="none" stroke="#4fd1c5" stroke-width="3"/><circle cx="80" cy="170" r="5" fill="#4fd1c5"/>
+<text x="112" y="177" font-size="22" font-weight="600" fill="#4fd1c5">Agentforce</text>
+<text x="60" y="217" font-size="13" fill="#9db0b3">Site Helper chat agent, Case Triage,</text>
+<text x="60" y="236" font-size="13" fill="#9db0b3">escalation to humans in Omni-Channel</text>
 </g>
 <g>
-<rect x="360" y="135" width="280" height="130" rx="12" fill="#3a2a14" stroke="#f0a65a" stroke-width="2"/>
-<path d="M392 163 L388 189 M408 163 L404 189 M382 172 H414 M378 182 H410" stroke="#f0a65a" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-<text x="432" y="182" font-size="22" font-weight="600" fill="#f0a65a">Slackforce</text>
-<text x="380" y="222" font-size="13" fill="#9db0b3">High priority case alerts and a daily</text>
-<text x="380" y="241" font-size="13" fill="#9db0b3">digest, posted from Salesforce to Slack</text>
+<rect x="360" y="130" width="280" height="130" rx="12" fill="#3a2a14" stroke="#f0a65a" stroke-width="2"/>
+<path d="M392 158 L388 184 M408 158 L404 184 M382 167 H414 M378 177 H410" stroke="#f0a65a" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+<text x="432" y="177" font-size="22" font-weight="600" fill="#f0a65a">Slackforce</text>
+<text x="380" y="217" font-size="13" fill="#9db0b3">High priority case alerts and a daily</text>
+<text x="380" y="236" font-size="13" fill="#9db0b3">digest, posted from Salesforce to Slack</text>
 </g>
 <g>
-<rect x="680" y="135" width="280" height="130" rx="12" fill="#1a2740" stroke="#8fb0e6" stroke-width="2"/>
-<path d="M722 156 L728.5 169.5 L743 171.5 L732.5 181.5 L735 196 L722 189 L709 196 L711.5 181.5 L701 171.5 L715.5 169.5 Z" fill="#8fb0e6"/>
-<text x="756" y="182" font-size="22" font-weight="600" fill="#8fb0e6">Claudeforce</text>
-<text x="700" y="222" font-size="13" fill="#9db0b3">Claude Code and Claude in Chrome</text>
-<text x="700" y="241" font-size="13" fill="#9db0b3">building, testing and documenting it</text>
+<rect x="680" y="130" width="280" height="130" rx="12" fill="#1a2740" stroke="#8fb0e6" stroke-width="2"/>
+<path d="M722 151 L728.5 164.5 L743 166.5 L732.5 176.5 L735 191 L722 184 L709 191 L711.5 176.5 L701 166.5 L715.5 164.5 Z" fill="#8fb0e6"/>
+<text x="756" y="177" font-size="22" font-weight="600" fill="#8fb0e6">Claudeforce</text>
+<text x="700" y="217" font-size="13" fill="#9db0b3">Claude Code and Claude in Chrome</text>
+<text x="700" y="236" font-size="13" fill="#9db0b3">building, testing and documenting it</text>
+</g>
+
+<text x="40" y="296" font-size="12" letter-spacing="1.5" fill="#9db0b3">ALSO IN THIS REPO</text>
+<g>
+<rect x="40" y="308" width="440" height="82" rx="12" fill="#14301f" stroke="#6fd08f" stroke-width="2"/>
+<path d="M66 354 a10 10 0 0 1 1-19 a14 14 0 0 1 27 3 a9 9 0 0 1 -1 16 Z" fill="#6fd08f"/>
+<text x="112" y="338" font-size="20" font-weight="600" fill="#6fd08f">Salesforce in Claude</text>
+<text x="112" y="358" font-size="13" fill="#9db0b3">Claude as the interface for sellers, and how MCP</text>
+<text x="112" y="375" font-size="13" fill="#9db0b3">connects Claude to Salesforce: local, hosted, AWS</text>
+</g>
+<g>
+<rect x="520" y="308" width="440" height="82" rx="12" fill="#2a1f40" stroke="#c8a2ff" stroke-width="2"/>
+<rect x="548" y="332" width="46" height="34" rx="5" fill="none" stroke="#c8a2ff" stroke-width="3"/>
+<path d="M558 342 L566 349 L558 356 M570 357 H584" stroke="#c8a2ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+<text x="612" y="338" font-size="20" font-weight="600" fill="#c8a2ff">Claude Agents on AWS</text>
+<text x="612" y="358" font-size="13" fill="#9db0b3">Your own agent, built with Claude Code, run on</text>
+<text x="612" y="375" font-size="13" fill="#9db0b3">Lambda, shared in an LWC or a public site</text>
 </g>
 </g>
 </svg>

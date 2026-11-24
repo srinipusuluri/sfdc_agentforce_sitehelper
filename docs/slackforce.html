@@ -109,14 +109,14 @@ details pre{border:0;border-radius:0 0 8px 8px}
 </head>
 <body>
 <main>
-<nav class="site-nav" aria-label="Site"><a href="index.html">Home</a><a href="agentforce.html">Agentforce</a><a href="slackforce.html" aria-current="page">Slackforce</a><a href="claudeforce.html">Claudeforce</a><a href="salesforce-in-claude.html">Salesforce in Claude</a></nav>
+<nav class="site-nav" aria-label="Site"><a href="index.html">Home</a><a href="agentforce.html">Agentforce</a><a href="slackforce.html" aria-current="page">Slackforce</a><a href="claudeforce.html">Claudeforce</a><a href="salesforce-in-claude.html">Salesforce in Claude</a><a href="claude-agents-aws.html">Claude Agents on AWS</a></nav>
 <header style="display:flex;flex-direction:column;gap:14px">
   <span class="eyebrow">Slack workspace aiforall · Salesforce org afdcnew</span>
   <h1>Slackforce: Salesforce and Slack together</h1>
   <p class="lede">How Salesforce posts case alerts and a daily digest into Slack, how the Case Triage agent could be reached from Slack, and who does each setup step.</p>
 </header>
 
-<section id="status"><h2>Where things stand</h2><div class="grid"><div class="col"><h3><span class="pill p-ok">Live</span> Alerts</h3><ul><li>A new High priority Case posts an alert to Slack on its own</li><li>Proven: a test Case fired the trigger and the alert arrived</li><li>The test Case was deleted afterwards</li></ul></div><div class="col"><h3><span class="pill p-ok">Live</span> Daily digest</h3><ul><li>Scheduled for 8:00 every day in the org time zone</li><li>A manual send was seen in Slack: High 5, Medium 4, Low 5</li><li>The first scheduled run is the next 8:00</li></ul></div><div class="col"><h3><span class="pill p-have">Unconfirmed</span> Agent in Slack</h3><ul><li>The Salesforce and Slack integration may not be available on a free Slack plan</li><li>Not checked. The Chrome instructions include a step that finds out</li></ul></div></div></section>
+<section id="status"><h2>Where things stand</h2><div class="grid"><div class="col"><h3><span class="pill p-ok">Live</span> Alerts</h3><ul><li>A new High priority Case posts an alert to Slack on its own</li><li>Proven: a test Case fired the trigger and the alert arrived</li><li>The test Case was deleted afterwards</li></ul></div><div class="col"><h3><span class="pill p-ok">Live</span> Daily digest</h3><ul><li>Scheduled for 8:00 every day, in the time zone of the user who scheduled it</li><li>A manual send was seen in Slack: High 5, Medium 4, Low 5</li><li>The first scheduled run is the next 8:00</li></ul></div><div class="col"><h3><span class="pill p-have">Unconfirmed</span> Agent in Slack</h3><ul><li>The Salesforce and Slack integration may not be available on a free Slack plan</li><li>Not checked. The Chrome instructions include a step that finds out</li></ul></div></div></section>
 
 <section id="scope"><h2>What Slackforce is for</h2><p>Slackforce <b>pushes information to people where they already work</b>. A rule in Salesforce fires, Apex builds a short message, and Slack shows it. There is no AI at run time and the same event always produces the same kind of message. Use it for awareness, not for conversation.</p><div class="two"><div class="col"><h3><span class="pill p-ok">Meant for</span></h3><ul><li>Telling a team about urgent items as they happen</li><li>A daily summary the team does not have to ask for</li><li>Small teams that live in Slack</li><li>One-way notifications, simple to operate and audit</li></ul></div><div class="col"><h3><span class="pill p-no">Not meant for</span></h3><ul><li>Conversation or questions. Use Agentforce.</li><li>Approvals, buttons or threads. A webhook is one-way, so that needs a full Slack app.</li><li>Reading what people write in Slack</li><li>Very high event volumes, because Salesforce limits callouts</li></ul></div></div><h3>Use cases</h3><div class="tbl"><table><thead><tr><th>Use case</th><th>Who</th><th>How it works</th><th>Status</th></tr></thead><tbody><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Instant alert on a new High priority Case</td><td>Support team</td><td>Trigger after insert sends one message per batch through a future method</td><td><span class="pill p-ok">Built</span><div style="color:var(--muted);font-size:.8rem;margin-top:4px">Proven end to end</div></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Daily digest of open Cases by priority</td><td>Team lead</td><td>Scheduled Apex at 8:00 counts open Cases and posts the totals</td><td><span class="pill p-ok">Built</span><div style="color:var(--muted);font-size:.8rem;margin-top:4px">Scheduled. A manual send was seen in Slack</div></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Alert when a Case is escalated</td><td>Support team</td><td>Extend the trigger to fire on a status change</td><td><span class="pill p-have">Next</span></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Link to the Case in each message</td><td>Support team</td><td>Add the record URL to the message text</td><td><span class="pill p-have">Next</span></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Different channels by priority or product</td><td>Support team</td><td>Store several webhooks, pick one per rule</td><td><span class="pill p-have">Next</span></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">SLA breach warning</td><td>Team lead</td><td>Needs entitlement or milestone data</td><td><span class="pill p-have">Next</span></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Digest per owner or queue</td><td>Agents</td><td>Group the digest query by owner</td><td><span class="pill p-have">Next</span></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Use the Case Triage agent from Slack</td><td>Support staff</td><td>Needs the Salesforce and Slack integration, which may not be available on a free Slack plan</td><td><span class="pill p-todo">Option</span><div style="color:var(--muted);font-size:.8rem;margin-top:4px">Unconfirmed</div></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Approve or reassign from a Slack button</td><td>Support staff</td><td>Needs a custom Slack app, not a webhook</td><td><span class="pill p-no">Out of scope</span></td></tr><tr><td style="font-family:var(--sans);white-space:normal;font-weight:600">Post customer personal data</td><td>Anyone</td><td>Messages carry case number and subject only</td><td><span class="pill p-no">Out of scope</span></td></tr></tbody></table></div></section>
 
@@ -183,7 +183,7 @@ details pre{border:0;border-radius:0 0 8px 8px}
         </g>
       </svg>
     </div>
-    <figcaption>The only secret is the webhook URL, held in a protected label. It is read when a message is sent and never appears in code. The callout runs asynchronously, so saving a Case does not wait for Slack.</figcaption>
+    <figcaption>The only secret is the webhook URL, held in a custom label that any admin can read. It is read when a message is sent and never appears in code. The callout runs asynchronously, so saving a Case does not wait for Slack.</figcaption>
   </figure>
   <div class="stack"><details><summary><span class="path">force-app/main/default/classes/SlackCaseNotifier.cls</span><span class="meta">66 lines</span></summary><pre><code>/**
  * Posts Case summaries to Slack through an incoming webhook.
@@ -260,20 +260,13 @@ public with sharing class SlackCaseDigestJob implements Schedulable, Database.Al
     }
 }</code></pre></details><details open><summary><span class="path">force-app/main/default/triggers/CaseSlackAlertTrigger.trigger</span><span class="meta">3 lines</span></summary><pre><code>trigger CaseSlackAlertTrigger on Case (after insert) {
     SlackCaseNotifier.alertHighPriority(Trigger.new);
-}</code></pre></details><details open><summary><span class="path">force-app/main/default/labels/CustomLabels.labels-meta.xml</span><span class="meta">17 lines</span></summary><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+}</code></pre></details><details open><summary><span class="path">force-app/main/default/labels/CustomLabels.labels-meta.xml</span><span class="meta">10 lines</span></summary><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;CustomLabels xmlns=&quot;http://soap.sforce.com/2006/04/metadata&quot;&gt;
     &lt;labels&gt;
         &lt;fullName&gt;Slack_Webhook_Url&lt;/fullName&gt;
         &lt;language&gt;en_US&lt;/language&gt;
         &lt;protected&gt;true&lt;/protected&gt;
         &lt;shortDescription&gt;Slack incoming webhook URL&lt;/shortDescription&gt;
-        &lt;value&gt;REPLACE_ME&lt;/value&gt;
-    &lt;/labels&gt;
-    &lt;labels&gt;
-        &lt;fullName&gt;Claude_Api_Key&lt;/fullName&gt;
-        &lt;language&gt;en_US&lt;/language&gt;
-        &lt;protected&gt;true&lt;/protected&gt;
-        &lt;shortDescription&gt;Anthropic API key for Claudeforce&lt;/shortDescription&gt;
         &lt;value&gt;REPLACE_ME&lt;/value&gt;
     &lt;/labels&gt;
 &lt;/CustomLabels&gt;</code></pre></details><details open><summary><span class="path">force-app/main/default/remoteSiteSettings/Slack_Hooks.remoteSite-meta.xml</span><span class="meta">6 lines</span></summary><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
@@ -341,7 +334,7 @@ private class SlackCaseNotifierTest {
 }</code></pre></details></div>
 </section>
 
-<section id="verified"><h2>What was tested</h2><div class="tbl"><table><thead><tr><th>Check</th><th>Result</th></tr></thead><tbody><tr><td style="white-space:normal">Apex unit tests</td><td>4 pass: digest counts, no send without a webhook, one post per High priority insert batch, digest job posts</td></tr><tr><td style="white-space:normal">Test message</td><td>Slack answered 200 and the message appeared in the channel</td></tr><tr><td style="white-space:normal">Digest and alert through the real class</td><td>Both appeared in the channel with the right counts and Case numbers</td></tr><tr><td style="white-space:normal">Trigger on a new Case</td><td>A High priority test Case queued the send job, it completed, and the alert appeared in Slack. The test Case was then deleted</td></tr><tr><td style="white-space:normal">Webhook label overwritten</td><td>A project deploy reset the label to its placeholder once, so the first trigger test sent nothing. The label file is now excluded in <code>.forceignore</code></td></tr></tbody></table></div></section>
+<section id="verified"><h2>What was tested</h2><div class="tbl"><table><thead><tr><th>Check</th><th>Result</th></tr></thead><tbody><tr><td style="white-space:normal">Apex unit tests</td><td>4 pass: digest counts, no send without a webhook, one post per High priority insert batch, digest job posts</td></tr><tr><td style="white-space:normal">Test message</td><td>Slack answered 200 and the message appeared in the channel</td></tr><tr><td style="white-space:normal">Digest and alert through the real class</td><td>Both appeared in the channel with the right counts and Case numbers</td></tr><tr><td style="white-space:normal">Trigger on a new Case</td><td>A High priority test Case queued the send job, it completed, and the alert appeared in Slack. The test Case was then deleted</td></tr><tr><td style="white-space:normal">Webhook label overwritten</td><td>A project deploy reset the label to its placeholder once, so the first trigger test sent nothing. In the working project the label file is now excluded in <code>.forceignore</code>. The published repo does not do this, so add that line yourself after you set the webhook (README step 8)</td></tr></tbody></table></div></section>
 
 <section id="agent-in-slack">
   <h2>Architecture: the agent from Slack</h2>
@@ -424,7 +417,7 @@ echo "SlackCaseNotifier.send('Test from Salesforce');" > /tmp/slack_test.apex
 sf apex run -o afdcnew -f /tmp/slack_test.apex
 
 # 2. check the alert path: create a High priority Case, expect one Slack message
-# 3. schedule the digest (8:00 in the org time zone)
+# 3. schedule the digest (8:00 in the time zone of the user who schedules it)
 System.schedule('Slack case digest', '0 0 8 * * ?', new SlackCaseDigestJob());
 
 # stop the digest: find the job, then abort it
@@ -442,12 +435,12 @@ sf project deploy start -o afdcnew -m CustomLabel:Slack_Webhook_Url -m RemoteSit
   <div class="tbl"><table>
     <thead><tr><th>Topic</th><th>What to know</th></tr></thead>
     <tbody>
-      <tr><td>Webhook secret</td><td>Anyone with the URL can post to that channel. It lives in a protected label. For production move it to a Named Credential, and rotate it in Slack if it leaks.</td></tr>
+      <tr><td>Webhook secret</td><td>Anyone with the URL can post to that channel. It lives in a custom label, which any admin, and any Apex code in the org, can read. For production move it to a Named Credential, and rotate it in Slack if it leaks.</td></tr>
       <tr><td>Trigger scope</td><td>The trigger runs on every Case insert in the org. It sends nothing unless the label is set and at least one new Case is High priority.</td></tr>
       <tr><td>One message per batch</td><td>A bulk load of 200 High priority Cases sends one message listing them, not 200 messages.</td></tr>
       <tr><td>Asynchronous</td><td>Sending runs in a future method, so a Slack outage never blocks saving a Case. A failed post is not retried.</td></tr>
       <tr><td>Message content</td><td>Case number and subject only, as plain text. Subjects go to Slack, so avoid sensitive text in subjects, or remove the subject from the alert.</td></tr>
-      <tr><td>Digest timing</td><td>The schedule uses the org time zone. The digest counts open Cases by priority at run time.</td></tr>
+      <tr><td>Digest timing</td><td>The schedule uses the time zone of the user who scheduled the job. The digest counts open Cases by priority at run time.</td></tr>
       <tr><td>Deploys can reset the label</td><td>The label value lives in the org, but the file in source says <code>REPLACE_ME</code>. A full project deploy overwrites the saved webhook. Add the label file to <code>.forceignore</code> after you create it.</td></tr>
       <tr><td>Free Slack plan</td><td>Incoming webhooks are available. The native Agentforce in Slack integration may not be. This has not been checked.</td></tr>
       <tr><td>Agent in Slack</td><td>Case Triage Assistant can change a Case's priority. Limit who can reach it, and keep its confirmation step.</td></tr>
@@ -455,7 +448,7 @@ sf project deploy start -o afdcnew -m CustomLabel:Slack_Webhook_Url -m RemoteSit
   </table></div>
 </section>
 
-<section id="next"><h2>Open items</h2><ol><li>Watch tomorrow's 8:00 digest arrive on its own.</li><li>Rotate the webhook if its URL was ever shared, then paste the new one into the label.</li><li>Run Part 2 of the Chrome instructions to find out whether the Slack integration is available on this plan.</li><li>Decide who in Slack may use the Case Triage agent, if it is enabled.</li><li>For production, replace the label with a Named Credential.</li></ol></section>
+<section id="next"><h2>Open items</h2><ol><li>Confirm the first scheduled 8:00 digest arrives on its own.</li><li>Rotate the webhook if its URL was ever shared, then paste the new one into the label.</li><li>Run Part 2 of the Chrome instructions to find out whether the Slack integration is available on this plan.</li><li>Decide who in Slack may use the Case Triage agent, if it is enabled.</li><li>For production, replace the label with a Named Credential.</li></ol></section>
 </main>
 </body>
 </html>

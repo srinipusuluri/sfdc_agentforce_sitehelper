@@ -1,0 +1,6 @@
+.assistant {
+    max-width: 40rem;
+}
+.answer {
+    white-space: pre-wrap;
+}

@@ -1,0 +1,18 @@
+<template>
+    <lightning-card title="Ask Claude about this Case" icon-name="standard:case">
+        <div class="slds-p-horizontal_medium">
+            <lightning-button
+                label="Summarize and suggest next steps"
+                variant="brand"
+                onclick={handleSummarize}
+                disabled={loading}
+            ></lightning-button>
+            <lightning-spinner lwc:if={loading} alternative-text="Asking Claude" size="small"></lightning-spinner>
+            <p lwc:if={error} class="slds-text-color_error slds-m-top_small" role="alert">{error}</p>
+            <p lwc:if={answer} class="answer slds-m-top_small">{answer}</p>
+            <p class="slds-text-color_weak slds-text-body_small slds-m-top_small">
+                AI generated. Check it before you act on it.
+            </p>
+        </div>
+    </lightning-card>
+</template>

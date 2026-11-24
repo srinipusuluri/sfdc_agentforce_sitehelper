@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 450" width="1000" height="450" role="img" aria-label="Three ways Claude reaches Salesforce through MCP. A: a local server on your machine, used from Claude Code and Claude Desktop over stdio, signing in with your Salesforce CLI login. B: a vendor-hosted remote server used from Claude Code, Desktop, web and mobile over HTTPS with each user signing in by OAuth. C: a self-hosted remote server on AWS used from the same clients and from your own agent, calling Salesforce as an integration user.">
+<rect width="1000" height="450" fill="#f6f8f8"/>
+<defs>
+<marker id="ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#0b7a75"/></marker>
+<marker id="mb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#3b5b8c"/></marker>
+<marker id="mc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#b45309"/></marker>
+</defs>
+<g font-family="IBM Plex Sans, system-ui, sans-serif" font-size="12.5" fill="#17232a" stroke="#17232a">
+<text x="350" y="18" stroke="none" font-size="11" letter-spacing="1" fill="#58696f">MCP SERVER</text>
+<text x="740" y="18" stroke="none" font-size="11" letter-spacing="1" fill="#58696f">SALESFORCE</text>
+<rect x="10" y="30" width="280" height="110" rx="8" fill="#ffffff"/>
+<text x="150" y="58" text-anchor="middle" stroke="none" font-size="11" letter-spacing="1" fill="#58696f">WORKS FROM</text><text x="150" y="84" text-anchor="middle" stroke="none" font-size="11.5">Claude Code</text><text x="150" y="101" text-anchor="middle" stroke="none" font-size="11.5">Claude Desktop</text><text x="150" y="118" text-anchor="middle" stroke="none" font-size="11.5">(on your machine)</text>
+<rect x="350" y="30" width="260" height="110" rx="8" fill="#dff1ef" stroke="#0b7a75" stroke-width="2"/>
+<text x="480" y="58" text-anchor="middle" stroke="none" font-weight="600" fill="#0b7a75">A. Local server</text><text x="480" y="87" text-anchor="middle" stroke="none" font-size="11.5" fill="#58696f">Salesforce DX MCP</text><text x="480" y="104" text-anchor="middle" stroke="none" font-size="11.5" fill="#58696f">@salesforce/mcp</text><text x="480" y="121" text-anchor="middle" stroke="none" font-size="11.5" fill="#58696f">runs as a process on your laptop</text>
+<line x1="290" y1="85" x2="348" y2="85" stroke="#0b7a75" stroke-width="2" marker-end="url(#ma)"/>
+<text x="319" y="75" text-anchor="middle" stroke="none" font-size="10.5" fill="#0b7a75">stdio</text>
+<line x1="610" y1="85" x2="728" y2="85" stroke="#0b7a75" stroke-width="2" marker-end="url(#ma)"/>
+<text x="669" y="75" text-anchor="middle" stroke="none" font-size="10.5" fill="#0b7a75">sf CLI login</text>
+<rect x="10" y="165" width="280" height="110" rx="8" fill="#ffffff"/>
+<text x="150" y="193" text-anchor="middle" stroke="none" font-size="11" letter-spacing="1" fill="#58696f">WORKS FROM</text><text x="150" y="219" text-anchor="middle" stroke="none" font-size="11.5">Claude Code · Claude Desktop</text><text x="150" y="236" text-anchor="middle" stroke="none" font-size="11.5">Claude on web and mobile</text><text x="150" y="253" text-anchor="middle" stroke="none" font-size="11.5">(added as a connector)</text>
+<rect x="350" y="165" width="260" height="110" rx="8" fill="#e3eaf5" stroke="#3b5b8c" stroke-width="2"/>
+<text x="480" y="193" text-anchor="middle" stroke="none" font-weight="600" fill="#3b5b8c">B. Vendor-hosted remote</text><text x="480" y="222" text-anchor="middle" stroke="none" font-size="11.5" fill="#58696f">for example the Salesforce MCP</text><text x="480" y="239" text-anchor="middle" stroke="none" font-size="11.5" fill="#58696f">in the Claude directory</text><text x="480" y="256" text-anchor="middle" stroke="none" font-size="11.5" fill="#58696f">hosted for you</text>
+<line x1="290" y1="220" x2="348" y2="220" stroke="#3b5b8c" stroke-width="2" marker-end="url(#mb)"/>
+<text x="319" y="210" text-anchor="middle" stroke="none" font-size="10.5" fill="#3b5b8c">OAuth</text>
+<line x1="610" y1="220" x2="728" y2="220" stroke="#3b5b8c" stroke-width="2" marker-end="url(#mb)"/>
+<text x="669" y="210" text-anchor="middle" stroke="none" font-size="10.5" fill="#3b5b8c">HTTPS API</text>
+<rect x="10" y="300" width="280" height="110" rx="8" fill="#ffffff"/>
+<text x="150" y="328" text-anchor="middle" stroke="none" font-size="11" letter-spacing="1" fill="#58696f">WORKS FROM</text><text x="150" y="354" text-anchor="middle" stroke="none" font-size="11.5">The same clients, plus</text><text x="150" y="371" text-anchor="middle" stroke="none" font-size="11.5">your own agent on AWS</text><text x="150" y="388" text-anchor="middle" stroke="none" font-size="11.5">(Messages API MCP connector)</text>
+<rect x="350" y="300" width="260" height="110" rx="8" fill="#fbeedb" stroke="#b45309" stroke-width="2"/>
+<text x="480" y="328" text-anchor="middle" stroke="none" font-weight="600" fill="#b45309">C. Self-hosted on AWS</text><text x="480" y="357" text-anchor="middle" stroke="none" font-size="11.5" fill="#58696f">your MCP server on Lambda or Fargate</text><text x="480" y="374" text-anchor="middle" stroke="none" font-size="11.5" fill="#58696f">your tools, your auth, your account</text><text x="480" y="391" text-anchor="middle" stroke="none" font-size="11.5" fill="#58696f">you run it</text>
+<line x1="290" y1="355" x2="348" y2="355" stroke="#b45309" stroke-width="2" marker-end="url(#mc)"/>
+<text x="319" y="345" text-anchor="middle" stroke="none" font-size="10.5" fill="#b45309">OAuth</text>
+<line x1="610" y1="355" x2="728" y2="355" stroke="#b45309" stroke-width="2" marker-end="url(#mc)"/>
+<text x="669" y="345" text-anchor="middle" stroke="none" font-size="10.5" fill="#b45309">HTTPS API</text>
+<rect x="730" y="30" width="260" height="380" rx="10" fill="#ffffff" stroke-width="2"/>
+<text x="860" y="60" text-anchor="middle" stroke="none" font-weight="600">Salesforce org</text>
+<text x="860" y="88" text-anchor="middle" stroke="none" font-size="11.5">REST API and SOQL</text>
+<text x="860" y="108" text-anchor="middle" stroke="none" font-size="11.5">Metadata and Tooling APIs</text>
+<text x="860" y="128" text-anchor="middle" stroke="none" font-size="11.5">Apex REST, invocable actions</text>
+<line x1="750" y1="150" x2="970" y2="150" stroke="#cfd9db"/>
+<text x="860" y="176" text-anchor="middle" stroke="none" font-size="11" letter-spacing="1" fill="#58696f">WHOSE PERMISSIONS APPLY</text>
+<text x="860" y="214" text-anchor="middle" stroke="none" font-size="12" font-weight="600" fill="#0b7a75">A: your CLI login</text>
+<text x="860" y="232" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">whichever org you authorized</text>
+<text x="860" y="272" text-anchor="middle" stroke="none" font-size="12" font-weight="600" fill="#3b5b8c">B: each user</text>
+<text x="860" y="290" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">signs in with their own account</text>
+<text x="860" y="330" text-anchor="middle" stroke="none" font-size="12" font-weight="600" fill="#b45309">C: your design</text>
+<text x="860" y="348" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">one integration user for everyone,</text>
+<text x="860" y="364" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">or pass each user's token through</text>
+</g></svg>

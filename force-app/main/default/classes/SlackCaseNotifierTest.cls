@@ -10,8 +10,14 @@ private class SlackCaseNotifierTest {
         }
     }
 
+    // Tests must not depend on the org's real webhook label. Pin it in every test.
+    private static void withoutWebhook() {
+        SlackCaseNotifier.webhookOverride = 'REPLACE_ME';
+    }
+
     @IsTest
     static void digestCountsOpenCasesByPriority() {
+        withoutWebhook();
         insert new List<Case>{
             new Case(Subject = 'a', Status = 'New', Priority = 'High'),
             new Case(Subject = 'b', Status = 'New', Priority = 'Low')
@@ -23,6 +29,7 @@ private class SlackCaseNotifierTest {
 
     @IsTest
     static void doesNothingWithoutWebhook() {
+        withoutWebhook();
         Mock m = new Mock();
         Test.setMock(HttpCalloutMock.class, m);
         Test.startTest();

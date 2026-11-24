@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" width="1000" height="560" role="img" aria-label="Build time: a developer works with Claude Code, which writes the agent and deploys it to AWS. Run time: an LWC on a Salesforce record page or a public Experience Cloud site calls Apex, which calls the agent through a Named Credential. The agent runs in AWS Lambda, calls Claude, and reads and writes Salesforce through the REST API as an integration user.">
+<rect width="1000" height="560" fill="#f6f8f8"/>
+<defs>
+<marker id="w1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#17232a"/></marker>
+<marker id="w2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#3b5b8c"/></marker>
+<marker id="w3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#0b7a75"/></marker>
+</defs>
+<g font-family="IBM Plex Sans, system-ui, sans-serif" font-size="12.5" fill="#17232a" stroke="#17232a">
+<rect x="10" y="10" width="980" height="82" rx="10" fill="#e3eaf5" stroke="#3b5b8c" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="24" y="30" stroke="none" font-size="11" letter-spacing="1" fill="#58696f">BUILD TIME</text>
+<rect x="150" y="38" width="130" height="42" rx="6" fill="#ffffff" stroke="#3b5b8c"/><text x="215" y="63" text-anchor="middle" stroke="none">Developer</text>
+<rect x="330" y="38" width="150" height="42" rx="6" fill="#ffffff" stroke="#3b5b8c"/><text x="405" y="56" text-anchor="middle" stroke="none">Claude Code</text><text x="405" y="72" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">writes, tests, fixes</text>
+<rect x="530" y="38" width="140" height="42" rx="6" fill="#ffffff" stroke="#3b5b8c"/><text x="600" y="56" text-anchor="middle" stroke="none">Git repo</text><text x="600" y="72" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">code + CLAUDE.md</text>
+<rect x="720" y="38" width="190" height="42" rx="6" fill="#ffffff" stroke="#3b5b8c"/><text x="815" y="56" text-anchor="middle" stroke="none">sam deploy / sf deploy</text><text x="815" y="72" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">AWS stack + Apex + LWC</text>
+
+<rect x="10" y="115" width="400" height="435" rx="10" fill="#ffffff" stroke="#cfd9db" stroke-width="2"/>
+<text x="24" y="135" stroke="none" font-size="11" letter-spacing="1" fill="#58696f">SALESFORCE ORG</text>
+<rect x="26" y="150" width="180" height="62" rx="6" fill="#dff1ef" stroke="#0b7a75"/><text x="116" y="173" text-anchor="middle" stroke="none">LWC on a record page</text><text x="116" y="191" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">staff, signed in</text>
+<rect x="214" y="150" width="180" height="62" rx="6" fill="#dff1ef" stroke="#0b7a75"/><text x="304" y="173" text-anchor="middle" stroke="none">LWC on a public site</text><text x="304" y="191" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">visitors, guest user</text>
+<rect x="26" y="238" width="180" height="62" rx="6" fill="#ffffff"/><text x="116" y="259" text-anchor="middle" stroke="none">ClaudeAgentService</text><text x="116" y="277" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">checks the user can see the Case</text>
+<rect x="214" y="238" width="180" height="62" rx="6" fill="#ffffff"/><text x="304" y="259" text-anchor="middle" stroke="none">ClaudeSiteService</text><text x="304" y="277" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">one agent, no record Id</text>
+<rect x="26" y="326" width="368" height="60" rx="6" fill="#ffffff" stroke-width="2"/><text x="210" y="349" text-anchor="middle" stroke="none" font-weight="600">ClaudeAgentClient + Named Credential</text><text x="210" y="368" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">holds the URL and the shared key, so neither is in code</text>
+<rect x="26" y="440" width="368" height="92" rx="6" fill="#ffffff" stroke-dasharray="5 3"/><text x="210" y="462" text-anchor="middle" stroke="none" font-weight="600">Data</text><text x="210" y="482" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">Cases · Comments · Knowledge articles</text><text x="210" y="502" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">reached through the REST API by an integration user</text><text x="210" y="518" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">with minimal permissions</text>
+
+<rect x="450" y="115" width="540" height="435" rx="10" fill="#ffffff" stroke="#cfd9db" stroke-width="2"/>
+<text x="464" y="135" stroke="none" font-size="11" letter-spacing="1" fill="#58696f">AWS</text>
+<rect x="470" y="150" width="500" height="50" rx="6" fill="#ffffff"/><text x="720" y="172" text-anchor="middle" stroke="none" font-weight="600">Lambda Function URL</text><text x="720" y="190" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">HTTPS, checks the x-api-key header</text>
+<rect x="470" y="222" width="300" height="190" rx="8" fill="#dff1ef" stroke="#0b7a75" stroke-width="2"/>
+<text x="620" y="244" text-anchor="middle" stroke="none" font-weight="600" fill="#0b7a75">Lambda: the agent</text>
+<rect x="486" y="256" width="268" height="40" rx="5" fill="#ffffff" stroke="#0b7a75"/><text x="620" y="280" text-anchor="middle" stroke="none">handler: validate, pick agent</text>
+<rect x="486" y="304" width="268" height="40" rx="5" fill="#ffffff" stroke="#0b7a75"/><text x="620" y="328" text-anchor="middle" stroke="none">tool loop with turn and size caps</text>
+<rect x="486" y="352" width="268" height="48" rx="5" fill="#ffffff" stroke="#0b7a75"/><text x="620" y="373" text-anchor="middle" stroke="none">tools: get_case, search_articles,</text><text x="620" y="389" text-anchor="middle" stroke="none">add_internal_comment</text>
+<rect x="800" y="222" width="170" height="92" rx="8" fill="#e3eaf5" stroke="#3b5b8c" stroke-width="2"/><text x="885" y="248" text-anchor="middle" stroke="none" font-weight="600" fill="#3b5b8c">Claude</text><text x="885" y="268" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">one of three routes:</text><text x="885" y="284" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">Anthropic API</text><text x="885" y="298" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">Claude Platform on AWS · Bedrock</text>
+<rect x="800" y="336" width="170" height="76" rx="8" fill="#ffffff"/><text x="885" y="362" text-anchor="middle" stroke="none">Secrets Manager</text><text x="885" y="380" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">API key, Salesforce</text><text x="885" y="394" text-anchor="middle" stroke="none" font-size="10.5" fill="#58696f">credentials, caller key</text>
+<rect x="470" y="440" width="500" height="92" rx="8" fill="#ffffff" stroke-dasharray="5 3"/><text x="720" y="466" text-anchor="middle" stroke="none" font-weight="600">Operate</text><text x="720" y="488" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">CloudWatch logs and alarms · Lambda timeout and concurrency limits</text><text x="720" y="506" text-anchor="middle" stroke="none" font-size="11" fill="#58696f">budget alerts on model spend · no case text in logs</text>
+
+<g fill="none" stroke-width="1.5">
+<line x1="280" y1="59" x2="328" y2="59" stroke="#3b5b8c" stroke-width="2" marker-end="url(#w2)"/>
+<line x1="480" y1="59" x2="528" y2="59" stroke="#3b5b8c" stroke-width="2" marker-end="url(#w2)"/>
+<line x1="670" y1="59" x2="718" y2="59" stroke="#3b5b8c" stroke-width="2" marker-end="url(#w2)"/>
+<path d="M815 80 V108 H720 V148" stroke="#3b5b8c" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#w2)"/>
+<line x1="116" y1="212" x2="116" y2="236" stroke="#0b7a75" stroke-width="2" marker-end="url(#w3)"/>
+<line x1="304" y1="212" x2="304" y2="236" stroke="#0b7a75" stroke-width="2" marker-end="url(#w3)"/>
+<path d="M116 300 V312 H210 V324" stroke="#0b7a75" stroke-width="2" marker-end="url(#w3)"/>
+<path d="M304 300 V312 H210" stroke="#0b7a75" stroke-width="2"/>
+<path d="M394 356 H430 V175 H468" stroke="#0b7a75" stroke-width="2" marker-end="url(#w3)"/>
+<line x1="720" y1="200" x2="720" y2="220" stroke="#0b7a75" stroke-width="2" marker-end="url(#w3)"/>
+<line x1="770" y1="262" x2="798" y2="262" stroke="#3b5b8c" stroke-width="2" marker-end="url(#w2)"/>
+<line x1="770" y1="372" x2="798" y2="372" marker-end="url(#w1)"/>
+<path d="M620 412 V432 H430 V486 H396" stroke="#0b7a75" stroke-width="2" marker-end="url(#w3)"/>
+</g>
+<g stroke="none" font-size="10.5">
+<text x="436" y="270" fill="#0b7a75" transform="rotate(-90 436 270)" text-anchor="middle">HTTPS callout</text>
+<text x="784" y="256" fill="#3b5b8c" text-anchor="end">asks</text>
+<text x="548" y="428" fill="#0b7a75">REST: read, add comment</text>
+<text x="735" y="104" fill="#3b5b8c">deploys</text>
+</g>
+</g></svg>

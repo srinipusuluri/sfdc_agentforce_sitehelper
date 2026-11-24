@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Claude agent called from Salesforce through Apex and a Named Credential
+
+Parameters:
+  ClaudeRoute:
+    Type: String
+    Default: anthropic
+    AllowedValues: [anthropic, claude-platform-on-aws, bedrock]
+  ClaudeModel:
+    Type: String
+    Default: claude-sonnet-5-5
+    Description: Model ID. For route bedrock the anthropic. prefix is added for you
+  AnthropicSecretArn:
+    Type: String
+    Description: Secrets Manager secret holding the Anthropic API key (route "anthropic")
+  SalesforceSecretArn:
+    Type: String
+    Description: Secret JSON with loginUrl, clientId, clientSecret for the integration user
+  CallerSecretArn:
+    Type: String
+    Description: Secret holding the shared value Salesforce sends in the x-api-key header
+  ClaudeWorkspaceId:
+    Type: String
+    Default: ""
+    Description: Only for route "claude-platform-on-aws"
+
+Resources:
+  AgentFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs22.x
+      Handler: handler.handler          # dist/handler.mjs, built by `npm run build`
+      CodeUri: dist/
+      Timeout: 90                       # Apex callouts can wait up to 120 s, so stay below that
+      MemorySize: 512
+      Environment:
+        Variables:
+          CLAUDE_ROUTE: !Ref ClaudeRoute
+          CLAUDE_MODEL: !Ref ClaudeModel
+          ANTHROPIC_SECRET_ID: !Ref AnthropicSecretArn
+          SF_SECRET_ID: !Ref SalesforceSecretArn
+          CALLER_SECRET_ID: !Ref CallerSecretArn
+          ANTHROPIC_AWS_WORKSPACE_ID: !Ref ClaudeWorkspaceId
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action: secretsmanager:GetSecretValue
+              Resource:
+                - !Ref AnthropicSecretArn
+                - !Ref SalesforceSecretArn
+                - !Ref CallerSecretArn
+        # For route "bedrock" or "claude-platform-on-aws", add the IAM actions for that service.
+        # Take them from the provider's current documentation and scope them to what you use.
+      FunctionUrlConfig:
+        AuthType: NONE                  # the handler checks the x-api-key header itself
+        InvokeMode: BUFFERED
+
+Outputs:
+  AgentUrl:
+    Description: Put this URL in the Salesforce Named Credential
+    Value: !GetAtt AgentFunctionUrl.FunctionUrl

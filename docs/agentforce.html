@@ -108,7 +108,7 @@ details pre{border:0;border-radius:0 0 8px 8px}
 </head>
 <body>
 <main>
-<nav class="site-nav" aria-label="Site"><a href="index.html">Home</a><a href="agentforce.html" aria-current="page">Agentforce</a><a href="slackforce.html">Slackforce</a><a href="claudeforce.html">Claudeforce</a><a href="salesforce-in-claude.html">Salesforce in Claude</a></nav>
+<nav class="site-nav" aria-label="Site"><a href="index.html">Home</a><a href="agentforce.html" aria-current="page">Agentforce</a><a href="slackforce.html">Slackforce</a><a href="claudeforce.html">Claudeforce</a><a href="salesforce-in-claude.html">Salesforce in Claude</a><a href="claude-agents-aws.html">Claude Agents on AWS</a></nav>
 <header style="display:flex;flex-direction:column;gap:14px">
   <span class="eyebrow">Salesforce org afdcnew · Developer Edition · updated 24 Nov 2026</span>
   <h1>Agentforce self-service, with a path to a human</h1>
@@ -120,9 +120,9 @@ details pre{border:0;border-radius:0 0 8px 8px}
 <section id="status">
   <h2>Where things stand</h2>
   <div class="grid">
-    <div class="col"><h3><span class="pill p-ok">Working</span> Public chat</h3>
+    <div class="col"><h3><span class="pill p-have">Configured</span> Public chat (live chat not run by Claude)</h3>
       <ul>
-        <li>Agent <code>Site_Helper</code>, version 4 active, five topics written in Agent Script</li>
+        <li>Agent <code>Site_Helper</code>, version 4 active, a router and four subagents, written in Agent Script</li>
         <li>Messaging channel <code>Site_Helper_Web_Chat</code> hands sessions to the agent</li>
         <li>Embedded chat deployment on the live site <code>ESW_Site_Helper_We_17955492998421</code></li>
         <li>Escalation action sends the chat to queue <code>BYOC_Messaging_Queue</code></li>
@@ -984,7 +984,7 @@ System.debug(&#x27;Published &#x27; + recs.size());</code></pre></details></div>
 <section id="slack">
   <h2>Slack alerts</h2>
   <span class="pill p-ok" style="align-self:flex-start">Live, tested end to end</span>
-  <p>A trigger posts to Slack when a High priority Case is created, and a scheduled job posts a daily digest. Both go through one class that reads the webhook URL from the protected label <code>Slack_Webhook_Url</code>. While the label says <code>REPLACE_ME</code>, nothing is sent.</p>
+  <p>A trigger posts to Slack when a High priority Case is created, and a scheduled job posts a daily digest. Both go through one class that reads the webhook URL from the custom label <code>Slack_Webhook_Url</code>. While the label says <code>REPLACE_ME</code>, nothing is sent.</p>
   <figure>
     <div class="fig">
       <svg viewBox="0 0 1000 330" role="img" aria-label="Staff talk to Case Triage Assistant, which calls Apex actions on Case records. A Case insert with High priority fires a trigger, and a daily job, both call SlackCaseNotifier, which posts to a Slack webhook.">

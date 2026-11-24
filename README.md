@@ -6,7 +6,7 @@ A working example of **Salesforce agents** for self-service and human handoff, t
 
 **Live site:** https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/
 
-Pages: [Home](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/) · [Agentforce](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/agentforce.html) · [Slackforce](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/slackforce.html) · [Claudeforce](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/claudeforce.html) · [Salesforce in Claude](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/salesforce-in-claude.html)
+Pages: [Home](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/) · [Agentforce](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/agentforce.html) · [Slackforce](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/slackforce.html) · [Claudeforce](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/claudeforce.html) · [Salesforce in Claude](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/salesforce-in-claude.html) · [Claude Agents on AWS](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/claude-agents-aws.html)
 
 ## Which one do I use?
 
@@ -19,6 +19,7 @@ Start from what you are trying to do, not from the product name.
 | **Agentforce** | Someone asks in their own words and needs an answer or an action. The right response depends on what was said, and the person may need a human. |
 | **Slackforce** | Something happens in Salesforce and a team should be told, with nobody asking. The message has the same shape every time. |
 | **Claudeforce** | You are building, changing, testing or documenting the project. It works for the developer, not for end users. |
+| **Claude Agents on AWS** | You want your own Claude agent, built with Claude Code and run on AWS, shared in an LWC or a public site. It uses no Agentforce. |
 | **Salesforce in Claude** (reference) | Sellers want Claude itself to work with their Salesforce accounts and pipeline. Described on its own page. It is not set up in this repo. |
 
 ## How they fit together
@@ -31,17 +32,19 @@ Agentforce and Slackforce run in your Salesforce org, in front of people. Claude
 
 ## Side by side
 
-| | Agentforce | Slackforce | Claudeforce |
-|---|---|---|---|
-| **In one line** | Conversational agents that understand free text and act on Salesforce data | Automatic Slack messages when something happens in Salesforce | Claude helping people build, test and document the project |
-| **Who it serves** | Website visitors and support staff | The support team | The developer or admin |
-| **What starts it** | Someone sends a message | A new Case, or the clock at 8:00 | A person asks Claude to do a task |
-| **AI at run time** | Yes, a language model reasons about each message | No. Plain Apex, same output each time | Yes, but only while building, never in front of customers |
-| **Human in the loop** | Hands over to a human through Omni-Channel | Humans read and act on the messages | A person approves secrets, logins, permission clicks and risky steps |
-| **Best for** | Deflecting routine questions, answering in context | Making sure nothing urgent is missed | Repeatable build, test and documentation work |
-| **Not for** | Plain notifications, fixed rules | Conversation, approvals, buttons | Secrets, production support, unreviewed production deploys |
-| **Status** | Built. A live human handoff was not run by Claude | Built, proven end to end | Used throughout this repo |
-| **Page** | [Agentforce](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/agentforce.html) | [Slackforce](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/slackforce.html) | [Claudeforce](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/claudeforce.html) |
+| | Agentforce | Slackforce | Claudeforce | Salesforce in Claude | Claude Agents on AWS |
+|---|---|---|---|---|---|
+| **In one line** | Conversational agents that understand free text and act on Salesforce data | Automatic Slack messages when something happens in Salesforce | Claude helping people build, test and document the project | Claude as the interface for sellers, using Salesforce and Slack connectors (reference, beta) | Your own Claude agent on AWS, shared in an LWC or a public site |
+| **Who it serves** | Website visitors and support staff | The support team | The developer or admin | Sellers and sales leaders | Staff on record pages and visitors on a public site |
+| **What starts it** | Someone sends a message | A new Case, or the clock at 8:00 | A person asks Claude to do a task | A seller asks Claude, or a schedule the seller sets | A click in an LWC, or a Case event |
+| **AI at run time** | Yes, a language model reasons about each message | No. Plain Apex, the same output each time | Yes, but only while building, never in front of customers | Yes | Yes, a Claude model you choose |
+| **Where it runs** | Salesforce, in the chat on your site | Salesforce, posting to Slack | Your editor and your browser | The Claude app, with connectors to Salesforce and Slack | Lambda in your AWS account, called from Salesforce through Apex |
+| **Human in the loop** | Hands over to a human through Omni-Channel | Humans read and act on the messages | A person approves secrets, logins, permission clicks and risky steps | The seller approves each change before it is written, by default | People read the answers. Writes are limited to an internal comment from a background job |
+| **Main pieces here** | Site Helper agent, Case Triage agent, Apex actions, Knowledge, messaging channel, queue | Case trigger, digest job, notifier class, webhook label | Salesforce CLI, git, Claude in Chrome, published pages | A reference page on the plugin, plus how MCP connects Claude to Salesforce | aws-agent, Apex services, two LWCs, Named Credential, SAM template |
+| **Best for** | Deflecting routine questions and answering in context | Making sure nothing urgent is missed | Doing repeatable build, test and documentation work fast | Account research, call prep, pipeline review, CRM updates | Custom logic, other systems, a specific model, one agent shared by many apps |
+| **Not for** | Plain notifications and fixed rules | Conversation, approvals, buttons | Secrets, production support, unreviewed production deploys | Customer-facing chat, building Salesforce metadata. Cases are not described in the article | A conversation with a human handoff inside Salesforce. Use Agentforce |
+| **Status** | Configured. Live human handoff not run by Claude | Built and proven end to end | Used throughout this repo | Reference only, not set up here | Built and tested locally. Not deployed to AWS |
+| **Page** | [Agentforce](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/agentforce.html) | [Slackforce](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/slackforce.html) | [Claudeforce](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/claudeforce.html) | [Salesforce in Claude](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/salesforce-in-claude.html) | [Claude Agents on AWS](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/claude-agents-aws.html) |
 
 **Common mix-ups**
 
@@ -50,6 +53,8 @@ Agentforce and Slackforce run in your Salesforce org, in front of people. Claude
 | A notification when a Case is created | Slackforce | It is an event with a fixed message. An agent adds cost and variation for no gain. |
 | Visitors to get answers without waiting | Agentforce | It needs understanding of free text and a path to a person. |
 | To change what the agent says or give it a new action | Claudeforce, then Agentforce | Claude edits and tests it while you build. Agentforce is what runs afterwards. |
+| My own Claude agent, outside Salesforce, shared in an LWC or a site | Claude Agents on AWS | Custom logic and tools that Agentforce does not give you. You build and run it. |
+| Claude to reach Salesforce through MCP | Salesforce in Claude, MCP section | Local, vendor-hosted or self-hosted. Each has different pros and cons. |
 | To use the Case Triage agent from Slack | Agentforce, reached from Slack | Needs the Salesforce and Slack integration, which is unconfirmed on a free plan. |
 | Sellers to ask Claude about their pipeline and update the CRM from there | Salesforce in Claude | Claude is the interface and Salesforce is the data. Reference only, not set up here. |
 | A secret entered, or a permission screen approved | You | None of the three should do this for you. |
@@ -141,21 +146,76 @@ A separate product, summarised on its own page: [Salesforce in Claude](https://s
 | **Data it touches** | Accounts, opportunities, pipeline | Cases and Knowledge | Cases | Code and metadata |
 | **Status here** | Not set up, reference only | Built | Built, proven end to end | Used throughout |
 
+**How MCP connects Claude to Salesforce.** MCP is a standard way for Claude to call tools, and an MCP server sits between Claude and Salesforce. There are three kinds, and the page [Salesforce in Claude](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/salesforce-in-claude.html#mcp) compares them in detail.
+
+![Three ways MCP connects Claude to Salesforce](docs/images/mcp-connection-paths.svg)
+
+| | A. Local | B. Vendor-hosted remote | C. Self-hosted on AWS |
+|---|---|---|---|
+| **Runs where** | Your computer | The provider's cloud | Your AWS account |
+| **Sign-in** | Salesforce CLI login | OAuth, per user | Your design |
+| **Whose permissions** | The CLI user's | Each user's own | The integration user's, or each user's if tokens pass through |
+| **Works from** | Claude Code, Claude Desktop | Claude web, mobile, Desktop, Code | The same, plus your own agents |
+| **Pros** | Nothing to host. Reuses your CLI login. Strong for developers | Nothing to build. Per-user permissions. Admin control | Custom tools. Combines systems. Inside your AWS controls |
+| **Cons** | One machine. Acts as you. Not on web or mobile | Fixed tools. Depends on the provider. Less control | You build and run it. Authentication is the hard part |
+| **Best for** | Building and testing Salesforce | Sellers and admins using CRM data | Custom business tools and shared use |
+
+A minimal remote MCP server with one read-only tool is in [examples/mcp](examples/mcp). It type-checks and was started and called with a real MCP request. The Salesforce call in it is a stub.
+
 **Fit.** This repo is service work (Cases, Knowledge, website visitors). The article describes sales work and does not say how the plugin handles Cases.
 
-**Not stated in the article:** required Salesforce editions and admin permissions, how sign-in works technically, whether Claude Code or the API support the plugin, whether the separate Salesforce MCP in the Claude directory is the same as the plugin's connector, pricing, and audit or retention details. Check the [admin setup guide](https://support.claude.com/en/articles/16952184) before a rollout.
+**Not stated in the article:** required Salesforce editions and admin permissions, how sign-in works technically, whether Claude Code or the API support the plugin, whether the separate Salesforce MCP the article says is installable through the marketplace is the same as the plugin's connector, pricing, and audit or retention details. Check the [admin setup guide](https://support.claude.com/en/articles/16952184) before a rollout.
+
+## Claude Agents on AWS
+
+A Claude agent built on its own with Claude Code, run on AWS Lambda, and shared in Salesforce through an LWC on a record page and on a public Experience Cloud site. It uses no Agentforce. Full write-up: [Claude Agents on AWS](https://srinipusuluri.github.io/sfdc_agentforce_sitehelper/claude-agents-aws.html).
+
+![Claude agent on AWS architecture](docs/images/claude-agents-aws-architecture.svg)
+
+**How it works.** A person clicks an LWC. Apex checks what that person may do and calls the agent through a Named Credential. The agent runs in Lambda, asks Claude what to do, and uses tools that read and write Salesforce through the REST API as an integration user. The browser never talks to AWS.
+
+**Choose your route to Claude** with `CLAUDE_ROUTE`: `anthropic` (an API key in Secrets Manager), `claude-platform-on-aws` (AWS IAM and billing) or `bedrock` (Amazon Bedrock, with an `anthropic.`-prefixed model ID). Examples use `claude-sonnet-5-5`, set with `CLAUDE_MODEL`.
+
+**Examples**
+
+| Example | Where it appears | Can it write? | Status |
+|---|---|---|---|
+| Case summary | Case record page, an LWC | No | Built, unit tested |
+| Knowledge answer | Public site, an LWC | No | Built, unit tested |
+| Case triage comment | Background job on a new High priority Case | Internal comment only | Validated by a dry run, not deployed |
+| Draft a customer reply, find duplicates, account brief, knowledge gap finder, digest narrative, data clean-up helper | Various | Mostly no | Ideas, not built |
+
+![Wait or run in the background](docs/images/claude-agents-aws-patterns.svg)
+
+**Try the code**
+
+```
+cd aws-agent
+npm ci
+npm run typecheck && npm test   # 5 tests, no network, no tokens
+npm run build                   # bundles the Lambda handler
+```
+
+Then follow the page to create the secrets, run `sam deploy --guided`, create the Named Credential, deploy the Apex and LWCs in `force-app`, and add the components to a Case page or a site.
+
+**What was tested.** The agent code type-checks and passes 5 unit tests that use a fake Claude client. The Salesforce side passes 10 Apex tests and both LWCs deploy. **What was not:** a deployment to AWS, a live Claude call, the Named Credential, the OAuth app, or a guest user on a real site. No AWS account was used, so treat those steps as a guide to verify.
+
+**Security basics built in.** Tools are bound to one record, and the model never picks an Id. Apex checks the signed-in user can see the Case. The public site reaches one agent only. Errors to callers are generic. Secrets live in Secrets Manager. See the page for the full list.
 
 ## Repository layout
 
 | Path | Contents |
 |---|---|
-| `force-app/main/default/classes` | Apex actions for Case Triage, Slack notifier, job, tests |
+| `force-app/main/default/classes` | Apex actions for Case Triage, Slack notifier, job, Claude agent callout and services, tests |
 | `force-app/main/default/genAiFunctions`, `genAiPlugins` | Agent actions with input and output schemas, and the Case Triage topic |
 | `force-app/main/default/bots`, `genAiPlannerBundles` | Both agents. `Site_Helper_v4` holds the Agent Script |
 | `force-app/main/default/messagingChannels`, `queues`, `queueRoutingConfigs`, `EmbeddedServiceConfig` | Chat channel, queue, routing and chat deployment, retrieved from the org as reference |
 | `force-app/main/default/permissionsets` | Bot user access, Knowledge body field, guest read |
 | `force-app/main/default/settings`, `objects/Knowledge__kav` | Knowledge setting and article body field |
+| `force-app/main/default/lwc` | Two LWCs for the Claude agent: a Case record page and a public site |
 | `force-app/main/default/triggers`, `labels`, `remoteSiteSettings` | Slack alert trigger, webhook label, remote site |
+| `aws-agent/` | The Claude agent for AWS Lambda: TypeScript source, tests, SAM template, CLAUDE.md |
+| `examples/` | Background-triage Apex (not deployed) and a minimal remote MCP server |
 | `specs/` | Agent spec and agent test spec |
 | `scripts/apex/` | Seed scripts for Knowledge articles and sample Cases |
 | `docs/` | The pages, diagrams in `images/`, Slack notes, the decoded Site Helper agent script, Chrome instructions |
@@ -295,6 +355,8 @@ Optional: paste [docs/slackforce-chrome-instructions.md](docs/slackforce-chrome-
 - Case Triage Assistant can edit Cases. Keep it internal.
 - The alert trigger runs on every Case insert. It sends nothing unless the webhook is set and a new Case is High priority.
 - A failed Slack post is not retried.
+- The Claude agent on AWS was not deployed to AWS and has not made a live Claude call. See the page for what is untested.
+- The Slack Apex tests now set the webhook themselves. An earlier version read the org's real webhook label, so they failed once the real webhook was set.
 
 ## Troubleshooting
 

@@ -1,0 +1,24 @@
+<template>
+    <section class="assistant" aria-label="Help assistant">
+        <h2 class="slds-text-heading_medium">Ask a question</h2>
+        <lightning-textarea
+            label="Your question"
+            value={question}
+            max-length="300"
+            onchange={handleChange}
+        ></lightning-textarea>
+        <lightning-button
+            class="slds-m-top_small"
+            label="Ask"
+            variant="brand"
+            onclick={handleAsk}
+            disabled={disabled}
+        ></lightning-button>
+        <lightning-spinner lwc:if={loading} alternative-text="Finding an answer" size="small"></lightning-spinner>
+        <p lwc:if={error} class="slds-text-color_error slds-m-top_small" role="alert">{error}</p>
+        <p lwc:if={answer} class="answer slds-m-top_small" aria-live="polite">{answer}</p>
+        <p class="slds-text-color_weak slds-text-body_small slds-m-top_small">
+            Answers are generated from our help articles and may contain mistakes. Do not enter personal details.
+        </p>
+    </section>
+</template>

@@ -117,7 +117,7 @@ details pre{border:0;border-radius:0 0 8px 8px}
 </head>
 <body>
 <main>
-<nav class="site-nav" aria-label="Site"><a href="index.html">Home</a><a href="agentforce.html">Agentforce</a><a href="slackforce.html">Slackforce</a><a href="claudeforce.html" aria-current="page">Claudeforce</a><a href="salesforce-in-claude.html">Salesforce in Claude</a></nav>
+<nav class="site-nav" aria-label="Site"><a href="index.html">Home</a><a href="agentforce.html">Agentforce</a><a href="slackforce.html">Slackforce</a><a href="claudeforce.html" aria-current="page">Claudeforce</a><a href="salesforce-in-claude.html">Salesforce in Claude</a><a href="claude-agents-aws.html">Claude Agents on AWS</a></nav>
 <header style="display:flex;flex-direction:column;gap:14px">
   <span class="eyebrow">Claude Code · Claude in Chrome · private artifacts</span>
   <h1>Claudeforce: Claude working on Salesforce</h1>
@@ -128,7 +128,7 @@ details pre{border:0;border-radius:0 0 8px 8px}
 
 <section id="toolchain">
   <h2>The toolchain</h2>
-  <p>Claude Code runs in your editor and works in the project folder. It deploys and tests through the Salesforce CLI, and pushes to GitHub with <code>git</code> and <code>gh</code>. Claude in Chrome drives the browser for steps that only exist in a web UI, such as Slack. Pages are published as private artifacts. Anything that needs a secret, a login or a permission click comes back to you.</p>
+  <p>Claude Code runs in your editor and works in the project folder. It deploys and tests through the Salesforce CLI, and pushes to GitHub with <code>git</code> and <code>gh</code>. Claude in Chrome drives the browser for steps that only exist in a web UI, such as Slack. Pages are published as private claude.ai artifacts and, for this repo, to GitHub Pages from <code>docs/</code>. Anything that needs a secret, a login or a permission click comes back to you.</p>
   <figure>
     <div class="fig">
       <svg viewBox="0 0 1000 360" role="img" aria-label="You direct Claude Code and Claude in Chrome. Claude Code uses the Salesforce CLI to reach the org, git to reach GitHub, and the artifact tool to publish pages. Claude in Chrome reaches Slack and Salesforce Setup in the browser. Secrets and approvals go through you.">
@@ -203,6 +203,7 @@ details pre{border:0;border-radius:0 0 8px 8px}
       <tr><td>Daily digest</td><td>Claude Code</td><td>Scheduled for 8:00 daily. A manual send was seen in Slack</td></tr>
       <tr><td>Site Helper agent, channel, queue</td><td>Claude Code, retrieve</td><td>Read from the org and documented. Built by you, not by Claude</td></tr>
       <tr><td>Slackbot page</td><td>Claude in Chrome</td><td>Found no agent builder, stopped, wrote instructions instead</td></tr>
+      <tr><td>Claude agent on AWS</td><td>Claude Code, Sonnet 5.5</td><td>Code type-checked, 5 unit tests, 10 Apex tests, two LWCs deployed. Nothing was deployed to AWS. A second model (Opus) then reviewed the README and pages for accuracy, and Claude fixed what it found</td></tr>
       <tr><td>Architecture pages</td><td>Claude Code, artifacts</td><td>Written from the retrieved metadata and code</td></tr>
       <tr><td>This repo</td><td>Claude Code, git</td><td>Org usernames redacted before the public push</td></tr>
     </tbody>
@@ -219,7 +220,7 @@ details pre{border:0;border-radius:0 0 8px 8px}
       <tr><td>Slack approach</td><td>Claude asked which way to build, since the Slackbot UI had no agent builder.</td></tr>
       <tr><td>Webhook URL pasted in chat</td><td>Claude declined to enter it into Salesforce and opened the Custom Labels page so you could paste it yourself.</td></tr>
       <tr><td>Slack webhook URL</td><td>Treated as a secret. You paste it into Salesforce yourself. The Chrome instructions forbid reading it back.</td></tr>
-      <tr><td>Public repo</td><td>Pushed because you asked. Usernames were replaced with placeholders first, and Pages was left off.</td></tr>
+      <tr><td>Public repo</td><td>Pushed because you asked. Usernames were replaced with placeholders first. GitHub Pages was already on, so the pages are public.</td></tr>
       <tr><td>A wrong earlier claim</td><td>The first architecture page said the chat had no routing. Claude retrieved the real metadata, found that wrong, and published a correction.</td></tr>
     </tbody>
   </table></div>
@@ -240,7 +241,9 @@ details pre{border:0;border-radius:0 0 8px 8px}
       <tr><td>Bot user rejected View All permissions</td><td>Use read access with sharing</td></tr>
       <tr><td>Apex would not compile: bind on the left, <code>String[][]</code></td><td>Two queries, and <code>List&lt;List&lt;String&gt;&gt;</code> with explicit inner lists</td></tr>
       <tr><td>Wider deploy failed the 75% coverage check</td><td>Deploy only the new classes with <code>RunSpecifiedTests</code></td></tr>
-      <tr><td>Webhook label reset to its placeholder, so no alert was sent</td><td>A project deploy overwrote it. The label file is now in <code>.forceignore</code>, and the README says to deploy first and paste the webhook after</td></tr>
+      <tr><td>Webhook label reset to its placeholder, so no alert was sent</td><td>A project deploy overwrote it. In the working project the label file is now in <code>.forceignore</code>. The README says to deploy first, paste the webhook after, and then add that line</td></tr>
+      <tr><td>Apex tests failed once the real webhook was set, and a test insert fired the live Slack trigger</td><td>Pin config such as the webhook in every test, and use a Medium priority Case where a High one would fire the trigger</td></tr>
+      <tr><td>A claim of generic error messages was only partly true until a reviewer checked the code</td><td>Both Apex services now catch every exception. Have a second reviewer check claims against the code</td></tr>
       <tr><td>SSH push denied</td><td>Pushed over HTTPS with the existing <code>gh</code> login, no config change</td></tr>
     </tbody>
   </table></div>
